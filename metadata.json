@@ -1,0 +1,6 @@
+{
+  "name": "Barista Stamp & Loyalty Rewards",
+  "description": "Full-featured Coffee Shop stamp loyalty rewards program with QR & NFC, 3-tier portals (Customer, Barista, Store Owner), WhatsApp 963 CRM integration, wheel game, and bilingual Arabic/English RTL support.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
