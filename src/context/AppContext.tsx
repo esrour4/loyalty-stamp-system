@@ -537,17 +537,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [notifications, setNotifications] = useState<BroadcastNotification[]>([]);
-  const [currentCustomerId, setCurrentCustomerId] = useState<string | null>('cust_1');
-  const [activeBarista, setActiveBarista] = useState<Barista | null>(INITIAL_BARISTAS[0]);
-  const [isOwnerAuthenticated, setIsOwnerAuthenticated] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    const saved = sessionStorage.getItem('coffee_owner_auth');
-    return saved !== null ? saved === 'true' : true;
+  
+  // Auth state defaults to logged-out (null/false) on new devices/sessions
+  const [currentCustomerId, setCurrentCustomerId] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('coffee_current_customer_id') || null;
   });
+
+  const [activeBarista, setActiveBarista] = useState<Barista | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const savedId = sessionStorage.getItem('coffee_active_barista_id');
+    if (savedId) {
+      const savedBaristas = localStorage.getItem('coffee_baristas');
+      const list: Barista[] = savedBaristas ? JSON.parse(savedBaristas) : INITIAL_BARISTAS;
+      return list.find((b) => b.id === savedId && b.active) || null;
+    }
+    return null;
+  });
+
+  const [isOwnerAuthenticated, setIsOwnerAuthenticated] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const saved = sessionStorage.getItem('coffee_owner_auth');
+    return saved === 'true';
+  });
+
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
 
   // Sync current customer object
   const currentCustomer = customers.find((c) => c.id === currentCustomerId) || null;
+
+  // Sync customer auth to localStorage
+  useEffect(() => {
+    if (currentCustomerId) {
+      localStorage.setItem('coffee_current_customer_id', currentCustomerId);
+    } else {
+      localStorage.removeItem('coffee_current_customer_id');
+    }
+  }, [currentCustomerId]);
 
   // Language & RTL side effect
   useEffect(() => {
@@ -741,6 +767,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const logoutCustomer = () => {
     setCurrentCustomerId(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('coffee_current_customer_id');
+    }
+    triggerToast(language === 'ar' ? 'تم تسجيل خروج العميل بنجاح' : 'Customer logged out successfully');
   };
 
   // Barista Auth
@@ -748,6 +778,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const found = baristas.find((b) => b.pin === pin && b.active);
     if (found) {
       setActiveBarista(found);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('coffee_active_barista_id', found.id);
+      }
       triggerToast(language === 'ar' ? `تم تسجيل دخول الباريستا: ${found.name}` : `Barista logged in: ${found.name}`);
       return true;
     }
@@ -757,6 +790,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const logoutBarista = () => {
     setActiveBarista(null);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('coffee_active_barista_id');
+    }
     triggerToast(language === 'ar' ? 'تم تسجيل خروج الباريستا بنجاح' : 'Barista logged out');
   };
 
@@ -778,7 +814,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logoutOwner = () => {
     setIsOwnerAuthenticated(false);
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('coffee_owner_auth', 'false');
+      sessionStorage.removeItem('coffee_owner_auth');
     }
     triggerToast(language === 'ar' ? 'تم تسجيل خروج الأدمن بنجاح' : 'Owner / Admin logged out');
   };

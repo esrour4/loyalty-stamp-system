@@ -23,8 +23,9 @@ import {
   X,
 } from 'lucide-react';
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
-import { NFCService } from '../../services/nfcService';
 import { Customer } from '../../types';
+import { QrScanner } from '../common/QrScanner';
+import { NfcScannerModal } from './NfcScannerModal';
 
 export const BaristaPanel: React.FC = () => {
   const {
@@ -62,13 +63,9 @@ export const BaristaPanel: React.FC = () => {
   const [newCustPhone, setNewCustPhone] = useState('');
   const [newCustDob, setNewCustDob] = useState('');
 
-  // Camera QR Scanner states
-  const [isScanning, setIsScanning] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [cameraError, setCameraError] = useState<string | null>(null);
-
-  // NFC reading state
-  const [isListeningNfc, setIsListeningNfc] = useState(false);
+  // Scanner Modals
+  const [showQrScanner, setShowQrScanner] = useState(false);
+  const [showNfcModal, setShowNfcModal] = useState(false);
 
   // Barista PIN auth
   const [pinInput, setPinInput] = useState('');
@@ -88,64 +85,78 @@ export const BaristaPanel: React.FC = () => {
       )
     : [];
 
-  // Handle Camera QR Scanning
-  useEffect(() => {
-    let stream: MediaStream | null = null;
-    let animationFrameId: number;
+  // Robust QR Code payload decoder
+  const handleQrScanSuccess = (decodedText: string) => {
+    const raw = (decodedText || '').trim();
+    console.log('[QR Decoded]:', raw);
 
-    if (isScanning && videoRef.current) {
-      navigator.mediaDevices
-        ?.getUserMedia({ video: { facingMode: 'environment' } })
-        .then((s) => {
-          stream = s;
-          if (videoRef.current) {
-            videoRef.current.srcObject = s;
-            videoRef.current.play().catch(console.error);
-          }
-        })
-        .catch((err) => {
-          console.warn('Camera access:', err);
-          setCameraError(
-            isAr
-              ? 'تعذر الوصول للكاميرا. يمكنك استخدام البحث اليدوي أو محاكاة الباركود.'
-              : 'Camera unavailable. Use manual search or simulate scan.'
-          );
-        });
-    }
+    // 1. Direct card number match (case insensitive)
+    let found = customers.find(
+      (c) => c.cardNumber.toLowerCase() === raw.toLowerCase()
+    );
 
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [isScanning, isAr]);
-
-  // Handle NFC Scanning Listener
-  const handleStartNfc = async () => {
-    setIsListeningNfc(true);
-    triggerToast(isAr ? 'جاري الاستماع لتقنية NFC... قرّب جوال العميل' : 'Listening for NFC tag... Hold customer phone close');
-    const res = await NFCService.startReading((cardNum) => {
-      const found = customers.find((c) => c.cardNumber === cardNum);
-      if (found) {
-        setSelectedCustomerId(found.id);
-        triggerToast(isAr ? `تمت قراءة بطاقة: ${found.name}` : `NFC detected: ${found.name}`);
-        setIsListeningNfc(false);
-      }
-    });
-
-    if (!res.success) {
-      // Fallback simulation: select first approved customer
-      setTimeout(() => {
-        setIsListeningNfc(false);
-        const demoCust = customers.find((c) => c.status === 'approved');
-        if (demoCust) {
-          setSelectedCustomerId(demoCust.id);
-          triggerToast(
-            isAr ? `تمت محاكاة قراءة NFC للعميل: ${demoCust.name}` : `Simulated NFC scan: ${demoCust.name}`
+    // 2. Extract from URL e.g. https://.../?card=COFFEE-...
+    if (!found && (raw.includes('?card=') || raw.includes('&card='))) {
+      try {
+        const urlObj = new URL(raw.startsWith('http') ? raw : `https://${raw}`);
+        const cardParam = urlObj.searchParams.get('card');
+        if (cardParam) {
+          found = customers.find(
+            (c) => c.cardNumber.toLowerCase() === cardParam.toLowerCase()
           );
         }
-      }, 1000);
+      } catch (e) {
+        const match = raw.match(/card=([A-Za-z0-9\-]+)/);
+        if (match && match[1]) {
+          found = customers.find(
+            (c) => c.cardNumber.toLowerCase() === match[1].toLowerCase()
+          );
+        }
+      }
+    }
+
+    // 3. Extract from JSON format
+    if (!found && raw.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed.card) {
+          found = customers.find(
+            (c) => c.cardNumber.toLowerCase() === parsed.card.toLowerCase()
+          );
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // 4. Regex match standard pattern COFFEE-XXXX-YYYY
+    if (!found) {
+      const match = raw.match(/COFFEE-[A-Z0-9]+-[A-Z0-9]+/i);
+      if (match) {
+        found = customers.find(
+          (c) => c.cardNumber.toLowerCase() === match[0].toLowerCase()
+        );
+      }
+    }
+
+    // 5. Match by phone or ID
+    if (!found) {
+      found = customers.find((c) => c.phone.includes(raw) || c.id === raw);
+    }
+
+    if (found) {
+      setSelectedCustomerId(found.id);
+      triggerToast(
+        isAr ? `تم مسح رمز QR بنجاح: ${found.name}` : `QR Code Scanned: ${found.name}`,
+        'success'
+      );
+    } else {
+      triggerToast(
+        isAr
+          ? `تم مسح الرمز (${raw}) ولكن لم يتم العثور على بطاقة عميل مطابقة.`
+          : `Scanned: "${raw}" (No matching customer found)`,
+        'warning'
+      );
     }
   };
 
@@ -153,7 +164,7 @@ export const BaristaPanel: React.FC = () => {
   const selectCustomer = (cust: Customer) => {
     setSelectedCustomerId(cust.id);
     setSearchQuery('');
-    setIsScanning(false);
+    setShowQrScanner(false);
     triggerToast(isAr ? `تم تحديد العميل: ${cust.name}` : `Selected ${cust.name}`);
   };
 
@@ -384,49 +395,34 @@ export const BaristaPanel: React.FC = () => {
 
             {/* Camera & NFC Scanner Box */}
             <div className="bg-white dark:bg-stone-900 rounded-3xl p-5 shadow-sm border border-stone-200 dark:border-stone-800 space-y-3">
-              <h3 className="text-xs font-bold text-stone-700 dark:text-stone-300">
-                {t('quickScanner')} (QR & NFC)
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-stone-700 dark:text-stone-300">
+                  {t('quickScanner')} (QR & NFC)
+                </h3>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
+                  Live Scanner
+                </span>
+              </div>
 
-              {/* Video stream container */}
-              {isScanning && (
-                <div className="relative rounded-2xl overflow-hidden bg-black aspect-video flex items-center justify-center">
-                  <video ref={videoRef} className="w-full h-full object-cover" />
-                  <div className="absolute inset-8 border-2 border-dashed border-amber-400 rounded-xl pointer-events-none animate-pulse" />
-                </div>
-              )}
-
-              {cameraError && (
-                <p className="text-[11px] text-amber-600 dark:text-amber-400">{cameraError}</p>
-              )}
-
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   id="barista-camera-toggle-btn"
-                  onClick={() => {
-                    setIsScanning(!isScanning);
-                    setCameraError(null);
-                  }}
-                  className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition shadow-xs ${
-                    isScanning
-                      ? 'bg-red-600 text-white'
-                      : 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
-                  }`}
+                  onClick={() => setShowQrScanner(true)}
+                  className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 text-xs font-bold transition shadow-sm hover:opacity-90 active:scale-98 cursor-pointer"
                 >
-                  {isScanning ? <CameraOff className="w-4 h-4" /> : <Camera className="w-4 h-4" />}
-                  <span>{isScanning ? t('stopScanner') : t('cameraScanner')}</span>
+                  <Camera className="w-4 h-4 text-amber-400 dark:text-amber-600" />
+                  <span>{t('cameraScanner')}</span>
                 </button>
 
                 <button
                   type="button"
                   id="barista-nfc-scan-btn"
-                  onClick={handleStartNfc}
-                  disabled={isListeningNfc}
-                  className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition shadow-xs active:scale-95 disabled:opacity-50"
+                  onClick={() => setShowNfcModal(true)}
+                  className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition shadow-sm active:scale-98 cursor-pointer"
                 >
-                  <Radio className={`w-4 h-4 ${isListeningNfc ? 'animate-spin' : ''}`} />
-                  <span>{isListeningNfc ? (isAr ? 'جاري القراءة...' : 'Reading...') : t('nfcScanBtn')}</span>
+                  <Radio className="w-4 h-4" />
+                  <span>{t('nfcScanBtn')}</span>
                 </button>
               </div>
 
@@ -443,8 +439,8 @@ export const BaristaPanel: React.FC = () => {
                       onClick={() => selectCustomer(c)}
                       className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition ${
                         selectedCustomerId === c.id
-                          ? 'bg-amber-500 text-white border-amber-500'
-                          : 'bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700'
+                          ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
+                          : 'bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-amber-400'
                       }`}
                     >
                       {c.name.split(' ')[0]} ({c.currentStamps}/8)
@@ -750,6 +746,25 @@ export const BaristaPanel: React.FC = () => {
           </form>
         </div>
       )}
+
+      {/* High-Precision Camera QR Scanner Modal */}
+      <QrScanner
+        isOpen={showQrScanner}
+        onClose={() => setShowQrScanner(false)}
+        onScanSuccess={handleQrScanSuccess}
+        title={isAr ? 'مسح رمز بطاقة العميل (QR)' : 'Scan Customer QR Pass'}
+        subtitle={isAr ? 'وجّه كاميرا الجوال نحو رمز QR للبطاقة' : 'Align the customer QR code inside the square frame'}
+      />
+
+      {/* NFC Reader & Emulation Modal */}
+      <NfcScannerModal
+        isOpen={showNfcModal}
+        onClose={() => setShowNfcModal(false)}
+        onCustomerSelected={(cust) => {
+          setSelectedCustomerId(cust.id);
+        }}
+        onOpenQrScanner={() => setShowQrScanner(true)}
+      />
     </div>
   );
 };

@@ -15,11 +15,12 @@ import {
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
 import { CardExportService } from '../../services/cardExportService';
 import { NFCService } from '../../services/nfcService';
+import { CustomerNfcModal } from './CustomerNfcModal';
 
 export const DigitalStampCard: React.FC = () => {
   const { currentCustomer, settings, language, t, triggerToast } = useApp();
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
-  const [nfcTransmitting, setNfcTransmitting] = useState(false);
+  const [showNfcModal, setShowNfcModal] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
   const isAr = language === 'ar';
@@ -57,16 +58,6 @@ export const DigitalStampCard: React.FC = () => {
     } finally {
       setDownloading(false);
     }
-  };
-
-  // Handle NFC Beam / Transmission
-  const handleNfcTransmit = async () => {
-    setNfcTransmitting(true);
-    const res = await NFCService.writeCustomerCard(currentCustomer.cardNumber, currentCustomer.name);
-    setTimeout(() => {
-      setNfcTransmitting(false);
-      triggerToast(res.message);
-    }, 800);
   };
 
   return (
@@ -221,12 +212,11 @@ export const DigitalStampCard: React.FC = () => {
               <button
                 type="button"
                 id="customer-nfc-beam-btn"
-                onClick={handleNfcTransmit}
-                disabled={nfcTransmitting}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-semibold border border-amber-500/30 transition active:scale-95"
+                onClick={() => setShowNfcModal(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-semibold border border-amber-500/30 transition active:scale-95 cursor-pointer"
               >
-                <Radio className={`w-3.5 h-3.5 ${nfcTransmitting ? 'animate-spin' : ''}`} />
-                <span>{nfcTransmitting ? (isAr ? 'جاري البث...' : 'Beaming...') : t('tapToTransmitNfc')}</span>
+                <Radio className="w-3.5 h-3.5" />
+                <span>{t('tapToTransmitNfc')}</span>
               </button>
 
               {/* Download Card Button */}
@@ -235,7 +225,7 @@ export const DigitalStampCard: React.FC = () => {
                 id="customer-download-card-btn"
                 onClick={handleDownloadCard}
                 disabled={downloading}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow-sm transition active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer"
               >
                 <Download className={`w-3.5 h-3.5 ${downloading ? 'animate-bounce' : ''}`} />
                 <span>{downloading ? t('savingCard') : t('downloadCard')}</span>
@@ -258,6 +248,13 @@ export const DigitalStampCard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Customer NFC Modal */}
+      <CustomerNfcModal
+        isOpen={showNfcModal}
+        onClose={() => setShowNfcModal(false)}
+        customer={currentCustomer}
+      />
     </div>
   );
 };
