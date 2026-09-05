@@ -4,15 +4,17 @@ import {
   Check,
   CreditCard,
   HelpCircle,
+  Info,
   QrCode,
   Radio,
   Sparkles,
   Smartphone,
+  Tag,
   X,
   Zap,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { NFCService } from '../../services/nfcService';
+import { NFCService, NfcReadResult } from '../../services/nfcService';
 import { Customer } from '../../types';
 
 interface NfcScannerModalProps {
@@ -34,6 +36,7 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
   const [isHardwareSupported, setIsHardwareSupported] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [hardwareError, setHardwareError] = useState<string | null>(null);
+  const [lastScannedUid, setLastScannedUid] = useState<string | null>(null);
   const [activeStopFn, setActiveStopFn] = useState<(() => void) | null>(null);
 
   useEffect(() => {
@@ -41,31 +44,58 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
       const supported = NFCService.isSupported();
       setIsHardwareSupported(supported);
       setHardwareError(null);
+      setLastScannedUid(null);
 
       if (supported) {
         setIsScanning(true);
-        NFCService.startReading((cardNum) => {
-          const found = customers.find(
-            (c) => c.cardNumber.toLowerCase() === cardNum.toLowerCase()
-          );
-          if (found) {
-            triggerToast(
-              isAr
-                ? `تمت قراءة بطاقة NFC بنجاح: ${found.name}`
-                : `NFC Card Detected: ${found.name}`,
-              'success'
+        NFCService.startReading(
+          (cardNum, readResult: NfcReadResult) => {
+            if (readResult.serialNumber) {
+              setLastScannedUid(readResult.serialNumber);
+            }
+
+            // 1. Match by card number or extracted ID
+            let found = customers.find(
+              (c) =>
+                c.cardNumber.toLowerCase() === cardNum.toLowerCase() ||
+                (c.nfcTagUid &&
+                  readResult.serialNumber &&
+                  c.nfcTagUid.toLowerCase() === readResult.serialNumber.toLowerCase())
             );
-            onCustomerSelected(found);
-            onClose();
-          } else {
-            triggerToast(
-              isAr
-                ? `تمت قراءة الرمز (${cardNum}) لكن العميل غير مسجل`
-                : `NFC Read: ${cardNum} (Customer not found)`,
-              'warning'
-            );
+
+            // 2. Match by phone or ID
+            if (!found) {
+              found = customers.find(
+                (c) => c.phone.includes(cardNum) || c.id === cardNum
+              );
+            }
+
+            if (found) {
+              triggerToast(
+                isAr
+                  ? `تمت قراءة بطاقة NFC بنجاح: ${found.name} ${
+                      readResult.serialNumber ? `(UID: ${readResult.serialNumber})` : ''
+                    }`
+                  : `NFC Card Detected: ${found.name} ${
+                      readResult.serialNumber ? `(UID: ${readResult.serialNumber})` : ''
+                    }`,
+                'success'
+              );
+              onCustomerSelected(found);
+              onClose();
+            } else {
+              triggerToast(
+                isAr
+                  ? `تمت قراءة شريحة (${cardNum}) ولكن لم يتم العثور على عميل مسجل بها.`
+                  : `NFC Read: "${cardNum}" (No registered customer found)`,
+                'warning'
+              );
+            }
+          },
+          (serial) => {
+            if (serial) setLastScannedUid(serial);
           }
-        }).then((res) => {
+        ).then((res) => {
           if (res.success && res.stop) {
             setActiveStopFn(() => res.stop);
           } else if (res.error) {
@@ -128,22 +158,22 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 animate-in fade-in">
-      <div className="relative w-full max-w-md rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4 animate-in fade-in">
+      <div className="relative w-full max-w-md rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden text-stone-900 dark:text-stone-100 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-stone-100 dark:border-stone-800">
+        <div className="flex items-center justify-between p-5 border-b border-stone-100 dark:border-stone-800 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
               <Radio className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
-                {isAr ? 'قارئ تقنية NFC' : 'NFC Card & Tag Reader'}
+              <h3 className="text-base font-bold">
+                {isAr ? 'قارئ تقنية NFC والبطاقات' : 'NFC Card & Tag Reader'}
               </h3>
               <p className="text-xs text-stone-500 dark:text-stone-400">
                 {isHardwareSupported
                   ? isAr
-                    ? 'الاستشعار اللاسلكي نشط'
+                    ? 'المستشعر اللاسلكي نشط (Web NFC)'
                     : 'Hardware Web NFC Active'
                   : isAr
                   ? 'وضع المحاكاة والمسح'
@@ -162,29 +192,35 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-5 overflow-y-auto">
           {/* NFC Radar Visual Animation */}
-          <div className="relative flex flex-col items-center justify-center py-6">
+          <div className="relative flex flex-col items-center justify-center py-4 text-center">
             <div className="relative flex items-center justify-center w-28 h-28">
               {/* Radar waves */}
-              <div className="absolute inset-0 rounded-full bg-amber-500/10 animate-ping duration-1000" />
-              <div className="absolute -inset-3 rounded-full bg-amber-500/5 animate-pulse" />
+              <div className="absolute inset-0 rounded-full bg-amber-500/15 animate-ping duration-1000" />
+              <div className="absolute -inset-3 rounded-full bg-amber-500/10 animate-pulse" />
               <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/30 z-10">
                 <Smartphone className="w-9 h-9" />
               </div>
             </div>
 
-            <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-4 text-center">
+            <h4 className="text-sm font-bold mt-4">
               {isHardwareSupported
                 ? isAr
-                  ? 'قرّب بطاقة أو شريحة NFC من خلف الجوال'
+                  ? 'قرّب بطاقة أو ميدالية NFC من خلف الجوال'
                   : 'Hold physical NFC card / tag near phone'
                 : isAr
                 ? 'جاهز للاستقبال والمسح'
                 : 'Ready for NFC & QR Pass'}
             </h4>
 
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-xs text-center leading-relaxed">
+            {lastScannedUid && (
+              <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold">
+                Tag UID: {lastScannedUid}
+              </span>
+            )}
+
+            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-xs leading-relaxed">
               {isHardwareSupported
                 ? isAr
                   ? 'يتم الاستماع تلقائياً لبطاقات NTAG وشرائح NFC المبرمجة للمتجر.'
@@ -195,34 +231,36 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
             </p>
           </div>
 
-          {/* Quick Camera QR Alternative Button */}
-          <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <QrCode className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
-              <div>
-                <p className="text-xs font-bold text-amber-950 dark:text-amber-200">
-                  {isAr ? 'مسح رمز QR بالكاميرا' : 'Instant Camera QR Scan'}
-                </p>
-                <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80">
-                  {isAr ? 'يعمل على كافة أجهزة الآيفون والأندرويد' : 'Works on all iOS & Android devices'}
-                </p>
-              </div>
+          {/* Educational Phone-to-Phone Tip */}
+          <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-start gap-3 text-xs">
+            <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="font-bold text-amber-950 dark:text-amber-200">
+                {isAr
+                  ? 'لمس الهاتف بالهاتف يهتز بدون نقل البيانات؟'
+                  : 'Touching Phone-to-Phone Vibrates Without Data?'}
+              </p>
+              <p className="text-[11px] text-amber-900/80 dark:text-amber-300/80 leading-relaxed">
+                {isAr
+                  ? 'اهتزاز الهاتف عند لمس جوال آخر هو استشعار تلقائي من نظام أندرويد، ولكن متصفحات الويب لا تدعم البث المباشر بين هاتفين. لنقل البيانات فورياً بين هاتفين، استخدم كاميرا QR أدناه.'
+                  : 'Phone vibration upon touching another phone is a hardware OS collision. Web browsers require physical NFC tags/cards to read data. For phone-to-phone, use the Instant Camera Scanner.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenQrScanner();
+                }}
+                className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                <span>{isAr ? 'فتح ماسح كاميرا QR الفوري' : 'Switch to Camera QR Scanner'}</span>
+              </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onOpenQrScanner();
-              }}
-              className="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-xs transition cursor-pointer shrink-0"
-            >
-              {isAr ? 'فتح الكاميرا' : 'Open Camera'}
-            </button>
           </div>
 
           {/* 1-Tap Quick Customer Tap Simulator */}
-          <div className="space-y-2 pt-1 border-t border-stone-100 dark:border-stone-800">
+          <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Zap className="w-3.5 h-3.5 text-amber-500" />

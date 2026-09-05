@@ -16,6 +16,7 @@ import {
   Radio,
   Search,
   Sparkles,
+  Tag,
   Ticket,
   UserCheck,
   UserPlus,
@@ -26,6 +27,7 @@ import { useApp, TIER_CONFIGS } from '../../context/AppContext';
 import { Customer } from '../../types';
 import { QrScanner } from '../common/QrScanner';
 import { NfcScannerModal } from './NfcScannerModal';
+import { NfcTagWriterModal } from '../common/NfcTagWriterModal';
 
 export const BaristaPanel: React.FC = () => {
   const {
@@ -66,6 +68,7 @@ export const BaristaPanel: React.FC = () => {
   // Scanner Modals
   const [showQrScanner, setShowQrScanner] = useState(false);
   const [showNfcModal, setShowNfcModal] = useState(false);
+  const [showNfcWriterModal, setShowNfcWriterModal] = useState(false);
 
   // Barista PIN auth
   const [pinInput, setPinInput] = useState('');
@@ -597,6 +600,19 @@ export const BaristaPanel: React.FC = () => {
                         ))}
                     </div>
                   )}
+
+                  {/* Program / Write Physical NFC Tag / Keyfob for this customer */}
+                  <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
+                    <button
+                      type="button"
+                      id="barista-program-nfc-tag-btn"
+                      onClick={() => setShowNfcWriterModal(true)}
+                      className="w-full py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 text-xs font-bold transition flex items-center justify-center gap-2 border border-stone-300 dark:border-stone-700 cursor-pointer"
+                    >
+                      <Tag className="w-3.5 h-3.5 text-amber-500" />
+                      <span>{isAr ? 'برمجة بطاقة / ميدالية NFC لهذا العميل' : 'Program Physical NFC Tag / Keyfob'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -765,6 +781,16 @@ export const BaristaPanel: React.FC = () => {
         }}
         onOpenQrScanner={() => setShowQrScanner(true)}
       />
+
+      {/* Program Physical NFC Tag Studio for selected customer */}
+      {selectedCustomer && (
+        <NfcTagWriterModal
+          isOpen={showNfcWriterModal}
+          onClose={() => setShowNfcWriterModal(false)}
+          customer={selectedCustomer}
+          onOpenQrScanner={() => setShowQrScanner(true)}
+        />
+      )}
     </div>
   );
 };

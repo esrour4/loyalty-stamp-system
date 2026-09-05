@@ -53,6 +53,7 @@ export interface Customer {
   lastSpinDate?: string; // YYYY-MM-DD to track spins date
   spinsCountToday?: number; // Number of spins used on lastSpinDate
   coupons: Coupon[];
+  nfcTagUid?: string; // Physical NFC Tag/Card Hardware UID e.g. "04:8b:2e:9a:1c:60:80"
   notes?: string;
 }
 
