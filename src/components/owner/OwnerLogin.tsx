@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import {
   ShieldCheck,
-  Store,
   Lock,
   ArrowRight,
   ArrowLeft,
-  Coffee,
-  KeyRound,
-  CheckCircle2,
-  Sparkles,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -17,8 +12,6 @@ export const OwnerLogin: React.FC = () => {
   const [pinInput, setPinInput] = useState('');
   const isAr = language === 'ar';
 
-  const defaultPin = settings.ownerPin || '1234';
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!pinInput) return;
@@ -26,11 +19,6 @@ export const OwnerLogin: React.FC = () => {
     if (!ok) {
       setPinInput('');
     }
-  };
-
-  const handleQuickDemoFill = () => {
-    setPinInput(defaultPin);
-    ownerLogin(defaultPin);
   };
 
   return (
@@ -86,26 +74,11 @@ export const OwnerLogin: React.FC = () => {
           </button>
         </form>
 
-        {/* Quick Demo Helper */}
-        <div className="pt-4 border-t border-stone-100 dark:border-stone-800 space-y-3">
-          <button
-            type="button"
-            onClick={handleQuickDemoFill}
-            className="w-full flex items-center justify-between p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs font-semibold hover:bg-amber-100 dark:hover:bg-amber-900/60 transition"
-          >
-            <div className="flex items-center gap-2">
-              <KeyRound className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              <span>{isAr ? `الرمز المعتمد: ${defaultPin}` : `Configured PIN: ${defaultPin}`}</span>
-            </div>
-            <span className="font-mono font-bold bg-amber-200/80 dark:bg-amber-800/80 px-2 py-0.5 rounded-md text-[11px]">
-              {isAr ? 'دخول سريع' : 'Quick Login'}
-            </span>
-          </button>
-
+        <div className="pt-4 border-t border-stone-100 dark:border-stone-800 text-center">
           <button
             type="button"
             onClick={() => setRole('customer')}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-stone-900 dark:hover:text-stone-300 transition"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-stone-900 dark:hover:text-stone-300 transition cursor-pointer"
           >
             {isAr ? <ArrowRight className="w-3.5 h-3.5" /> : <ArrowLeft className="w-3.5 h-3.5" />}
             <span>{isAr ? 'العودة لتطبيق العملاء' : 'Back to Customer App'}</span>

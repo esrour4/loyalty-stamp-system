@@ -36,9 +36,9 @@ export interface WheelSettings {
 
 export interface Customer {
   id: string;
-  cardNumber: string; // e.g. "COFFEE-7892"
+  cardNumber: string; // e.g. "100101"
   name: string;
-  phone: string; // e.g. "+966501234567"
+  phone: string; // e.g. "+963944112233"
   dateOfBirth?: string; // YYYY-MM-DD
   status: CustomerStatus;
   currentStamps: number; // 0 to maxStamps (e.g. 8)

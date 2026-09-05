@@ -249,7 +249,12 @@ export class NFCService {
     if (!payload) return null;
     const clean = payload.trim();
 
-    // 1. Direct standard COFFEE-XXXX match
+    // 1. Direct pure numeric card number or standard alphanumeric format
+    if (/^\d{4,12}$/.test(clean)) {
+      return clean;
+    }
+
+    // 2. Direct standard COFFEE-XXXX match
     if (/^COFFEE-[A-Z0-9]+(-[A-Z0-9]+)?$/i.test(clean)) {
       return clean.toUpperCase();
     }

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Coffee, Gift, Sparkles, UserPlus, Users } from 'lucide-react';
+import { Coffee, Sparkles } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export const CustomerLoginRegister: React.FC = () => {
   const {
     loginCustomerByCard,
     registerCustomer,
-    customers,
     t,
     language,
     settings,
@@ -61,11 +60,6 @@ export const CustomerLoginRegister: React.FC = () => {
       return;
     }
     registerCustomer(name, phone, dob, referralCode);
-  };
-
-  const quickLoginAs = (card: string) => {
-    setCardNumberInput(card);
-    loginCustomerByCard(card);
   };
 
   return (
@@ -139,7 +133,7 @@ export const CustomerLoginRegister: React.FC = () => {
                   id="customer-login-card-input"
                   value={cardNumberInput}
                   onChange={(e) => setCardNumberInput(e.target.value)}
-                  placeholder="e.g. COFFEE-1001 or 050..."
+                  placeholder={isAr ? 'رقم البطاقة أو رقم الجوال' : 'Card number or phone number'}
                   className="w-full px-4 py-3 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 placeholder-stone-400 text-sm font-mono tracking-wider focus:outline-hidden focus:ring-2 focus:ring-amber-500"
                 />
               </div>
@@ -148,43 +142,12 @@ export const CustomerLoginRegister: React.FC = () => {
             <button
               type="submit"
               id="customer-login-submit-btn"
-              className="w-full py-3.5 rounded-xl text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-xl text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
               style={{ backgroundColor: settings.theme.accent || '#d97706' }}
             >
               <Coffee className="w-4 h-4" />
               <span>{t('loginBtn')}</span>
             </button>
-
-            {/* Quick Demo Profiles Helper */}
-            <div className="pt-4 border-t border-stone-200 dark:border-stone-800">
-              <span className="block text-[11px] font-semibold text-stone-400 mb-2 uppercase tracking-wider text-center">
-                {isAr ? 'تجربة سريعة (اختر حساب تجريبي)' : 'Quick Demo Test Accounts'}
-              </span>
-              <div className="grid grid-cols-1 gap-2">
-                {customers.slice(0, 3).map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => quickLoginAs(c.cardNumber)}
-                    className="flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-amber-50 dark:hover:bg-stone-700/60 border border-stone-200 dark:border-stone-700 transition text-left"
-                  >
-                    <div>
-                      <p className="text-xs font-bold text-stone-800 dark:text-stone-200">{c.name}</p>
-                      <p className="text-[10px] text-stone-400 font-mono">{c.cardNumber} • {c.currentStamps}/8 stamps</p>
-                    </div>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                        c.status === 'pending'
-                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
-                          : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300'
-                      }`}
-                    >
-                      {c.status === 'pending' ? (isAr ? 'معلق' : 'Pending') : c.tier.toUpperCase()}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
           </form>
         ) : (
           /* Registration Form */
@@ -252,7 +215,7 @@ export const CustomerLoginRegister: React.FC = () => {
             <button
               type="submit"
               id="customer-register-submit-btn"
-              className="w-full mt-2 py-3.5 rounded-xl text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2"
+              className="w-full mt-2 py-3.5 rounded-xl text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
               style={{ backgroundColor: settings.theme.accent || '#d97706' }}
             >
               <Sparkles className="w-4 h-4" />

@@ -15,8 +15,8 @@ export const translations = {
     // Customer Auth
     welcomeBack: "Welcome to",
     loginWithCard: "Card Number Sign-In",
-    enterCardNumber: "Enter your Card Number (e.g. COFFEE-7892)",
-    cardNumberPlaceholder: "COFFEE-XXXX",
+    enterCardNumber: "Enter your Card Number (e.g. 100101)",
+    cardNumberPlaceholder: "Card # (e.g. 100101)",
     orEnterPhone: "Or enter phone number",
     loginBtn: "Access My Rewards",
     notAMember: "New coffee lover? Join our Loyalty Club",
@@ -123,7 +123,7 @@ export const translations = {
     nfcScanBtn: "Scan Physical Card (NFC)",
     issuePhysicalCard: "Issue Physical NFC Card",
     manualSearch: "Search by Card # or Phone",
-    searchPlaceholder: "COFFEE-7892 or 050...",
+    searchPlaceholder: "100101 or 0933...",
     customerFound: "Customer Profile Loaded",
     noCustomerSelected: "Scan a card QR code or search customer number to begin",
     
@@ -364,8 +364,8 @@ export const translations = {
     // Customer Auth
     welcomeBack: "مرحباً بك في",
     loginWithCard: "تسجيل الدخول برقم البطاقة",
-    enterCardNumber: "أدخل رقم بطاقتك (مثال: COFFEE-7892)",
-    cardNumberPlaceholder: "COFFEE-XXXX",
+    enterCardNumber: "أدخل رقم بطاقتك (مثال: 100101)",
+    cardNumberPlaceholder: "رقم البطاقة (مثال: 100101)",
     orEnterPhone: "أو أدخل رقم الجوال",
     loginBtn: "الدخول إلى بطاقتي ومكافآتي",
     notAMember: "عشاق القهوة الجدد؟ انضم لبرنامج الولاء الآن",
@@ -472,7 +472,7 @@ export const translations = {
     nfcScanBtn: "مسح بطاقة ملموسة (NFC)",
     issuePhysicalCard: "إصدار بطاقة NFC ملموسة",
     manualSearch: "بحث برقم البطاقة أو الجوال",
-    searchPlaceholder: "COFFEE-7892 أو 050...",
+    searchPlaceholder: "100101 أو 0933...",
     customerFound: "تم تحميل ملف العميل",
     noCustomerSelected: "امسح رمز QR للبطاقة أو ابحث برقم البطاقة للبدء",
     

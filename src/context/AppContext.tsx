@@ -187,7 +187,7 @@ export const TIER_CONFIGS = DEFAULT_TIER_CONFIGS;
 const INITIAL_CUSTOMERS: Customer[] = [
   {
     id: 'cust_1',
-    cardNumber: 'COFFEE-1001',
+    cardNumber: '100101',
     name: 'سارة العلي (Sara Al-Ali)',
     phone: '+963944112233',
     dateOfBirth: '1995-09-04', // Today matches demo birthday!
@@ -216,7 +216,7 @@ const INITIAL_CUSTOMERS: Customer[] = [
   },
   {
     id: 'cust_2',
-    cardNumber: 'COFFEE-2045',
+    cardNumber: '100202',
     name: 'خالد المنصور (Khalid Al-Mansoor)',
     phone: '+963933445566',
     dateOfBirth: '1992-11-20',
@@ -233,7 +233,7 @@ const INITIAL_CUSTOMERS: Customer[] = [
   },
   {
     id: 'cust_3',
-    cardNumber: 'COFFEE-9812',
+    cardNumber: '100303',
     name: 'نور الشامي (Nour Al-Shami)',
     phone: '+963955667788',
     dateOfBirth: '1998-05-14',
@@ -502,10 +502,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       const parsed: Customer[] = JSON.parse(saved);
       return parsed.map((c) => {
-        if (c.phone.startsWith('+966')) {
-          return { ...c, phone: c.phone.replace('+9665', '+9639') };
+        let updated = { ...c };
+        if (updated.phone.startsWith('+966')) {
+          updated.phone = updated.phone.replace('+9665', '+9639');
         }
-        return c;
+        // Upgrade legacy COFFEE-XXXX cards to pure numeric format
+        if (updated.cardNumber && /^COFFEE-\d+$/i.test(updated.cardNumber)) {
+          const numPart = updated.cardNumber.replace(/\D/g, '');
+          updated.cardNumber = numPart.length >= 4 ? `10${numPart}` : `${Math.floor(100000 + Math.random() * 900000)}`;
+        }
+        return updated;
       });
     }
     return INITIAL_CUSTOMERS;
@@ -734,7 +740,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const registerCustomer = (name: string, phone: string, dob?: string, refCode?: string) => {
-    const cardNum = `COFFEE-${Math.floor(1000 + Math.random() * 9000)}`;
+    // Generate a unique pure numeric card number (6 digits)
+    let cardNum = '';
+    do {
+      cardNum = String(Math.floor(100000 + Math.random() * 900000));
+    } while (customers.some((c) => c.cardNumber === cardNum));
+
     const userRefCode = name.replace(/\s+/g, '').substring(0, 4).toUpperCase() + Math.floor(10 + Math.random() * 90);
 
     const newCustomer: Customer = {

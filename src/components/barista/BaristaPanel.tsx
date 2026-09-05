@@ -133,13 +133,19 @@ export const BaristaPanel: React.FC = () => {
       }
     }
 
-    // 4. Regex match standard pattern COFFEE-XXXX-YYYY
+    // 4. Regex match numeric or legacy card pattern
     if (!found) {
-      const match = raw.match(/COFFEE-[A-Z0-9]+-[A-Z0-9]+/i);
-      if (match) {
-        found = customers.find(
-          (c) => c.cardNumber.toLowerCase() === match[0].toLowerCase()
-        );
+      const numMatch = raw.match(/\b\d{4,10}\b/);
+      if (numMatch) {
+        found = customers.find((c) => c.cardNumber === numMatch[0]);
+      }
+      if (!found) {
+        const legacyMatch = raw.match(/COFFEE-[A-Z0-9\-]+/i);
+        if (legacyMatch) {
+          found = customers.find(
+            (c) => c.cardNumber.toLowerCase() === legacyMatch[0].toLowerCase()
+          );
+        }
       }
     }
 
@@ -228,41 +234,21 @@ export const BaristaPanel: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-md"
+              className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-md cursor-pointer transition active:scale-98"
             >
               {isAr ? 'تسجيل الدخول للكاونتر' : 'Enter Counter'}
             </button>
           </form>
 
-          {/* Quick Demo Baristas */}
-          <div className="mt-6 pt-4 border-t border-stone-100 dark:border-stone-800 text-left rtl:text-right space-y-3">
-            <span className="text-[11px] font-semibold text-stone-400 block mb-2">
-              {isAr ? 'الحسابات المتاحة للتجربة:' : 'Demo Barista Accounts:'}
-            </span>
-            <div className="space-y-1.5">
-              {baristas.map((b) => (
-                <button
-                  key={b.id}
-                  type="button"
-                  onClick={() => baristaLogin(b.pin)}
-                  className="w-full flex items-center justify-between p-2 rounded-xl bg-stone-50 dark:bg-stone-800 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:bg-amber-50 dark:hover:bg-stone-700 transition cursor-pointer"
-                >
-                  <span>{b.name} ({b.branch})</span>
-                  <span className="font-mono text-amber-600 dark:text-amber-400">PIN: {b.pin}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="pt-2 text-center">
-              <button
-                type="button"
-                onClick={() => setRole('customer')}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-stone-900 dark:hover:text-stone-300 transition"
-              >
-                {isAr ? <ArrowRight className="w-3.5 h-3.5" /> : <ArrowLeft className="w-3.5 h-3.5" />}
-                <span>{isAr ? 'العودة لتطبيق العملاء' : 'Back to Customer App'}</span>
-              </button>
-            </div>
+          <div className="mt-6 pt-4 border-t border-stone-100 dark:border-stone-800 text-center">
+            <button
+              type="button"
+              onClick={() => setRole('customer')}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-stone-900 dark:hover:text-stone-300 transition cursor-pointer"
+            >
+              {isAr ? <ArrowRight className="w-3.5 h-3.5" /> : <ArrowLeft className="w-3.5 h-3.5" />}
+              <span>{isAr ? 'العودة لتطبيق العملاء' : 'Back to Customer App'}</span>
+            </button>
           </div>
         </div>
       </div>
