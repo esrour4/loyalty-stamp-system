@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Clock,
   Coffee,
+  CreditCard,
   Gift,
   KeyRound,
   LogOut,
@@ -396,38 +397,74 @@ export const BaristaPanel: React.FC = () => {
               )}
             </div>
 
-            {/* Camera & NFC Scanner Box */}
+            {/* Counter Scanner Hub: QR Code vs Physical Card */}
             <div className="bg-white dark:bg-stone-900 rounded-3xl p-5 shadow-sm border border-stone-200 dark:border-stone-800 space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-stone-700 dark:text-stone-300">
-                  {t('quickScanner')} (QR & NFC)
+                <h3 className="text-xs font-bold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>{isAr ? 'خيارات استقبال العميل بالكاونتر' : 'Counter Reception Scanner'}</span>
                 </h3>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
-                  Live Scanner
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
+                  Ready
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5">
+              {/* Two primary scanning buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {/* 1. Scan QR Code via Camera */}
                 <button
                   type="button"
                   id="barista-camera-toggle-btn"
                   onClick={() => setShowQrScanner(true)}
-                  className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 text-xs font-bold transition shadow-sm hover:opacity-90 active:scale-98 cursor-pointer"
+                  className="flex flex-col items-center justify-center p-4 rounded-2xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-sm hover:opacity-90 active:scale-98 transition cursor-pointer border border-stone-800 dark:border-stone-200 text-center"
                 >
-                  <Camera className="w-4 h-4 text-amber-400 dark:text-amber-600" />
-                  <span>{t('cameraScanner')}</span>
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 dark:text-amber-600 flex items-center justify-center mb-2">
+                    <QrCode className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-bold block mb-0.5">
+                    {isAr ? 'مسح رمز QR' : 'Scan QR Code'}
+                  </span>
+                  <span className="text-[10px] text-stone-400 dark:text-stone-600 leading-tight">
+                    {isAr ? 'من شاشة جوال العميل' : 'From customer phone'}
+                  </span>
                 </button>
 
+                {/* 2. Scan Physical Card via NFC */}
                 <button
                   type="button"
                   id="barista-nfc-scan-btn"
                   onClick={() => setShowNfcModal(true)}
-                  className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition shadow-sm active:scale-98 cursor-pointer"
+                  className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white shadow-sm active:scale-98 transition cursor-pointer text-center"
                 >
-                  <Radio className="w-4 h-4" />
-                  <span>{t('nfcScanBtn')}</span>
+                  <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center mb-2">
+                    <CreditCard className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-bold block mb-0.5">
+                    {isAr ? 'مسح بطاقة ملموسة' : 'Scan Physical Card'}
+                  </span>
+                  <span className="text-[10px] text-amber-100 leading-tight">
+                    {isAr ? 'تمرير بطاقة أو ميدالية NFC' : 'Tap plastic card / NFC tag'}
+                  </span>
                 </button>
               </div>
+
+              {/* Issue Physical Card Quick Trigger */}
+              {selectedCustomer && (
+                <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
+                  <button
+                    type="button"
+                    onClick={() => setShowNfcWriterModal(true)}
+                    className="w-full py-2.5 px-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-amber-900 dark:text-amber-200 border border-amber-300/60 dark:border-amber-700/60 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Tag className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                    <span>
+                      {isAr
+                        ? `إصدار وبرمجة بطاقة NFC لـ ${selectedCustomer.name}`
+                        : `Issue Physical NFC Card for ${selectedCustomer.name}`}
+                    </span>
+                  </button>
+                </div>
+              )}
 
               {/* Quick Preset Customers Bar */}
               <div className="pt-2 border-t border-stone-100 dark:border-stone-800">

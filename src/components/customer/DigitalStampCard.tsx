@@ -8,19 +8,15 @@ import {
   Flame,
   Gift,
   QrCode,
-  Radio,
   Share2,
   Sparkles,
 } from 'lucide-react';
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
 import { CardExportService } from '../../services/cardExportService';
-import { NFCService } from '../../services/nfcService';
-import { CustomerNfcModal } from './CustomerNfcModal';
 
 export const DigitalStampCard: React.FC = () => {
   const { currentCustomer, settings, language, t, triggerToast } = useApp();
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
-  const [showNfcModal, setShowNfcModal] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
   const isAr = language === 'ar';
@@ -123,63 +119,68 @@ export const DigitalStampCard: React.FC = () => {
           </div>
         </div>
 
-        {/* Stamps Progress Visual Grid */}
+        {/* Dynamic Stamp Grid Visual */}
         <div className="relative z-10 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-stone-300">
-              {t('stampProgress')} ({currentStamps} / {maxStamps})
+            <span className="text-xs font-semibold text-stone-300 flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5 text-amber-500" />
+              <span>{t('stampsProgress')}</span>
             </span>
             <span className="text-xs font-bold text-amber-400">
-              {stampsRemaining === 0
-                ? isAr
-                  ? '☕ مشروب مجاني جاهز!'
-                  : '☕ Free Drink Ready!'
-                : t('stampsRemaining', { count: stampsRemaining })}
+              {currentStamps} / {maxStamps} {t('stamps')}
             </span>
           </div>
 
-          {/* 8-Grid Stamp Cups */}
-          <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
-            {Array.from({ length: maxStamps }).map((_, idx) => {
-              const isStamped = idx < currentStamps;
-              const isTarget = idx === maxStamps - 1;
+          {/* Stamp circles grid */}
+          <div className="grid grid-cols-4 gap-2.5 sm:gap-3 p-3.5 rounded-2xl bg-black/40 border border-amber-500/20 backdrop-blur-xs">
+            {Array.from({ length: maxStamps }).map((_, index) => {
+              const isStamped = index < currentStamps;
+              const isRewardSlot = index === maxStamps - 1;
 
               return (
                 <div
-                  key={idx}
-                  className={`relative flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-300 aspect-square ${
+                  key={index}
+                  className={`relative flex flex-col items-center justify-center aspect-square rounded-2xl transition-all duration-300 ${
                     isStamped
-                      ? 'bg-gradient-to-br from-amber-500 to-amber-700 text-stone-950 shadow-lg shadow-amber-900/30 scale-102 ring-2 ring-amber-300/40'
-                      : isTarget
-                      ? 'bg-stone-900/90 border-2 border-dashed border-amber-500/60 text-amber-400'
-                      : 'bg-stone-900/60 border border-stone-800 text-stone-500'
+                      ? 'bg-gradient-to-tr from-amber-600 to-amber-400 text-stone-950 shadow-md shadow-amber-500/30 scale-100'
+                      : isRewardSlot
+                      ? 'bg-amber-950/40 border border-dashed border-amber-500/60 text-amber-400'
+                      : 'bg-stone-900/60 border border-stone-800 text-stone-600'
                   }`}
                 >
                   {isStamped ? (
-                    <>
-                      <Coffee className="w-6 h-6 text-stone-950 stroke-[2.5]" />
-                      <CheckCircle2 className="w-3.5 h-3.5 absolute top-1.5 right-1.5 text-stone-950" />
-                    </>
-                  ) : isTarget ? (
-                    <>
-                      <Gift className="w-6 h-6 animate-pulse text-amber-400" />
-                      <span className="text-[9px] font-extrabold uppercase mt-1 text-amber-300">
-                        {isAr ? 'مجاني' : 'FREE'}
-                      </span>
-                    </>
+                    <div className="flex flex-col items-center justify-center animate-in zoom-in-50 duration-300">
+                      <Coffee className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
+                      <CheckCircle2 className="w-3 h-3 absolute top-1 right-1 text-stone-950" />
+                    </div>
+                  ) : isRewardSlot ? (
+                    <Gift className="w-5 h-5 animate-pulse" />
                   ) : (
-                    <>
-                      <Coffee className="w-5 h-5 opacity-40" />
-                      <span className="text-[10px] font-mono mt-1 font-bold">{idx + 1}</span>
-                    </>
+                    <span className="text-xs font-mono font-bold">{index + 1}</span>
                   )}
                 </div>
               );
             })}
           </div>
+
+          {/* Free drink progress encouragement text */}
+          <p className="text-center text-xs text-amber-200/90 mt-2.5 font-medium">
+            {stampsRemaining === 0 ? (
+              <span className="text-emerald-400 font-bold flex items-center justify-center gap-1">
+                <Sparkles className="w-3.5 h-3.5" />
+                {isAr ? 'مبروك! مشروبك القادم مجاناً ☕' : 'Congratulations! Your next coffee is FREE! ☕'}
+              </span>
+            ) : (
+              <span>
+                {isAr
+                  ? `تبقّى ${stampsRemaining} أختام للحصول على مشروب مجاني!`
+                  : `Only ${stampsRemaining} stamps left until your free drink!`}
+              </span>
+            )}
+          </p>
         </div>
 
-        {/* QR Code and NFC Beam Hub */}
+        {/* QR Code Presentation Hub */}
         <div className="relative z-10 p-4 rounded-2xl bg-stone-900/80 border border-stone-800/80 flex flex-col sm:flex-row items-center gap-4">
           {/* QR Code */}
           <div className="shrink-0 bg-white p-2 rounded-xl shadow-md">
@@ -199,33 +200,22 @@ export const DigitalStampCard: React.FC = () => {
           {/* Quick Counter Info */}
           <div className="flex-1 text-center sm:text-left rtl:sm:text-right">
             <p className="text-xs font-semibold text-stone-200 mb-1">
-              {t('scanOrNfcAtCounter')}
+              {isAr ? 'امسح رمز QR عند الكاشير' : 'Scan QR at Counter'}
             </p>
-            <p className="text-[11px] text-stone-400 mb-3">
+            <p className="text-[11px] text-stone-400 mb-3 leading-relaxed">
               {isAr
-                ? 'أظهر الرمز للباريستا عند الطلب لإضافة الأختام واستبدال الهدايا فورياً.'
-                : 'Present this QR code or tap phone to instantly collect coffee stamps.'}
+                ? 'أظهر الرمز للباريستا عند الطلب لإضافة الأختام واستبدال المكافآت فورياً.'
+                : 'Present this QR code to the barista to collect stamps and redeem rewards.'}
             </p>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-              {/* NFC Transmit Button */}
-              <button
-                type="button"
-                id="customer-nfc-beam-btn"
-                onClick={() => setShowNfcModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-semibold border border-amber-500/30 transition active:scale-95 cursor-pointer"
-              >
-                <Radio className="w-3.5 h-3.5" />
-                <span>{t('tapToTransmitNfc')}</span>
-              </button>
-
               {/* Download Card Button */}
               <button
                 type="button"
                 id="customer-download-card-btn"
                 onClick={handleDownloadCard}
                 disabled={downloading}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer"
               >
                 <Download className={`w-3.5 h-3.5 ${downloading ? 'animate-bounce' : ''}`} />
                 <span>{downloading ? t('savingCard') : t('downloadCard')}</span>
@@ -248,13 +238,6 @@ export const DigitalStampCard: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Customer NFC Modal */}
-      <CustomerNfcModal
-        isOpen={showNfcModal}
-        onClose={() => setShowNfcModal(false)}
-        customer={currentCustomer}
-      />
     </div>
   );
 };

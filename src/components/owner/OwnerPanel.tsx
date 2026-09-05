@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Clock,
   Coffee,
+  CreditCard,
   DollarSign,
   Edit2,
   Edit3,
@@ -30,6 +31,7 @@ import {
   Sparkles,
   Star,
   Store,
+  Tag,
   Trash2,
   TrendingUp,
   UserCheck,
@@ -46,6 +48,7 @@ import { CustomerEditModal } from './CustomerEditModal';
 import { BaristaEditModal } from './BaristaEditModal';
 import { ChangeOwnerPinModal } from './ChangeOwnerPinModal';
 import { OwnerLogin } from './OwnerLogin';
+import { NfcTagWriterModal } from '../common/NfcTagWriterModal';
 
 export const OwnerPanel: React.FC = () => {
   const {
@@ -87,6 +90,10 @@ export const OwnerPanel: React.FC = () => {
   // Customer Edit Modal State
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [showCustomerEditModal, setShowCustomerEditModal] = useState(false);
+
+  // NFC Physical Tag Writer Modal State
+  const [nfcCustomer, setNfcCustomer] = useState<Customer | null>(null);
+  const [showNfcWriterModal, setShowNfcWriterModal] = useState(false);
 
   // Barista Edit Modal State
   const [editingBarista, setEditingBarista] = useState<Barista | null>(null);
@@ -938,6 +945,25 @@ export const OwnerPanel: React.FC = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              {/* Issue Physical NFC Card Button */}
+              <button
+                type="button"
+                id="owner-issue-nfc-card-btn"
+                onClick={() => {
+                  if (filteredCustomerList.length > 0) {
+                    setNfcCustomer(filteredCustomerList[0]);
+                    setShowNfcWriterModal(true);
+                  } else if (customers.length > 0) {
+                    setNfcCustomer(customers[0]);
+                    setShowNfcWriterModal(true);
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
+              >
+                <Tag className="w-3.5 h-3.5" />
+                <span>{isAr ? 'إصدار وبرمجة بطاقة NFC' : 'Issue Physical NFC Card'}</span>
+              </button>
+
               {/* Filter */}
               <select
                 value={customerFilter}
@@ -1080,6 +1106,19 @@ export const OwnerPanel: React.FC = () => {
                                 title={t('editCustomer')}
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
+                              </button>
+
+                              {/* Issue / Program Physical NFC Tag Button */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setNfcCustomer(c);
+                                  setShowNfcWriterModal(true);
+                                }}
+                                className="p-1.5 rounded-lg text-stone-600 hover:text-amber-600 hover:bg-amber-50 dark:text-stone-400 dark:hover:text-amber-400 dark:hover:bg-amber-950/40 transition"
+                                title={isAr ? 'إصدار وبرمجة بطاقة NFC' : 'Issue / Program Physical NFC Card'}
+                              >
+                                <Tag className="w-3.5 h-3.5" />
                               </button>
 
                               {/* Toggle Status (Disable / Enable) Button */}
@@ -1876,6 +1915,18 @@ export const OwnerPanel: React.FC = () => {
           toggleCustomerStatus(customerId, newStatus);
         }}
       />
+
+      {/* Modal: Issue & Program Physical NFC Loyalty Card */}
+      {nfcCustomer && (
+        <NfcTagWriterModal
+          isOpen={showNfcWriterModal}
+          onClose={() => {
+            setShowNfcWriterModal(false);
+            setNfcCustomer(null);
+          }}
+          customer={nfcCustomer}
+        />
+      )}
     </div>
   );
 };

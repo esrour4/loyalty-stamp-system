@@ -36,11 +36,14 @@ interface NfcTagWriterModalProps {
 export const NfcTagWriterModal: React.FC<NfcTagWriterModalProps> = ({
   isOpen,
   onClose,
-  customer,
+  customer: initialCustomer,
   onOpenQrScanner,
 }) => {
-  const { language, t, triggerToast, updateCustomer } = useApp();
+  const { customers, language, t, triggerToast, updateCustomer } = useApp();
   const isAr = language === 'ar';
+
+  const [activeCustomerId, setActiveCustomerId] = useState(initialCustomer.id);
+  const customer = customers.find((c) => c.id === activeCustomerId) || initialCustomer;
 
   const [isHardwareSupported, setIsHardwareSupported] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<'smart' | 'compact' | 'url' | 'json'>('smart');
@@ -56,12 +59,13 @@ export const NfcTagWriterModal: React.FC<NfcTagWriterModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      setActiveCustomerId(initialCustomer.id);
       setIsHardwareSupported(NFCService.isSupported());
       setStatus('idle');
       setErrorMessage(null);
-      setDetectedTagUid(customer.nfcTagUid || null);
+      setDetectedTagUid(initialCustomer.nfcTagUid || null);
     }
-  }, [isOpen, customer]);
+  }, [isOpen, initialCustomer]);
 
   if (!isOpen) return null;
 
@@ -181,25 +185,47 @@ export const NfcTagWriterModal: React.FC<NfcTagWriterModalProps> = ({
 
         {/* Scrollable Content Body */}
         <div className="p-6 space-y-6 overflow-y-auto">
-          {/* Target Customer Card Banner */}
-          <div className="p-4 rounded-2xl bg-stone-900 text-white dark:bg-stone-800/90 border border-amber-500/30 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">
-                {isAr ? 'بيانات البطاقة المستهدفة' : 'Target Customer Card'}
-              </span>
-              <p className="text-sm font-bold mt-0.5">{customer.name}</p>
-              <p className="text-xs font-mono text-stone-400 mt-0.5">{customer.cardNumber} • {customer.phone}</p>
-            </div>
-            <div className="text-right">
-              <span className="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                {customer.currentStamps}/8 ☕
-              </span>
-              {detectedTagUid && (
-                <span className="block text-[9px] font-mono text-stone-400 mt-1.5 truncate max-w-[120px]">
-                  UID: {detectedTagUid}
+          {/* Target Customer Card Banner & Customer Selector */}
+          <div className="p-4 rounded-2xl bg-stone-900 text-white dark:bg-stone-800/90 border border-amber-500/30 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">
+                  {isAr ? 'بيانات البطاقة المستهدفة' : 'Target Customer Card'}
                 </span>
-              )}
+                <p className="text-sm font-bold mt-0.5">{customer.name}</p>
+                <p className="text-xs font-mono text-stone-400 mt-0.5">{customer.cardNumber} • {customer.phone}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  {customer.currentStamps}/8 ☕
+                </span>
+                {detectedTagUid && (
+                  <span className="block text-[9px] font-mono text-stone-400 mt-1.5 truncate max-w-[120px]">
+                    UID: {detectedTagUid}
+                  </span>
+                )}
+              </div>
             </div>
+
+            {/* Quick Customer Switcher if multiple customers exist */}
+            {customers.length > 1 && (
+              <div className="pt-2 border-t border-stone-800 flex items-center gap-2">
+                <span className="text-[10px] text-stone-400 whitespace-nowrap">
+                  {isAr ? 'تبديل العميل:' : 'Switch Member:'}
+                </span>
+                <select
+                  value={customer.id}
+                  onChange={(e) => setActiveCustomerId(e.target.value)}
+                  className="w-full text-xs font-semibold py-1 px-2 rounded-lg bg-stone-800 border border-stone-700 text-stone-200 focus:outline-hidden"
+                >
+                  {customers.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} ({c.cardNumber}) - {c.currentStamps}/8 ☕
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Educational Note regarding Mobile-to-Mobile Touch vs Physical NFC Tag */}
