@@ -236,7 +236,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                {t('dobLabel')}
+                {t('dob')}
               </label>
               <input
                 type="date"
@@ -248,7 +248,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                {t('referralCode')}
+                {t('yourReferralCode')}
               </label>
               <input
                 type="text"
@@ -296,7 +296,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                  {t('totalPoints')}
+                  {t('pointsBalance')}
                 </label>
                 <input
                   type="number"

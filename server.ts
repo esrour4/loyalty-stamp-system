@@ -281,8 +281,39 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
+
+    // 1. Serve hashed static assets with immutable long-term caching
+    app.use(
+      '/assets',
+      express.static(path.join(distPath, 'assets'), {
+        maxAge: '1y',
+        immutable: true,
+      })
+    );
+
+    // 2. Prevent returning HTML for missing assets (avoids SyntaxError '<' in script tags)
+    app.use('/assets/*', (req, res) => {
+      res.status(404).type('text/plain').send('Asset not found');
+    });
+
+    // 3. Serve other public static files with no HTML caching
+    app.use(
+      express.static(distPath, {
+        setHeaders: (res, filePath) => {
+          if (filePath.endsWith('.html') || filePath.endsWith('.json') || filePath.endsWith('.webmanifest')) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+          }
+        },
+      })
+    );
+
+    // 4. SPA Fallback with strict no-cache headers on index.html
     app.get('*', (req, res) => {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

@@ -124,7 +124,7 @@ export const DigitalStampCard: React.FC = () => {
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-stone-300 flex items-center gap-1.5">
               <Flame className="w-3.5 h-3.5 text-amber-500" />
-              <span>{t('stampsProgress')}</span>
+              <span>{t('stampProgress')}</span>
             </span>
             <span className="text-xs font-bold text-amber-400">
               {currentStamps} / {maxStamps} {t('stamps')}

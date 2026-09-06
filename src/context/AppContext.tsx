@@ -444,66 +444,108 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+function safeGetStorage<T>(key: string, fallback: T): T {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return parsed !== null && parsed !== undefined ? parsed : fallback;
+  } catch (err) {
+    console.warn(`[LocalStorage Safe Recovery] Could not parse "${key}". Resetting.`, err);
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {}
+    return fallback;
+  }
+}
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Load initial states from localStorage with graceful fallback
   const [role, setRole] = useState<UserRole>(() => {
-    return (localStorage.getItem('coffee_role') as UserRole) || 'customer';
+    try {
+      const saved = localStorage.getItem('coffee_role') as UserRole;
+      return saved === 'customer' || saved === 'barista' || saved === 'owner' ? saved : 'customer';
+    } catch (e) {
+      return 'customer';
+    }
   });
 
   const [language, setLanguageState] = useState<Language>(() => {
-    return (localStorage.getItem('coffee_lang') as Language) || 'ar'; // Middle-Eastern default Arabic
+    try {
+      const saved = localStorage.getItem('coffee_lang') as Language;
+      return saved === 'en' || saved === 'ar' ? saved : 'ar';
+    } catch (e) {
+      return 'ar';
+    }
   });
 
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem('coffee_dark');
-    return saved !== null ? saved === 'true' : false;
+    try {
+      const saved = localStorage.getItem('coffee_dark');
+      return saved !== null ? saved === 'true' : false;
+    } catch (e) {
+      return false;
+    }
   });
 
   const [settings, setSettings] = useState<StoreSettings>(() => {
-    const saved = localStorage.getItem('coffee_settings');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.currency === 'SAR') {
-        parsed.currency = 'SYP';
+    try {
+      const raw = localStorage.getItem('coffee_settings');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          if (parsed.currency === 'SAR') {
+            parsed.currency = 'SYP';
+          }
+          if (
+            parsed.zender &&
+            parsed.zender.welcomeTemplate &&
+            !parsed.zender.welcomeTemplate.includes('{login_link}') &&
+            !parsed.zender.welcomeTemplate.includes('{login_url}')
+          ) {
+            parsed.zender.welcomeTemplate =
+              parsed.zender.welcomeTemplate.trim() + '\n\n🔗 رابط بطاقتك ودخول حسابك المباشر:\n{login_link}';
+          }
+          return {
+            ...DEFAULT_SETTINGS,
+            ...parsed,
+            theme: {
+              ...DEFAULT_SETTINGS.theme,
+              ...(parsed.theme || {}),
+            },
+            tiers: parsed.tiers || DEFAULT_TIER_CONFIGS,
+            wheel: {
+              ...DEFAULT_SETTINGS.wheel,
+              ...(parsed.wheel || {}),
+              sectors:
+                parsed.wheel?.sectors && Array.isArray(parsed.wheel.sectors) && parsed.wheel.sectors.length > 0
+                  ? parsed.wheel.sectors
+                  : DEFAULT_SETTINGS.wheel.sectors,
+            },
+          };
+        }
       }
-      // Ensure welcome template has login_link variable
-      if (parsed.zender && parsed.zender.welcomeTemplate && !parsed.zender.welcomeTemplate.includes('{login_link}') && !parsed.zender.welcomeTemplate.includes('{login_url}')) {
-        parsed.zender.welcomeTemplate = parsed.zender.welcomeTemplate.trim() + '\n\n🔗 رابط بطاقتك ودخول حسابك المباشر:\n{login_link}';
-      }
-      return {
-        ...DEFAULT_SETTINGS,
-        ...parsed,
-        tiers: parsed.tiers || DEFAULT_TIER_CONFIGS,
-        wheel: {
-          ...DEFAULT_SETTINGS.wheel,
-          ...(parsed.wheel || {}),
-          sectors:
-            parsed.wheel?.sectors && Array.isArray(parsed.wheel.sectors) && parsed.wheel.sectors.length > 0
-              ? parsed.wheel.sectors
-              : DEFAULT_SETTINGS.wheel.sectors,
-        },
-      };
+    } catch (e) {
+      console.warn('[Settings recovery]', e);
     }
     return DEFAULT_SETTINGS;
   });
 
   const [tierConfigs, setTierConfigs] = useState<Record<TierLevel, TierConfig>>(() => {
-    const saved = localStorage.getItem('coffee_tiers');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {}
+    const loaded = safeGetStorage<Record<TierLevel, TierConfig> | null>('coffee_tiers', null);
+    if (loaded && typeof loaded === 'object' && loaded.bronze && loaded.silver) {
+      return loaded;
     }
     return DEFAULT_SETTINGS.tiers || DEFAULT_TIER_CONFIGS;
   });
 
   const [customers, setCustomers] = useState<Customer[]>(() => {
-    const saved = localStorage.getItem('coffee_customers');
-    if (saved) {
-      const parsed: Customer[] = JSON.parse(saved);
-      return parsed.map((c) => {
+    const loaded = safeGetStorage<Customer[]>('coffee_customers', INITIAL_CUSTOMERS);
+    if (Array.isArray(loaded)) {
+      return loaded.map((c) => {
         let updated = { ...c };
-        if (updated.phone.startsWith('+966')) {
+        if (updated.phone && updated.phone.startsWith('+966')) {
           updated.phone = updated.phone.replace('+9665', '+9639');
         }
         // Upgrade legacy COFFEE-XXXX cards to pure numeric format
@@ -518,28 +560,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [baristas, setBaristas] = useState<Barista[]>(() => {
-    const saved = localStorage.getItem('coffee_baristas');
-    return saved ? JSON.parse(saved) : INITIAL_BARISTAS;
+    const loaded = safeGetStorage<Barista[]>('coffee_baristas', INITIAL_BARISTAS);
+    return Array.isArray(loaded) ? loaded : INITIAL_BARISTAS;
   });
 
   const [rewards, setRewards] = useState<RewardItem[]>(() => {
-    const saved = localStorage.getItem('coffee_rewards');
-    return saved ? JSON.parse(saved) : INITIAL_REWARDS;
+    const loaded = safeGetStorage<RewardItem[]>('coffee_rewards', INITIAL_REWARDS);
+    return Array.isArray(loaded) ? loaded : INITIAL_REWARDS;
   });
 
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
-    const saved = localStorage.getItem('coffee_txs');
-    return saved ? JSON.parse(saved) : INITIAL_TRANSACTIONS;
+    const loaded = safeGetStorage<Transaction[]>('coffee_txs', INITIAL_TRANSACTIONS);
+    return Array.isArray(loaded) ? loaded : INITIAL_TRANSACTIONS;
   });
 
   const [feedbackList, setFeedbackList] = useState<SurveyFeedback[]>(() => {
-    const saved = localStorage.getItem('coffee_feedback');
-    return saved ? JSON.parse(saved) : INITIAL_FEEDBACK;
+    const loaded = safeGetStorage<SurveyFeedback[]>('coffee_feedback', INITIAL_FEEDBACK);
+    return Array.isArray(loaded) ? loaded : INITIAL_FEEDBACK;
   });
 
   const [whatsAppLogs, setWhatsAppLogs] = useState<WhatsAppLog[]>(() => {
-    const saved = localStorage.getItem('coffee_wa_logs');
-    return saved ? JSON.parse(saved) : [];
+    const loaded = safeGetStorage<WhatsAppLog[]>('coffee_wa_logs', []);
+    return Array.isArray(loaded) ? loaded : [];
   });
 
   const [notifications, setNotifications] = useState<BroadcastNotification[]>([]);
@@ -547,24 +589,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Auth state defaults to logged-out (null/false) on new devices/sessions
   const [currentCustomerId, setCurrentCustomerId] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('coffee_current_customer_id') || null;
+    try {
+      return localStorage.getItem('coffee_current_customer_id') || null;
+    } catch (e) {
+      return null;
+    }
   });
 
   const [activeBarista, setActiveBarista] = useState<Barista | null>(() => {
     if (typeof window === 'undefined') return null;
-    const savedId = sessionStorage.getItem('coffee_active_barista_id');
-    if (savedId) {
-      const savedBaristas = localStorage.getItem('coffee_baristas');
-      const list: Barista[] = savedBaristas ? JSON.parse(savedBaristas) : INITIAL_BARISTAS;
-      return list.find((b) => b.id === savedId && b.active) || null;
-    }
+    try {
+      const savedId = sessionStorage.getItem('coffee_active_barista_id');
+      if (savedId) {
+        const savedBaristas = safeGetStorage<Barista[]>('coffee_baristas', INITIAL_BARISTAS);
+        return savedBaristas.find((b) => b.id === savedId && b.active) || null;
+      }
+    } catch (e) {}
     return null;
   });
 
   const [isOwnerAuthenticated, setIsOwnerAuthenticated] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
-    const saved = sessionStorage.getItem('coffee_owner_auth');
-    return saved === 'true';
+    try {
+      const saved = sessionStorage.getItem('coffee_owner_auth');
+      return saved === 'true';
+    } catch (e) {
+      return false;
+    }
   });
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
@@ -1093,7 +1144,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     // Check if using stamp card or coupon
-    let updatedCoupons = [...target.currentCoupons || target.coupons];
+    let updatedCoupons = [...(target.coupons || [])];
     let stampsDeducted = 0;
 
     const freeCouponIdx = updatedCoupons.findIndex((cp) => !cp.used && cp.discountType === 'free_item');
