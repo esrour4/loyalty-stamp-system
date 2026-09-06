@@ -99,7 +99,7 @@ export interface Transaction {
   customerId: string;
   customerName: string;
   cardNumber: string;
-  type: 'stamp_add' | 'stamp_redeem' | 'points_redeem' | 'wheel_reward' | 'referral_bonus' | 'birthday_gift' | 'survey_bonus';
+  type: 'stamp_add' | 'stamp_redeem' | 'points_redeem' | 'points_refund' | 'wheel_reward' | 'referral_bonus' | 'birthday_gift' | 'survey_bonus';
   stampsChanged: number;
   pointsChanged: number;
   detailsEn: string;

@@ -408,6 +408,8 @@ interface AppContextType {
   addStamps: (customerId: string, stampsToAdd: number, baristaName?: string) => Promise<void>;
   redeemFreeDrink: (customerId: string, baristaName?: string) => Promise<void>;
   redeemCatalogReward: (customerId: string, rewardId: string, baristaName?: string) => Promise<{ success: boolean; message: string }>;
+  refundOrReplacePointsReward: (customerId: string, pointsToRefund: number, reason: string, baristaName?: string) => Promise<{ success: boolean; message: string }>;
+  redeemCustomPointsGift: (customerId: string, pointsCost: number, giftDescription: string, baristaName?: string) => Promise<{ success: boolean; message: string }>;
   redeemCoupon: (customerId: string, couponId: string, baristaName?: string) => Promise<{ success: boolean; message: string }>;
   spinWheel: (customerId: string) => {
     success: boolean;
@@ -1247,6 +1249,109 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   };
 
+  // Refund or Replace Points Reward (e.g. swap gift, customer refund, or out-of-stock replacement)
+  const refundOrReplacePointsReward = async (
+    customerId: string,
+    pointsToRefund: number,
+    reason: string,
+    baristaName: string = 'Barista'
+  ) => {
+    const target = customers.find((c) => c.id === customerId);
+    if (!target) return { success: false, message: 'Customer not found' };
+
+    const updated: Customer = {
+      ...target,
+      totalPoints: target.totalPoints + pointsToRefund,
+    };
+
+    setCustomers((prev) => prev.map((c) => (c.id === customerId ? updated : c)));
+
+    const newTx: Transaction = {
+      id: 'tx_' + Date.now(),
+      customerId: target.id,
+      customerName: target.name,
+      cardNumber: target.cardNumber,
+      type: 'points_refund',
+      stampsChanged: 0,
+      pointsChanged: pointsToRefund,
+      detailsEn: `Points Refund / Gift Replacement: ${reason} (+${pointsToRefund} pts)`,
+      detailsAr: `استرجاع نقاط / تبديل الهدية: ${reason} (+${pointsToRefund} نقطة)`,
+      performedBy: baristaName,
+      createdAt: new Date().toISOString(),
+    };
+    setTransactions((prev) => [newTx, ...prev]);
+
+    triggerToast(
+      language === 'ar'
+        ? `تم استرجاع/تبديل النقاط بنجاح (+${pointsToRefund} نقطة للعميل ${target.name})`
+        : `Refunded/Replaced ${pointsToRefund} points for ${target.name} successfully`,
+      'success'
+    );
+
+    return {
+      success: true,
+      message: language === 'ar' ? 'تمت تسوية النقاط بنجاح' : 'Points adjusted successfully',
+    };
+  };
+
+  // Redeem custom gift with points
+  const redeemCustomPointsGift = async (
+    customerId: string,
+    pointsCost: number,
+    giftDescription: string,
+    baristaName: string = 'Barista'
+  ) => {
+    const target = customers.find((c) => c.id === customerId);
+    if (!target) return { success: false, message: 'Customer not found' };
+    if (target.totalPoints < pointsCost) {
+      return {
+        success: false,
+        message: language === 'ar' ? 'رصيد نقاط العميل غير كافٍ' : 'Customer has insufficient points',
+      };
+    }
+
+    const updated: Customer = {
+      ...target,
+      totalPoints: target.totalPoints - pointsCost,
+    };
+
+    setCustomers((prev) => prev.map((c) => (c.id === customerId ? updated : c)));
+
+    const newTx: Transaction = {
+      id: 'tx_' + Date.now(),
+      customerId: target.id,
+      customerName: target.name,
+      cardNumber: target.cardNumber,
+      type: 'points_redeem',
+      stampsChanged: 0,
+      pointsChanged: -pointsCost,
+      detailsEn: `Redeemed Custom Gift: ${giftDescription} (-${pointsCost} pts)`,
+      detailsAr: `صرف هدية مخصصة: ${giftDescription} (-${pointsCost} نقطة)`,
+      performedBy: baristaName,
+      createdAt: new Date().toISOString(),
+    };
+    setTransactions((prev) => [newTx, ...prev]);
+
+    if (activeBarista) {
+      setBaristas((prev) =>
+        prev.map((b) => (b.id === activeBarista.id ? { ...b, totalRedemptions: b.totalRedemptions + 1 } : b))
+      );
+    }
+
+    confetti({ particleCount: 80, spread: 60 });
+    triggerToast(
+      language === 'ar'
+        ? `تم صرف الهدية (${giftDescription}) بنجاح! (-${pointsCost} نقطة)`
+        : `Custom gift (${giftDescription}) redeemed successfully! (-${pointsCost} pts)`,
+      'success'
+    );
+
+    return {
+      success: true,
+      message: language === 'ar' ? 'تم صرف الهدية بنجاح' : 'Gift redeemed successfully',
+    };
+  };
+
   // Redeem Coupon
   const redeemCoupon = async (customerId: string, couponId: string, baristaName: string = 'Barista') => {
     const target = customers.find((c) => c.id === customerId);
@@ -1657,6 +1762,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addStamps,
         redeemFreeDrink,
         redeemCatalogReward,
+        refundOrReplacePointsReward,
+        redeemCustomPointsGift,
         redeemCoupon,
         spinWheel,
         submitFeedback,
