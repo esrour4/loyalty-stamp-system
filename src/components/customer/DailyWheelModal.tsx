@@ -75,38 +75,38 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ isOpen, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md rounded-3xl bg-stone-900 border border-amber-500/40 p-6 text-white shadow-2xl text-center overflow-hidden">
+      <div className="relative w-full max-w-md rounded-3xl bg-slate-900 border border-indigo-500/40 p-6 text-white shadow-2xl text-center overflow-hidden">
         {/* Ambient Glows */}
-        <div className="absolute -top-20 -left-20 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-amber-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 -left-20 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
           disabled={spinning}
-          className="absolute top-4 right-4 p-2 text-stone-400 hover:text-white rounded-full bg-stone-800/80 transition disabled:opacity-30 z-40"
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-full bg-slate-800/80 transition disabled:opacity-30 z-40"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="mb-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold mb-2 border border-amber-500/30">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-cyan-400 text-xs font-bold mb-2 border border-indigo-500/30">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{t('spinWheelTitle')}</span>
           </div>
-          <h3 className="text-xl font-extrabold text-stone-100">
+          <h3 className="text-xl font-extrabold text-slate-100">
             {isAr ? 'عجلة الحظ ومكافآت القهوة' : 'Daily Fortune Coffee Wheel'}
           </h3>
-          <p className="text-xs text-stone-400 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             {isAr
               ? `لديك ${maxSpins} ${maxSpins === 1 ? 'محاولة' : 'محاولات'} يومياً للفوز بجوائز فورية وكوبونات!`
               : `You have ${maxSpins} ${maxSpins === 1 ? 'spin' : 'spins'} per day for instant rewards & coupons!`}
           </p>
 
           {/* Spins badge */}
-          <div className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-0.5 rounded-full bg-stone-800 border border-stone-700 text-stone-300">
+          <div className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300">
             <span>
               {isAr
                 ? `المحاولات المتبقية اليوم: ${spinsLeft} من ${maxSpins}`
@@ -183,27 +183,27 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ isOpen, onClos
           <div
             className={`p-4 rounded-2xl mb-4 animate-in fade-in zoom-in duration-300 border text-center ${
               spinOutcome.isWinning
-                ? 'bg-amber-500/20 border-amber-400/60 text-amber-100'
-                : 'bg-stone-800/90 border-stone-600 text-stone-200'
+                ? 'bg-indigo-500/20 border-indigo-400/60 text-amber-100'
+                : 'bg-slate-800/90 border-slate-600 text-slate-200'
             }`}
           >
             {spinOutcome.isWinning ? (
               <>
-                <Trophy className="w-8 h-8 text-amber-400 mx-auto mb-1 animate-bounce" />
-                <p className="text-sm font-bold text-amber-300">{t('spinWonTitle')}</p>
+                <Trophy className="w-8 h-8 text-cyan-400 mx-auto mb-1 animate-bounce" />
+                <p className="text-sm font-bold text-cyan-300">{t('spinWonTitle')}</p>
                 <p className="text-base font-extrabold text-white mt-0.5">{spinOutcome.prize}</p>
-                <p className="text-[11px] text-stone-300 mt-1">
+                <p className="text-[11px] text-slate-300 mt-1">
                   {isAr ? 'تمت إضافة الجائزة والكوبون إلى محفظتك بنجاح!' : 'Prize & Coupon added to your wallet!'}
                 </p>
               </>
             ) : (
               <>
-                <Coffee className="w-8 h-8 text-amber-400 mx-auto mb-1" />
-                <p className="text-sm font-bold text-stone-100">
+                <Coffee className="w-8 h-8 text-cyan-400 mx-auto mb-1" />
+                <p className="text-sm font-bold text-slate-100">
                   {isAr ? 'حظ أوفر المرة القادمة!' : 'Better Luck Next Time!'}
                 </p>
-                <p className="text-xs text-amber-300 font-semibold mt-0.5">{spinOutcome.prize}</p>
-                <p className="text-[11px] text-stone-400 mt-1">
+                <p className="text-xs text-cyan-300 font-semibold mt-0.5">{spinOutcome.prize}</p>
+                <p className="text-[11px] text-slate-400 mt-1">
                   {isAr
                     ? 'شكراً لزيارتك! استمتع بفنجان قهوتك اليوم وتفضل بزيارتنا غداً ☕'
                     : 'Thank you for visiting! Enjoy your fresh cup of coffee today ☕'}
@@ -215,16 +215,16 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ isOpen, onClos
 
         {/* Action Controls */}
         {!wheelConfig.enabled ? (
-          <div className="p-3.5 rounded-2xl bg-stone-800 border border-stone-700 text-stone-400 text-xs">
+          <div className="p-3.5 rounded-2xl bg-slate-800 border border-slate-700 text-slate-400 text-xs">
             <p>{isAr ? 'عجلة الحظ غير مفعّلة حالياً من قبل إدارة المقهى.' : 'The Fortune Wheel is currently inactive.'}</p>
           </div>
         ) : isOutOfSpins && !spinning ? (
-          <div className="p-3.5 rounded-2xl bg-stone-800/90 border border-stone-700 text-stone-400 text-xs space-y-1">
-            <RotateCcw className="w-4 h-4 mx-auto text-stone-500" />
-            <p className="font-semibold text-stone-300">
+          <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-slate-400 text-xs space-y-1">
+            <RotateCcw className="w-4 h-4 mx-auto text-slate-500" />
+            <p className="font-semibold text-slate-300">
               {isAr ? 'استنفدت جميع محاولات التدوير لليوم' : 'All spins used for today'}
             </p>
-            <p className="text-[11px] text-stone-500">
+            <p className="text-[11px] text-slate-500">
               {isAr
                 ? `لديك ${maxSpins} ${maxSpins === 1 ? 'محاولة' : 'محاولات'} كل يوم. ننتظرك غداً لمزيد من الجوائز!`
                 : `Next ${maxSpins} spins will reset tomorrow. See you then!`}
@@ -236,7 +236,7 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ isOpen, onClos
             id="spin-wheel-action-btn"
             onClick={handleSpin}
             disabled={spinning}
-            className="w-full py-3.5 rounded-2xl text-white font-extrabold text-sm shadow-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 rounded-2xl text-white font-extrabold text-sm shadow-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-amber-500 hover:to-amber-400 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             <Gift className={`w-5 h-5 ${spinning ? 'animate-spin' : ''}`} />
             <span>

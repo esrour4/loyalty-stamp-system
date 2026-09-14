@@ -70,20 +70,20 @@ export const CustomerLoginRegister: React.FC = () => {
           className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-white shadow-xl"
           style={{ backgroundColor: settings.theme.primary || '#78350f' }}
         >
-          <Coffee className="w-8 h-8 text-amber-300" />
+          <Coffee className="w-8 h-8 text-cyan-300" />
         </div>
-        <h2 className="text-2xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
           {isAr ? settings.shopNameAr : settings.shopNameEn}
         </h2>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {isAr ? 'برنامج مكافآت الأختام الرقمية • اجمع الأختام واشرب مجاناً' : 'Digital Coffee Stamps • Collect & Sip Free'}
         </p>
       </div>
 
       {/* Main Card */}
-      <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-stone-200/80 dark:border-stone-800">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/80 dark:border-slate-800">
         {/* Toggle Mode Tabs */}
-        <div className="flex p-1 bg-stone-100 dark:bg-stone-800 rounded-2xl mb-6">
+        <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl mb-6">
           <button
             type="button"
             onClick={() => {
@@ -92,8 +92,8 @@ export const CustomerLoginRegister: React.FC = () => {
             }}
             className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition ${
               mode === 'login'
-                ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-xs'
-                : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
             }`}
           >
             {t('loginWithCard')}
@@ -106,8 +106,8 @@ export const CustomerLoginRegister: React.FC = () => {
             }}
             className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition ${
               mode === 'register'
-                ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-xs'
-                : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
             }`}
           >
             {t('registerTitle')}
@@ -124,7 +124,7 @@ export const CustomerLoginRegister: React.FC = () => {
         {mode === 'login' ? (
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 {t('enterCardNumber')}
               </label>
               <div className="relative">
@@ -134,7 +134,7 @@ export const CustomerLoginRegister: React.FC = () => {
                   value={cardNumberInput}
                   onChange={(e) => setCardNumberInput(e.target.value)}
                   placeholder={isAr ? 'رقم البطاقة أو رقم الجوال' : 'Card number or phone number'}
-                  className="w-full px-4 py-3 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 placeholder-stone-400 text-sm font-mono tracking-wider focus:outline-hidden focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-sm font-mono tracking-wider focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -153,7 +153,7 @@ export const CustomerLoginRegister: React.FC = () => {
           /* Registration Form */
           <form onSubmit={handleRegister} className="space-y-3.5">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('fullName')} *
               </label>
               <input
@@ -163,12 +163,12 @@ export const CustomerLoginRegister: React.FC = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder={isAr ? 'مثال: ريم الشامي' : 'e.g. Maya Al-Halabi'}
                 required
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('phone')} *
               </label>
               <input
@@ -178,12 +178,12 @@ export const CustomerLoginRegister: React.FC = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+963 933 123 456"
                 required
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('dob')} 🎂
               </label>
               <input
@@ -191,15 +191,15 @@ export const CustomerLoginRegister: React.FC = () => {
                 id="register-dob-input"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
               />
-              <p className="text-[10px] text-stone-400 mt-0.5">
+              <p className="text-[10px] text-slate-400 mt-0.5">
                 {isAr ? 'نرسل لك مشروباً مجانياً وهدية في شهر ميلادك!' : 'We send a free specialty beverage on your birthday!'}
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('referralCodeOptional')} 🎁
               </label>
               <input
@@ -208,7 +208,7 @@ export const CustomerLoginRegister: React.FC = () => {
                 value={referralCode}
                 onChange={(e) => setReferralCode(e.target.value)}
                 placeholder="e.g. SARA99"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-sm uppercase focus:outline-hidden focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm uppercase focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 

@@ -210,18 +210,18 @@ export const QrScanner: React.FC<QrScannerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="relative w-full max-w-md rounded-3xl bg-stone-900 border border-stone-800 shadow-2xl overflow-hidden flex flex-col text-white">
+      <div className="relative w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden flex flex-col text-white">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800/80 bg-stone-900/90 z-20">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800/80 bg-slate-900/90 z-20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-cyan-400 flex items-center justify-center font-bold">
               <Camera className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-stone-100">
+              <h3 className="text-sm font-bold text-slate-100">
                 {title || 'Scan Loyalty QR Code'}
               </h3>
-              <p className="text-[11px] text-stone-400">
+              <p className="text-[11px] text-slate-400">
                 {subtitle || 'Position the customer QR inside the frame'}
               </p>
             </div>
@@ -232,7 +232,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({
             <button
               type="button"
               onClick={() => setSoundEnabled(!soundEnabled)}
-              className="p-2 text-stone-400 hover:text-white rounded-xl hover:bg-stone-800 transition cursor-pointer"
+              className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
               title={soundEnabled ? 'Mute Beep' : 'Unmute Beep'}
             >
               {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -242,7 +242,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 text-stone-400 hover:text-white rounded-xl hover:bg-stone-800 transition cursor-pointer"
+              className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -270,10 +270,10 @@ export const QrScanner: React.FC<QrScannerProps> = ({
             {/* Square Target Window */}
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-3xl border border-white/20 overflow-hidden shadow-2xl bg-transparent">
               {/* 4 Golden Corner Reticles */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-amber-400 rounded-tl-2xl" />
-              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-amber-400 rounded-tr-2xl" />
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-amber-400 rounded-bl-2xl" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-amber-400 rounded-br-2xl" />
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-indigo-400 rounded-tl-2xl" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-indigo-400 rounded-tr-2xl" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-indigo-400 rounded-bl-2xl" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-indigo-400 rounded-br-2xl" />
 
               {/* Animated Laser Scanning Line */}
               <div className="absolute left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_12px_#f59e0b] animate-bounce duration-1000" />
@@ -282,14 +282,14 @@ export const QrScanner: React.FC<QrScannerProps> = ({
 
           {/* Camera Error Message Overlay */}
           {errorMessage && (
-            <div className="absolute inset-0 bg-stone-950/90 flex flex-col items-center justify-center p-6 text-center z-30">
-              <CameraOff className="w-12 h-12 text-amber-500 mb-3 opacity-80" />
-              <h4 className="text-sm font-bold text-stone-200 mb-1">Camera Access Issue</h4>
-              <p className="text-xs text-stone-400 max-w-xs mb-4 leading-relaxed">{errorMessage}</p>
+            <div className="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center p-6 text-center z-30">
+              <CameraOff className="w-12 h-12 text-indigo-500 mb-3 opacity-80" />
+              <h4 className="text-sm font-bold text-slate-200 mb-1">Camera Access Issue</h4>
+              <p className="text-xs text-slate-400 max-w-xs mb-4 leading-relaxed">{errorMessage}</p>
               <button
                 type="button"
                 onClick={startCamera}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Retry Camera</span>
@@ -299,7 +299,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({
         </div>
 
         {/* Footer Controls */}
-        <div className="p-4 bg-stone-900 border-t border-stone-800 flex items-center justify-between gap-3">
+        <div className="p-4 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             {/* Flashlight Button */}
             {hasTorch && (
@@ -308,8 +308,8 @@ export const QrScanner: React.FC<QrScannerProps> = ({
                 onClick={toggleTorch}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                   torchEnabled
-                    ? 'bg-amber-500 text-stone-950 shadow-md'
-                    : 'bg-stone-800 text-stone-300 hover:bg-stone-700'
+                    ? 'bg-amber-500 text-slate-950 shadow-md'
+                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                 }`}
               >
                 <Flashlight className="w-3.5 h-3.5" />
@@ -321,14 +321,14 @@ export const QrScanner: React.FC<QrScannerProps> = ({
             <button
               type="button"
               onClick={toggleCamera}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-bold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
             >
               <FlipHorizontal className="w-3.5 h-3.5" />
               <span>Flip</span>
             </button>
           </div>
 
-          <div className="text-[11px] font-mono text-stone-400">
+          <div className="text-[11px] font-mono text-slate-400">
             {facingMode === 'environment' ? 'Rear Camera' : 'Front Camera'}
           </div>
         </div>

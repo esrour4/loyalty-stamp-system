@@ -130,7 +130,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
   const renderCategoryIcon = (category: string) => {
     switch (category) {
       case 'drink':
-        return <Coffee className="w-4 h-4 text-amber-500" />;
+        return <Coffee className="w-4 h-4 text-indigo-500" />;
       case 'pastry':
         return <Croissant className="w-4 h-4 text-orange-500" />;
       case 'beans':
@@ -140,33 +140,33 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
       case 'discount':
         return <Percent className="w-4 h-4 text-purple-500" />;
       default:
-        return <Gift className="w-4 h-4 text-amber-500" />;
+        return <Gift className="w-4 h-4 text-indigo-500" />;
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs overflow-y-auto animate-fadeIn">
-      <div className="bg-white dark:bg-stone-900 rounded-3xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl border border-stone-200 dark:border-stone-800 overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
         
         {/* Header with Customer Summary */}
-        <div className="p-5 sm:p-6 bg-gradient-to-r from-stone-900 via-stone-800 to-amber-950 text-white relative flex-shrink-0">
+        <div className="p-5 sm:p-6 bg-gradient-to-r from-slate-900 via-slate-800 to-amber-950 text-white relative flex-shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 left-4 rtl:left-auto rtl:right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 flex items-center justify-center transition cursor-pointer"
+            className="absolute top-4 left-4 rtl:left-auto rtl:right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
 
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 text-cyan-400 flex items-center justify-center">
               <Gift className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold">
                 {t('pointsGiftsTitle')}
               </h3>
-              <p className="text-[11px] text-stone-300">
+              <p className="text-[11px] text-slate-300">
                 {t('pointsGiftsSubtitle')}
               </p>
             </div>
@@ -175,18 +175,18 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
           {/* Customer Bar */}
           <div className="flex items-center justify-between p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10 mt-2">
             <div>
-              <span className="text-xs font-bold text-stone-200 block">
+              <span className="text-xs font-bold text-slate-200 block">
                 {customer.name}
               </span>
-              <span className="text-[11px] font-mono text-stone-400">
+              <span className="text-[11px] font-mono text-slate-400">
                 {customer.cardNumber} • {customer.phone}
               </span>
             </div>
             <div className="text-right rtl:text-left">
-              <span className="text-[10px] text-amber-200 block uppercase font-semibold">
+              <span className="text-[10px] text-cyan-200 block uppercase font-semibold">
                 {t('pointsBalance')}
               </span>
-              <span className="text-lg font-extrabold text-amber-400 font-mono">
+              <span className="text-lg font-extrabold text-cyan-400 font-mono">
                 {customer.totalPoints} pts
               </span>
             </div>
@@ -204,7 +204,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
               className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'catalog'
                   ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-white/5 hover:bg-white/10 text-stone-300'
+                  : 'bg-white/5 hover:bg-white/10 text-slate-300'
               }`}
             >
               <Gift className="w-3.5 h-3.5" />
@@ -220,7 +220,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
               className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'replace'
                   ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-white/5 hover:bg-white/10 text-stone-300'
+                  : 'bg-white/5 hover:bg-white/10 text-slate-300'
               }`}
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -237,7 +237,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
               className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'custom'
                   ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-white/5 hover:bg-white/10 text-stone-300'
+                  : 'bg-white/5 hover:bg-white/10 text-slate-300'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -255,13 +255,13 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
               {/* Search & Category Filter */}
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="relative flex-1">
-                  <Search className="w-4 h-4 text-stone-400 absolute top-3 left-3 rtl:left-auto rtl:right-3 pointer-events-none" />
+                  <Search className="w-4 h-4 text-slate-400 absolute top-3 left-3 rtl:left-auto rtl:right-3 pointer-events-none" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={isAr ? 'البحث عن هدية أو مكافأة...' : 'Search rewards catalog...'}
-                    className="w-full pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-stone-900 dark:text-stone-100 placeholder-stone-400 outline-hidden focus:ring-2 focus:ring-amber-500"
+                    className="w-full pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-hidden focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
@@ -273,8 +273,8 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       onClick={() => setSelectedCategory(cat)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                         selectedCategory === cat
-                          ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
-                          : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-200'
+                          ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
                       }`}
                     >
                       {cat === 'all' && (isAr ? 'الكل' : 'All')}
@@ -289,17 +289,17 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
 
               {/* Confirmation Popover if a reward is clicked */}
               {confirmReward && (
-                <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500 space-y-3 animate-fadeIn">
+                <div className="p-4 rounded-2xl bg-indigo-500/10 border-2 border-indigo-500 space-y-3 animate-fadeIn">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
                         <Gift className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
                           {isAr ? confirmReward.titleAr : confirmReward.titleEn}
                         </h4>
-                        <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold">
+                        <p className="text-[11px] text-amber-700 dark:text-cyan-300 font-semibold">
                           {isAr ? 'صرف الهدية للعميل مقابل النقاط' : 'Redeem gift for customer'}
                         </p>
                       </div>
@@ -307,16 +307,16 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                     <button
                       type="button"
                       onClick={() => setConfirmReward(null)}
-                      className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 p-1"
+                      className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 text-center text-xs py-2 px-3 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
+                  <div className="grid grid-cols-3 gap-2 text-center text-xs py-2 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                     <div>
-                      <span className="text-[10px] text-stone-400 block">{isAr ? 'رصيد العميل الحالي' : 'Current Points'}</span>
-                      <span className="font-bold text-stone-800 dark:text-stone-200 font-mono">{customer.totalPoints} pts</span>
+                      <span className="text-[10px] text-slate-400 block">{isAr ? 'رصيد العميل الحالي' : 'Current Points'}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">{customer.totalPoints} pts</span>
                     </div>
                     <div>
                       <span className="text-[10px] text-red-500 block">{isAr ? 'تكلفة الهدية' : 'Gift Cost'}</span>
@@ -334,7 +334,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                     <button
                       type="button"
                       onClick={() => setConfirmReward(null)}
-                      className="flex-1 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-xs font-bold transition cursor-pointer"
+                      className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold transition cursor-pointer"
                     >
                       {t('cancel')}
                     </button>
@@ -342,7 +342,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       type="button"
                       disabled={isProcessing}
                       onClick={handleConfirmRedeem}
-                      className="flex-2 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
+                      className="flex-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <Check className="w-4 h-4" />
                       <span>{t('confirmRedeemGift')}</span>
@@ -362,32 +362,32 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       key={reward.id}
                       className={`p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                         canAfford && isAvailable
-                          ? 'bg-white dark:bg-stone-800/80 border-stone-200 dark:border-stone-700 hover:border-amber-400 shadow-xs'
-                          : 'bg-stone-50 dark:bg-stone-850/50 border-stone-200/60 dark:border-stone-800/60 opacity-60'
+                          ? 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-indigo-400 shadow-xs'
+                          : 'bg-slate-50 dark:bg-slate-850/50 border-slate-200/60 dark:border-slate-800/60 opacity-60'
                       }`}
                     >
                       <div>
                         <div className="flex items-start justify-between gap-2 mb-1.5">
                           <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-lg bg-stone-100 dark:bg-stone-700 flex items-center justify-center">
+                            <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
                               {renderCategoryIcon(reward.category)}
                             </div>
-                            <span className="text-xs font-bold text-stone-900 dark:text-stone-100 leading-tight">
+                            <span className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
                               {isAr ? reward.titleAr : reward.titleEn}
                             </span>
                           </div>
-                          <span className="text-xs font-extrabold text-amber-600 dark:text-amber-400 font-mono whitespace-nowrap bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-800/60">
+                          <span className="text-xs font-extrabold text-indigo-600 dark:text-cyan-400 font-mono whitespace-nowrap bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md border border-indigo-200/60 dark:border-amber-800/60">
                             {reward.pointsCost} pts
                           </span>
                         </div>
 
-                        <p className="text-[11px] text-stone-500 dark:text-stone-400 mb-3 line-clamp-2 leading-relaxed">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 line-clamp-2 leading-relaxed">
                           {isAr ? reward.descriptionAr : reward.descriptionEn}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-stone-100 dark:border-stone-700/60">
-                        <span className="text-[10px] text-stone-400 capitalize">
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                        <span className="text-[10px] text-slate-400 capitalize">
                           {reward.category}
                         </span>
 
@@ -401,7 +401,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                             <span>{isAr ? 'صرف الهدية' : 'Redeem'}</span>
                           </button>
                         ) : (
-                          <span className="text-[10px] font-semibold text-stone-400">
+                          <span className="text-[10px] font-semibold text-slate-400">
                             {!isAvailable
                               ? isAr ? 'غير متوفر حالياً' : 'Out of Stock'
                               : isAr
@@ -416,7 +416,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
               </div>
 
               {filteredRewards.length === 0 && (
-                <div className="py-8 text-center text-stone-400 text-xs">
+                <div className="py-8 text-center text-slate-400 text-xs">
                   {isAr ? 'لم يتم العثور على هدايا مطابقة.' : 'No matching reward items found.'}
                 </div>
               )}
@@ -426,8 +426,8 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
           {/* TAB 2: REPLACE GIFT OR REFUND POINTS */}
           {activeTab === 'replace' && (
             <div className="space-y-4">
-              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
-                <RotateCcw className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+              <div className="p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-amber-900 dark:text-cyan-200 flex items-start gap-2.5">
+                <RotateCcw className="w-4 h-4 text-indigo-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
                 <p className="leading-relaxed">
                   {isAr
                     ? 'في حال رغبة العميل بتبديل الهدية المصروفة سابقاً بصنف آخر، أو إرجاع الهدية واستعادة نقاطه، يمكنك استرجاع النقاط لحسابه بضغطة زر وتوثيق العملية في سجل الكاونتر.'
@@ -437,29 +437,29 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
 
               {/* Confirmation Modal for Refund */}
               {selectedTxForRefund && (
-                <div className="p-4 rounded-2xl bg-stone-900 text-white dark:bg-stone-800 border border-amber-500 space-y-3 animate-fadeIn">
+                <div className="p-4 rounded-2xl bg-slate-900 text-white dark:bg-slate-800 border border-indigo-500 space-y-3 animate-fadeIn">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
                       <RotateCcw className="w-4 h-4" />
                       <span>{t('confirmRefundPoints')}</span>
                     </span>
                     <button
                       type="button"
                       onClick={() => setSelectedTxForRefund(null)}
-                      className="text-stone-400 hover:text-white p-1"
+                      className="text-slate-400 hover:text-white p-1"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <p className="text-xs text-stone-300">
+                  <p className="text-xs text-slate-300">
                     {isAr
                       ? `سيتم استرجاع +${Math.abs(selectedTxForRefund.pointsChanged)} نقطة إلى حساب العميل (${customer.name}).`
                       : `Will refund +${Math.abs(selectedTxForRefund.pointsChanged)} points to ${customer.name}.`}
                   </p>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-stone-300 mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
                       {t('reasonForRefund')}
                     </label>
                     <input
@@ -467,7 +467,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       value={refundReason}
                       onChange={(e) => setRefundReason(e.target.value)}
                       placeholder={t('refundReasonPlaceholder')}
-                      className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-xs text-white placeholder-stone-400 outline-hidden"
+                      className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-xs text-white placeholder-slate-400 outline-hidden"
                     />
                   </div>
 
@@ -483,7 +483,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       type="button"
                       disabled={isProcessing}
                       onClick={handleConfirmRefund}
-                      className="flex-2 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
+                      className="flex-2 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-slate-950 text-xs font-bold shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <Check className="w-4 h-4" />
                       <span>{t('refundPointsBtn')}</span>
@@ -494,12 +494,12 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
 
               {/* Transactions List */}
               <div className="space-y-2">
-                <span className="text-xs font-bold text-stone-700 dark:text-stone-300 block">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
                   {t('recentPointsRedemptions')}
                 </span>
 
                 {customerPointsTransactions.length === 0 ? (
-                  <div className="py-8 text-center text-stone-400 text-xs">
+                  <div className="py-8 text-center text-slate-400 text-xs">
                     {t('noRecentRedemptions')}
                   </div>
                 ) : (
@@ -509,7 +509,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       return (
                         <div
                           key={tx.id}
-                          className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 flex items-center justify-between gap-3"
+                          className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3"
                         >
                           <div>
                             <div className="flex items-center gap-2">
@@ -522,11 +522,11 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                               >
                                 {isRedeem ? (isAr ? 'صرف هدية' : 'Redemption') : (isAr ? 'استرجاع نقاط' : 'Refund')}
                               </span>
-                              <span className="text-xs font-bold text-stone-800 dark:text-stone-200">
+                              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                                 {isAr ? tx.detailsAr : tx.detailsEn}
                               </span>
                             </div>
-                            <p className="text-[10px] text-stone-400 mt-1 flex items-center gap-1">
+                            <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
                               <Clock className="w-3 h-3" />
                               <span>{new Date(tx.createdAt).toLocaleString(isAr ? 'ar-SA' : 'en-US')}</span>
                               <span>• {tx.performedBy}</span>
@@ -549,7 +549,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                                   setSelectedTxForRefund(tx);
                                   setRefundReason(isAr ? `تبديل هدية (${tx.detailsAr})` : `Exchange (${tx.detailsEn})`);
                                 }}
-                                className="px-2.5 py-1.5 rounded-xl bg-stone-200 dark:bg-stone-700 hover:bg-amber-500 hover:text-white text-stone-700 dark:text-stone-200 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                                className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-indigo-500 hover:text-white text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
                               >
                                 <RotateCcw className="w-3 h-3" />
                                 <span>{isAr ? 'تبديل / استرجاع' : 'Swap / Refund'}</span>
@@ -568,7 +568,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
           {/* TAB 3: CUSTOM GIFT OR MANUAL ADJUSTMENT */}
           {activeTab === 'custom' && (
             <div className="space-y-4">
-              <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-xs text-stone-600 dark:text-stone-300">
+              <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
                 {isAr
                   ? 'استخدم هذا القسم لصرف هدايا موسمية خاصة غير مسجلة بالكتالوج، أو لتسوية النقاط يدوياً مع العميل عند الكاونتر.'
                   : 'Use this section to redeem custom or unlisted promotional gifts with points, or make manual points adjustments at the counter.'}
@@ -576,7 +576,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
 
               <form onSubmit={handleCustomRedeem} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                     {t('customGiftName')} *
                   </label>
                   <input
@@ -585,12 +585,12 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                     value={customDescription}
                     onChange={(e) => setCustomDescription(e.target.value)}
                     placeholder={isAr ? 'مثال: كوب زجاجي موسمي، أو خصم خاص على وجبة' : 'e.g. Seasonal Glass Tumbler or Special Meal Concession'}
-                    className="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs text-stone-900 dark:text-stone-100 outline-hidden focus:ring-2 focus:ring-amber-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100 outline-hidden focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                     {t('customPointsCost')} *
                   </label>
                   <div className="flex items-center gap-2">
@@ -602,7 +602,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                       step={5}
                       value={customPointsCost}
                       onChange={(e) => setCustomPointsCost(Math.max(0, Number(e.target.value)))}
-                      className="w-32 px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-mono font-bold text-stone-900 dark:text-stone-100 outline-hidden"
+                      className="w-32 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-slate-900 dark:text-slate-100 outline-hidden"
                     />
                     <div className="flex gap-1.5">
                       {[50, 100, 150, 200].map((val) => (
@@ -612,8 +612,8 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                           onClick={() => setCustomPointsCost(val)}
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
                             customPointsCost === val
-                              ? 'bg-amber-500 text-white border-amber-500'
-                              : 'bg-stone-100 dark:bg-stone-800 border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300'
+                              ? 'bg-amber-500 text-white border-indigo-500'
+                              : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                           }`}
                         >
                           {val} pts
@@ -624,8 +624,8 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                 </div>
 
                 {/* Calculation preview */}
-                <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 flex items-center justify-between text-xs">
-                  <span className="text-stone-600 dark:text-stone-300">
+                <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-amber-800/40 flex items-center justify-between text-xs">
+                  <span className="text-slate-600 dark:text-slate-300">
                     {t('pointsBalanceAfter')}:
                   </span>
                   <span className={`font-mono font-bold ${
@@ -638,7 +638,7 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
                 <button
                   type="submit"
                   disabled={isProcessing || customer.totalPoints < customPointsCost || !customDescription}
-                  className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Gift className="w-4 h-4" />
                   <span>
@@ -654,14 +654,14 @@ export const PointsGiftRedemptionModal: React.FC<PointsGiftRedemptionModalProps>
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-stone-50 dark:bg-stone-800/60 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between flex-shrink-0">
-          <span className="text-[11px] text-stone-500">
+        <div className="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between flex-shrink-0">
+          <span className="text-[11px] text-slate-500">
             {isAr ? `الباريستا المسؤول: ${baristaName}` : `Active Barista: ${baristaName}`}
           </span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-stone-200 hover:bg-stone-300 dark:bg-stone-700 dark:hover:bg-stone-600 text-stone-800 dark:text-stone-200 text-xs font-bold transition cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
           >
             {t('close')}
           </button>

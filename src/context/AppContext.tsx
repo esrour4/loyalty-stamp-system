@@ -28,7 +28,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     type: 'coupon',
     value: 'Free Croissant',
     discountType: 'free_item',
-    color: '#b45309',
+    color: '#06b6d4', // vibrant cyan
     isWinning: true,
   },
   {
@@ -37,7 +37,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     labelAr: 'حظ أوفر المرة القادمة',
     type: 'lose',
     value: 0,
-    color: '#57534e',
+    color: '#64748b', // cool slate
     isWinning: false,
   },
   {
@@ -46,7 +46,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     labelAr: '50 نقطة إضافية',
     type: 'points',
     value: 50,
-    color: '#d97706',
+    color: '#4f46e5', // vibrant indigo
     isWinning: true,
   },
   {
@@ -55,7 +55,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     labelAr: 'جرّب حظك غداً',
     type: 'lose',
     value: 0,
-    color: '#44403c',
+    color: '#94a3b8', // light slate
     isWinning: false,
   },
   {
@@ -65,7 +65,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     type: 'coupon',
     value: 'Free Shot',
     discountType: 'free_item',
-    color: '#92400e',
+    color: '#10b981', // vibrant emerald
     isWinning: true,
   },
   {
@@ -74,7 +74,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     labelAr: 'ابتسامة وقهوة طيبة 😊',
     type: 'lose',
     value: 0,
-    color: '#78716c',
+    color: '#0ea5e9', // vibrant sky
     isWinning: false,
   },
   {
@@ -83,7 +83,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     labelAr: '+1 ختم إضافي',
     type: 'stamp',
     value: 1,
-    color: '#f59e0b',
+    color: '#8b5cf6', // vibrant violet
     isWinning: true,
   },
   {
@@ -93,7 +93,7 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
     type: 'coupon',
     value: 20,
     discountType: 'percentage',
-    color: '#78350f',
+    color: '#ec4899', // vibrant pink
     isWinning: true,
   },
 ];
@@ -110,12 +110,12 @@ const DEFAULT_SETTINGS: StoreSettings = {
   pointsPerCurrencyUnit: 1,
   stampIcon: 'cup',
   theme: {
-    primary: '#78350f', // warm roast
-    accent: '#d97706',  // caramel amber
-    background: '#fafaf9',
+    primary: '#4f46e5', // Electric Indigo
+    accent: '#06b6d4',  // Radiant Cyan
+    background: '#f8fafc',
     cardBg: '#ffffff',
-    textColor: '#1c1917',
-    preset: 'caramel',
+    textColor: '#0f172a',
+    preset: 'indigoCyan',
   },
   zender: {
     apiUrl: 'https://zender.sms/api/send/whatsapp',
@@ -146,7 +146,7 @@ export const DEFAULT_TIER_CONFIGS: Record<TierLevel, TierConfig> = {
     nameAr: 'المحمص البرونزي',
     minPoints: 0,
     multiplier: 1.0,
-    color: '#b45309',
+    color: '#0284c7', // vibrant sky blue instead of brown
     perksEn: ['1x Points on drinks', 'Standard digital stamp card', 'Birthday beverage gift'],
     perksAr: ['1x نقاط على المشروبات', 'بطاقة أختام رقمية', 'مشروب هدية في عيد الميلاد'],
   },
@@ -156,7 +156,7 @@ export const DEFAULT_TIER_CONFIGS: Record<TierLevel, TierConfig> = {
     nameAr: 'الباريستا الفضي',
     minPoints: 100,
     multiplier: 1.25,
-    color: '#94a3b8',
+    color: '#06b6d4', // cyan
     perksEn: ['1.25x Points multiplier', 'Free flavour syrup upgrade', '10% Pastry discount'],
     perksAr: ['1.25x مضاعفة النقاط', 'إضافة نكهة سيروب مجانية', 'خصم 10% على المخبوزات'],
   },
@@ -166,7 +166,7 @@ export const DEFAULT_TIER_CONFIGS: Record<TierLevel, TierConfig> = {
     nameAr: 'خبير القهوة الذهبي',
     minPoints: 300,
     multiplier: 1.5,
-    color: '#eab308',
+    color: '#10b981', // emerald
     perksEn: ['1.5x Points multiplier', 'Free extra espresso shot anytime', 'Priority counter queue', 'Free monthly pastry'],
     perksAr: ['1.5x مضاعفة النقاط', 'شوت إسبريسو إضافي مجاناً دائماً', 'أولوية بالطلب', 'قطعة حلى شهرية مجاناً'],
   },
@@ -176,7 +176,7 @@ export const DEFAULT_TIER_CONFIGS: Record<TierLevel, TierConfig> = {
     nameAr: 'الماستر البلاتيني',
     minPoints: 600,
     multiplier: 2.0,
-    color: '#6366f1',
+    color: '#6366f1', // royal indigo
     perksEn: ['2.0x Double Points', 'Exclusive single-origin reserve tastings', 'Free barista masterclass', 'Personalized custom tumbler'],
     perksAr: ['2.0x نقاط مضاعفة', 'تذوق مجاني لمحاصيل القهوة المختصة النادرة', 'ورشة عمل باريستا مجانية', 'كوب حافظ مخصص باسمك'],
   },
@@ -467,9 +467,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [role, setRole] = useState<UserRole>(() => {
     try {
       const saved = localStorage.getItem('coffee_role') as UserRole;
-      return saved === 'customer' || saved === 'barista' || saved === 'owner' ? saved : 'customer';
+      return saved === 'landing' || saved === 'customer' || saved === 'barista' || saved === 'owner' ? saved : 'landing';
     } catch (e) {
-      return 'customer';
+      return 'landing';
     }
   });
 
@@ -509,13 +509,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             parsed.zender.welcomeTemplate =
               parsed.zender.welcomeTemplate.trim() + '\n\n🔗 رابط بطاقتك ودخول حسابك المباشر:\n{login_link}';
           }
+          const themeObj = {
+            ...DEFAULT_SETTINGS.theme,
+            ...(parsed.theme || {}),
+          };
+          // Automatically migrate away from brownish/amber defaults
+          if (
+            !themeObj.primary ||
+            themeObj.primary === '#78350f' ||
+            themeObj.primary === '#451a03' ||
+            themeObj.primary === '#1c130e' ||
+            themeObj.preset === 'espresso' ||
+            themeObj.preset === 'caramel'
+          ) {
+            themeObj.primary = '#4f46e5';
+            themeObj.accent = '#06b6d4';
+            themeObj.preset = 'indigoCyan';
+          }
           return {
             ...DEFAULT_SETTINGS,
             ...parsed,
-            theme: {
-              ...DEFAULT_SETTINGS.theme,
-              ...(parsed.theme || {}),
-            },
+            theme: themeObj,
             tiers: parsed.tiers || DEFAULT_TIER_CONFIGS,
             wheel: {
               ...DEFAULT_SETTINGS.wheel,

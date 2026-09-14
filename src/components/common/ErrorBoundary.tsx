@@ -55,16 +55,16 @@ export class ErrorBoundary extends Component<Props, State> {
   public override render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-stone-100 dark:bg-stone-950 flex items-center justify-center p-4 text-stone-900 dark:text-stone-100 font-sans">
-          <div className="w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-stone-200 dark:border-stone-800 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 mx-auto flex items-center justify-center mb-5">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex items-center justify-center p-4 text-slate-900 dark:text-slate-100 font-sans">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 mx-auto flex items-center justify-center mb-5">
               <Coffee className="w-8 h-8" />
             </div>
 
             <h1 className="text-xl font-bold mb-2">
               تحديث التطبيق مطلوب / Update Detected
             </h1>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mb-6 leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
               تم تحديث نظام نقاط وولاء المقهى بنسخة جديدة. اضغط على الزر أدناه لتحديث الشاشة فورياً ومتابعة الاستخدام.
             </p>
 
@@ -72,7 +72,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-indigo-600 text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>تحديث الشاشة الآن / Refresh App</span>
@@ -81,15 +81,15 @@ export class ErrorBoundary extends Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleResetCacheAndReload}
-                className="w-full py-2.5 px-4 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Trash2 className="w-3.5 h-3.5 text-stone-400" />
+                <Trash2 className="w-3.5 h-3.5 text-slate-400" />
                 <span>إعادة ضبط الذاكرة المؤقتة / Clear Cache & Reload</span>
               </button>
             </div>
 
             {this.state.error && (
-              <div className="mt-6 p-3 rounded-xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-left text-[11px] font-mono text-stone-500 max-h-24 overflow-y-auto">
+              <div className="mt-6 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-left text-[11px] font-mono text-slate-500 max-h-24 overflow-y-auto">
                 {this.state.error.message}
               </div>
             )}

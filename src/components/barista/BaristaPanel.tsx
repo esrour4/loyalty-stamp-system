@@ -208,14 +208,14 @@ export const BaristaPanel: React.FC = () => {
   if (!activeBarista) {
     return (
       <div className="max-w-md mx-auto px-4 py-12 text-center">
-        <div className="bg-white dark:bg-stone-900 p-8 rounded-3xl shadow-xl border border-stone-200 dark:border-stone-800">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 flex items-center justify-center">
             <Coffee className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold text-stone-900 dark:text-stone-100">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
             {t('baristaTitle')}
           </h2>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-6">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-6">
             {isAr ? 'أدخل رمز PIN للدخول إلى كاونتر ونقاط بيع الباريستا' : 'Enter 4-digit PIN to access Barista POS'}
           </p>
 
@@ -232,22 +232,22 @@ export const BaristaPanel: React.FC = () => {
               value={pinInput}
               onChange={(e) => setPinInput(e.target.value)}
               placeholder="••••"
-              className="w-40 mx-auto px-4 py-3 text-center tracking-[1em] font-mono text-2xl rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-amber-500 outline-hidden"
+              className="w-40 mx-auto px-4 py-3 text-center tracking-[1em] font-mono text-2xl rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden"
             />
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-md cursor-pointer transition active:scale-98"
+              className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md cursor-pointer transition active:scale-98"
             >
               {isAr ? 'تسجيل الدخول للكاونتر' : 'Enter Counter'}
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-stone-100 dark:border-stone-800 text-center">
+          <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
             <button
               type="button"
               onClick={() => setRole('customer')}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-stone-900 dark:hover:text-stone-300 transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition cursor-pointer"
             >
               {isAr ? <ArrowRight className="w-3.5 h-3.5" /> : <ArrowLeft className="w-3.5 h-3.5" />}
               <span>{isAr ? 'العودة لتطبيق العملاء' : 'Back to Customer App'}</span>
@@ -261,21 +261,21 @@ export const BaristaPanel: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
       {/* Barista Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-5 rounded-3xl shadow-sm border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-600 text-white flex items-center justify-center shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md">
             <Coffee className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
                 {t('baristaTitle')}
               </h2>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
                 {t('statusActive')}
               </span>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {activeBarista.name} • {activeBarista.branch}
             </p>
           </div>
@@ -283,14 +283,14 @@ export const BaristaPanel: React.FC = () => {
 
         {/* Navigation Tabs & Logout */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5 p-1 bg-stone-100 dark:bg-stone-800 rounded-2xl overflow-x-auto">
+          <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-x-auto">
             <button
               type="button"
               onClick={() => setActiveTab('scan')}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
                 activeTab === 'scan'
-                  ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
               <QrCode className="w-3.5 h-3.5" />
@@ -302,8 +302,8 @@ export const BaristaPanel: React.FC = () => {
               onClick={() => setActiveTab('approvals')}
               className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
                 activeTab === 'approvals'
-                  ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
@@ -320,8 +320,8 @@ export const BaristaPanel: React.FC = () => {
               onClick={() => setActiveTab('add_cust')}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
                 activeTab === 'add_cust'
-                  ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -333,7 +333,7 @@ export const BaristaPanel: React.FC = () => {
             type="button"
             id="barista-pos-logout-btn"
             onClick={logoutBarista}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 text-xs font-bold border border-stone-300 dark:border-stone-700 transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 text-xs font-bold border border-slate-300 dark:border-slate-700 transition cursor-pointer"
             title={t('baristaLogout')}
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -348,18 +348,18 @@ export const BaristaPanel: React.FC = () => {
           {/* Left Column: Search & Scanning Hub */}
           <div className="lg:col-span-5 space-y-4">
             {/* Search Input Box */}
-            <div className="bg-white dark:bg-stone-900 rounded-3xl p-5 shadow-sm border border-stone-200 dark:border-stone-800">
-              <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 mb-2">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 shadow-sm border border-slate-200 dark:border-slate-800">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
                 {t('manualSearch')}
               </label>
               <div className="relative">
-                <Search className="w-4 h-4 absolute top-3.5 left-3.5 text-stone-400 rtl:right-3.5 rtl:left-auto" />
+                <Search className="w-4 h-4 absolute top-3.5 left-3.5 text-slate-400 rtl:right-3.5 rtl:left-auto" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('searchPlaceholder')}
-                  className="w-full py-2.5 px-10 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs font-mono tracking-wider focus:outline-hidden focus:ring-2 focus:ring-amber-500"
+                  className="w-full py-2.5 px-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono tracking-wider focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
@@ -371,13 +371,13 @@ export const BaristaPanel: React.FC = () => {
                       key={c.id}
                       type="button"
                       onClick={() => selectCustomer(c)}
-                      className="w-full flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/80 hover:bg-amber-50 dark:hover:bg-stone-700 text-left rtl:text-right border border-stone-200/60 dark:border-stone-700 transition"
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-indigo-50 dark:hover:bg-slate-700 text-left rtl:text-right border border-slate-200/60 dark:border-slate-700 transition"
                     >
                       <div>
-                        <p className="text-xs font-bold text-stone-900 dark:text-stone-100">{c.name}</p>
-                        <p className="text-[10px] font-mono text-stone-500">{c.cardNumber} • {c.phone}</p>
+                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100">{c.name}</p>
+                        <p className="text-[10px] font-mono text-slate-500">{c.cardNumber} • {c.phone}</p>
                       </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-amber-800 dark:bg-amber-900/50 dark:text-cyan-300">
                         {c.currentStamps}/8 ☕
                       </span>
                     </button>
@@ -387,10 +387,10 @@ export const BaristaPanel: React.FC = () => {
             </div>
 
             {/* Counter Scanner Hub: QR Code vs Physical Card */}
-            <div className="bg-white dark:bg-stone-900 rounded-3xl p-5 shadow-sm border border-stone-200 dark:border-stone-800 space-y-3">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
                   <span>{isAr ? 'خيارات استقبال العميل بالكاونتر' : 'Counter Reception Scanner'}</span>
                 </h3>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
@@ -405,15 +405,15 @@ export const BaristaPanel: React.FC = () => {
                   type="button"
                   id="barista-camera-toggle-btn"
                   onClick={() => setShowQrScanner(true)}
-                  className="flex flex-col items-center justify-center p-4 rounded-2xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-sm hover:opacity-90 active:scale-98 transition cursor-pointer border border-stone-800 dark:border-stone-200 text-center"
+                  className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-sm hover:opacity-90 active:scale-98 transition cursor-pointer border border-slate-800 dark:border-slate-200 text-center"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 dark:text-amber-600 flex items-center justify-center mb-2">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-cyan-400 dark:text-indigo-600 flex items-center justify-center mb-2">
                     <QrCode className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-bold block mb-0.5">
                     {isAr ? 'مسح رمز QR' : 'Scan QR Code'}
                   </span>
-                  <span className="text-[10px] text-stone-400 dark:text-stone-600 leading-tight">
+                  <span className="text-[10px] text-slate-400 dark:text-slate-600 leading-tight">
                     {isAr ? 'من شاشة جوال العميل' : 'From customer phone'}
                   </span>
                 </button>
@@ -439,13 +439,13 @@ export const BaristaPanel: React.FC = () => {
 
               {/* Issue Physical Card Quick Trigger */}
               {selectedCustomer && (
-                <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <button
                     type="button"
                     onClick={() => setShowNfcWriterModal(true)}
-                    className="w-full py-2.5 px-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-amber-900 dark:text-amber-200 border border-amber-300/60 dark:border-amber-700/60 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-2.5 px-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 text-amber-900 dark:text-cyan-200 border border-indigo-300/60 dark:border-indigo-700/60 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Tag className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                    <Tag className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
                     <span>
                       {isAr
                         ? `إصدار وبرمجة بطاقة NFC لـ ${selectedCustomer.name}`
@@ -456,8 +456,8 @@ export const BaristaPanel: React.FC = () => {
               )}
 
               {/* Quick Preset Customers Bar */}
-              <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
-                <span className="text-[10px] font-semibold text-stone-400 block mb-1.5 uppercase">
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <span className="text-[10px] font-semibold text-slate-400 block mb-1.5 uppercase">
                   {isAr ? 'تحديد بطاقة عميل سريعاً للتجربة:' : 'Quick Select Customer:'}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -468,8 +468,8 @@ export const BaristaPanel: React.FC = () => {
                       onClick={() => selectCustomer(c)}
                       className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition ${
                         selectedCustomerId === c.id
-                          ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
-                          : 'bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-amber-400'
+                          ? 'bg-amber-500 text-white border-indigo-500 shadow-xs'
+                          : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-400'
                       }`}
                     >
                       {c.name.split(' ')[0]} ({c.currentStamps}/8)
@@ -483,37 +483,37 @@ export const BaristaPanel: React.FC = () => {
           {/* Right Column: Customer Action Desk */}
           <div className="lg:col-span-7">
             {selectedCustomer ? (
-              <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 shadow-sm border border-stone-200 dark:border-stone-800 space-y-6">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 space-y-6">
                 {/* Customer Profile Header */}
-                <div className="flex items-start justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800">
+                <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100">
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                         {selectedCustomer.name}
                       </h3>
-                      <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
+                      <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-amber-800 dark:text-cyan-300">
                         {isAr
                           ? TIER_CONFIGS[selectedCustomer.tier].nameAr
                           : TIER_CONFIGS[selectedCustomer.tier].nameEn}
                       </span>
                     </div>
-                    <p className="text-xs font-mono text-stone-500 mt-0.5">
+                    <p className="text-xs font-mono text-slate-500 mt-0.5">
                       {selectedCustomer.cardNumber} • {selectedCustomer.phone}
                     </p>
                   </div>
 
                   <div className="text-right rtl:text-left">
-                    <span className="text-xs font-bold text-stone-400 block">{t('pointsBalance')}</span>
-                    <span className="text-lg font-extrabold text-amber-600 dark:text-amber-400 font-mono">
+                    <span className="text-xs font-bold text-slate-400 block">{t('pointsBalance')}</span>
+                    <span className="text-lg font-extrabold text-indigo-600 dark:text-cyan-400 font-mono">
                       {selectedCustomer.totalPoints} pts
                     </span>
                     <button
                       type="button"
                       id="barista-quick-redeem-gifts-link"
                       onClick={() => setShowPointsGiftsModal(true)}
-                      className="mt-1 px-2.5 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 text-[11px] font-bold text-amber-800 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60 cursor-pointer flex items-center gap-1 ml-auto rtl:ml-0 rtl:mr-auto transition active:scale-95"
+                      className="mt-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-[11px] font-bold text-amber-800 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-700/60 cursor-pointer flex items-center gap-1 ml-auto rtl:ml-0 rtl:mr-auto transition active:scale-95"
                     >
-                      <Gift className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                      <Gift className="w-3 h-3 text-indigo-600 dark:text-cyan-400" />
                       <span>{isAr ? 'صرف / تبديل هدايا' : 'Redeem / Replace Gifts'}</span>
                     </button>
                   </div>
@@ -522,7 +522,7 @@ export const BaristaPanel: React.FC = () => {
                 {/* Stamps Status Visual */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-stone-700 dark:text-stone-300">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                       {t('stampProgress')} ({selectedCustomer.currentStamps} / {settings.stampsForFreeDrink || 8})
                     </span>
                     {selectedCustomer.currentStamps >= (settings.stampsForFreeDrink || 8) && (
@@ -533,7 +533,7 @@ export const BaristaPanel: React.FC = () => {
                   </div>
 
                   {/* Stamp grid */}
-                  <div className="grid grid-cols-8 gap-1.5 p-3 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200/60 dark:border-stone-700/60">
+                  <div className="grid grid-cols-8 gap-1.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     {Array.from({ length: settings.stampsForFreeDrink || 8 }).map((_, i) => {
                       const isStamped = i < selectedCustomer.currentStamps;
                       return (
@@ -541,8 +541,8 @@ export const BaristaPanel: React.FC = () => {
                           key={i}
                           className={`flex items-center justify-center aspect-square rounded-xl text-xs font-bold ${
                             isStamped
-                              ? 'bg-amber-500 text-stone-950 shadow-xs'
-                              : 'bg-stone-200 dark:bg-stone-700 text-stone-400'
+                              ? 'bg-amber-500 text-slate-950 shadow-xs'
+                              : 'bg-slate-200 dark:bg-slate-700 text-slate-400'
                           }`}
                         >
                           {isStamped ? '☕' : i + 1}
@@ -553,13 +553,13 @@ export const BaristaPanel: React.FC = () => {
                 </div>
 
                 {/* Issue Stamps Action Desk */}
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-3">
-                  <span className="text-xs font-bold text-amber-900 dark:text-amber-200 block">
+                <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 space-y-3">
+                  <span className="text-xs font-bold text-amber-900 dark:text-cyan-200 block">
                     {t('addStamps')}
                   </span>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-stone-600 dark:text-stone-300">{t('selectDrinkCount')}</span>
+                    <span className="text-xs text-slate-600 dark:text-slate-300">{t('selectDrinkCount')}</span>
                     {[1, 2, 3, 4].map((num) => (
                       <button
                         key={num}
@@ -567,8 +567,8 @@ export const BaristaPanel: React.FC = () => {
                         onClick={() => setStampsCount(num)}
                         className={`w-9 h-9 rounded-xl text-xs font-bold transition ${
                           stampsCount === num
-                            ? 'bg-amber-600 text-white shadow-md scale-105'
-                            : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700'
+                            ? 'bg-indigo-600 text-white shadow-md scale-105'
+                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                         }`}
                       >
                         +{num}
@@ -580,7 +580,7 @@ export const BaristaPanel: React.FC = () => {
                     type="button"
                     id="barista-confirm-stamps-btn"
                     onClick={handleGiveStamps}
-                    className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-md transition active:scale-98 flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition active:scale-98 flex items-center justify-center gap-2"
                   >
                     <Check className="w-4 h-4" />
                     <span>{t('giveStampsBtn')} (+{stampsCount} {isAr ? 'أختام' : 'stamps'})</span>
@@ -589,7 +589,7 @@ export const BaristaPanel: React.FC = () => {
 
                 {/* Redeem Free Drink / Rewards */}
                 <div className="space-y-3 pt-2">
-                  <span className="text-xs font-bold text-stone-700 dark:text-stone-300 block">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
                     {isAr ? 'خيارات الاستبدال والمكافآت' : 'Redemption Options'}
                   </span>
 
@@ -606,24 +606,24 @@ export const BaristaPanel: React.FC = () => {
                   </button>
 
                   {/* 2. Points Collected Gifts & Replacement Hub */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-400/40 dark:border-amber-700/40 space-y-3">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-indigo-400/40 dark:border-indigo-700/40 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-bold shadow-xs">
+                        <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
                           <Gift className="w-4 h-4" />
                         </div>
                         <div>
-                          <h4 className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                          <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
                             {t('pointsGiftsTitle')}
                           </h4>
-                          <span className="text-[10px] text-stone-500 dark:text-stone-400">
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400">
                             {isAr ? 'صرف، تبديل، أو استرجاع هدايا النقاط' : 'Redeem, replace, or refund gifts'}
                           </span>
                         </div>
                       </div>
 
                       <div className="text-right rtl:text-left">
-                        <span className="text-xs font-extrabold text-amber-600 dark:text-amber-400 font-mono">
+                        <span className="text-xs font-extrabold text-indigo-600 dark:text-cyan-400 font-mono">
                           {selectedCustomer.totalPoints} pts
                         </span>
                       </div>
@@ -632,7 +632,7 @@ export const BaristaPanel: React.FC = () => {
                     {/* Quick In-Desk Eligible Rewards */}
                     {rewards.filter((r) => r.available !== false && selectedCustomer.totalPoints >= r.pointsCost).length > 0 ? (
                       <div className="space-y-1.5 pt-1">
-                        <span className="text-[10px] font-bold text-stone-500 uppercase block">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase block">
                           {isAr ? 'هدايا جاهزة للصرف فوراً بالنقاط:' : 'Gifts ready to redeem with points:'}
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -642,13 +642,13 @@ export const BaristaPanel: React.FC = () => {
                             .map((reward) => (
                               <div
                                 key={reward.id}
-                                className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700"
+                                className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
                               >
                                 <div className="truncate mr-2 rtl:mr-0 rtl:ml-2">
-                                  <p className="text-[11px] font-bold text-stone-900 dark:text-stone-100 truncate">
+                                  <p className="text-[11px] font-bold text-slate-900 dark:text-slate-100 truncate">
                                     {isAr ? reward.titleAr : reward.titleEn}
                                   </p>
-                                  <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400">
+                                  <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-cyan-400">
                                     {reward.pointsCost} pts
                                   </span>
                                 </div>
@@ -666,7 +666,7 @@ export const BaristaPanel: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="p-2.5 rounded-xl bg-stone-100/60 dark:bg-stone-800/40 text-[11px] text-stone-500 text-center">
+                      <div className="p-2.5 rounded-xl bg-slate-100/60 dark:bg-slate-800/40 text-[11px] text-slate-500 text-center">
                         {isAr
                           ? `رصيد العميل الحالي (${selectedCustomer.totalPoints} نقطة). يحتاج المزيد من النقاط لفتح هدايا الكتالوج.`
                           : `Customer has ${selectedCustomer.totalPoints} pts. Needs more points for catalog gifts.`}
@@ -679,7 +679,7 @@ export const BaristaPanel: React.FC = () => {
                         type="button"
                         id="barista-open-points-catalog-btn"
                         onClick={() => setShowPointsGiftsModal(true)}
-                        className="py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+                        className="py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
                       >
                         <Gift className="w-3.5 h-3.5" />
                         <span>{t('pointsGiftsCatalog')}</span>
@@ -689,9 +689,9 @@ export const BaristaPanel: React.FC = () => {
                         type="button"
                         id="barista-open-replace-refund-btn"
                         onClick={() => setShowPointsGiftsModal(true)}
-                        className="py-2 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 font-bold text-xs border border-stone-300 dark:border-stone-700 transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+                        className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
                       >
-                        <RotateCcw className="w-3.5 h-3.5 text-amber-500" />
+                        <RotateCcw className="w-3.5 h-3.5 text-indigo-500" />
                         <span>{t('replaceOrRefundGift')}</span>
                       </button>
                     </div>
@@ -700,7 +700,7 @@ export const BaristaPanel: React.FC = () => {
                   {/* 3. Active Customer Coupons (if any) */}
                   {selectedCustomer.coupons.filter((c) => !c.used).length > 0 && (
                     <div className="space-y-2 pt-2">
-                      <span className="text-[11px] font-bold text-stone-500 uppercase">
+                      <span className="text-[11px] font-bold text-slate-500 uppercase">
                         {isAr ? 'كوبونات العميل الجاهزة للاستبدال:' : 'Customer Active Coupons:'}
                       </span>
                       {selectedCustomer.coupons
@@ -708,18 +708,18 @@ export const BaristaPanel: React.FC = () => {
                         .map((cp) => (
                           <div
                             key={cp.id}
-                            className="flex items-center justify-between p-3 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700"
+                            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
                           >
                             <div>
-                              <p className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                              <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
                                 {isAr ? cp.titleAr : cp.titleEn}
                               </p>
-                              <p className="text-[10px] font-mono text-amber-600 dark:text-amber-400">{cp.code}</p>
+                              <p className="text-[10px] font-mono text-indigo-600 dark:text-cyan-400">{cp.code}</p>
                             </div>
                             <button
                               type="button"
                               onClick={() => redeemCoupon(selectedCustomer.id, cp.id, activeBarista.name)}
-                              className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold"
+                              className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold"
                             >
                               {t('redeemCoupon')}
                             </button>
@@ -729,26 +729,26 @@ export const BaristaPanel: React.FC = () => {
                   )}
 
                   {/* Program / Write Physical NFC Tag / Keyfob for this customer */}
-                  <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                     <button
                       type="button"
                       id="barista-program-nfc-tag-btn"
                       onClick={() => setShowNfcWriterModal(true)}
-                      className="w-full py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 text-xs font-bold transition flex items-center justify-center gap-2 border border-stone-300 dark:border-stone-700 cursor-pointer"
+                      className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center justify-center gap-2 border border-slate-300 dark:border-slate-700 cursor-pointer"
                     >
-                      <Tag className="w-3.5 h-3.5 text-amber-500" />
+                      <Tag className="w-3.5 h-3.5 text-indigo-500" />
                       <span>{isAr ? 'برمجة بطاقة / ميدالية NFC لهذا العميل' : 'Program Physical NFC Tag / Keyfob'}</span>
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="bg-white dark:bg-stone-900 rounded-3xl p-12 shadow-sm border border-stone-200 dark:border-stone-800 text-center text-stone-400">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-12 shadow-sm border border-slate-200 dark:border-slate-800 text-center text-slate-400">
                 <Coffee className="w-12 h-12 mx-auto mb-3 opacity-40" />
-                <h4 className="text-base font-bold text-stone-700 dark:text-stone-300">
+                <h4 className="text-base font-bold text-slate-700 dark:text-slate-300">
                   {t('noCustomerSelected')}
                 </h4>
-                <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
                   {isAr
                     ? 'امسح رمز QR الخاص ببطاقة العميل أو استخدم البحث السريع برقم البطاقة للبدء بختم الأكواب.'
                     : 'Scan the customer QR code or enter card number to issue stamps and redeem rewards.'}
@@ -761,19 +761,19 @@ export const BaristaPanel: React.FC = () => {
 
       {/* Tab: Pending Approvals */}
       {activeTab === 'approvals' && (
-        <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 shadow-sm border border-stone-200 dark:border-stone-800">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-              <UserCheck className="w-5 h-5 text-amber-600" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <UserCheck className="w-5 h-5 text-indigo-600" />
               <span>{t('pendingApprovalsTab')}</span>
             </h3>
-            <span className="text-xs text-stone-400">
+            <span className="text-xs text-slate-400">
               {pendingCustomers.length} {isAr ? 'طلبات بانتظار الاعتماد' : 'pending requests'}
             </span>
           </div>
 
           {pendingCustomers.length === 0 ? (
-            <div className="py-12 text-center text-stone-400 text-sm">
+            <div className="py-12 text-center text-slate-400 text-sm">
               <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-500 opacity-60" />
               <p>{t('noPendingApprovals')}</p>
             </div>
@@ -782,16 +782,16 @@ export const BaristaPanel: React.FC = () => {
               {pendingCustomers.map((cust) => (
                 <div
                   key={cust.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/70 border border-stone-200 dark:border-stone-700"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">{cust.name}</h4>
-                      <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-bold">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">{cust.name}</h4>
+                      <span className="text-[10px] font-mono text-indigo-600 dark:text-cyan-400 font-bold">
                         {cust.cardNumber}
                       </span>
                     </div>
-                    <p className="text-xs text-stone-500 mt-0.5">
+                    <p className="text-xs text-slate-500 mt-0.5">
                       {cust.phone} • {isAr ? 'تاريخ التسجيل:' : 'Joined:'} {new Date(cust.joinedAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -809,7 +809,7 @@ export const BaristaPanel: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => rejectCustomer(cust.id)}
-                      className="px-3 py-2 rounded-xl bg-stone-200 dark:bg-stone-700 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/60 dark:hover:text-red-400 text-stone-600 dark:text-stone-300 font-bold text-xs transition"
+                      className="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/60 dark:hover:text-red-400 text-slate-600 dark:text-slate-300 font-bold text-xs transition"
                     >
                       {t('rejectCustomerBtn')}
                     </button>
@@ -823,16 +823,16 @@ export const BaristaPanel: React.FC = () => {
 
       {/* Tab: Rapid Customer Add */}
       {activeTab === 'add_cust' && (
-        <div className="max-w-xl mx-auto bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 shadow-sm border border-stone-200 dark:border-stone-800">
+        <div className="max-w-xl mx-auto bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 flex items-center justify-center">
               <UserPlus className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                 {t('addNewCustomer')}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {isAr ? 'تسجيل عميل جديد واعتماده فورياً وإرسال رسالة ترحيب واتساب' : 'Instant in-store customer onboarding with automated WhatsApp'}
               </p>
             </div>
@@ -840,7 +840,7 @@ export const BaristaPanel: React.FC = () => {
 
           <form onSubmit={handleAddNewCustomer} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('fullName')} *
               </label>
               <input
@@ -849,12 +849,12 @@ export const BaristaPanel: React.FC = () => {
                 onChange={(e) => setNewCustName(e.target.value)}
                 required
                 placeholder={isAr ? 'مثال: محمد الشريف' : 'e.g. Michael Jordan'}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:ring-2 focus:ring-indigo-500 outline-hidden"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('phone')} * (WhatsApp)
               </label>
               <input
@@ -863,25 +863,25 @@ export const BaristaPanel: React.FC = () => {
                 onChange={(e) => setNewCustPhone(e.target.value)}
                 required
                 placeholder="+963 933 123 456"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:ring-2 focus:ring-indigo-500 outline-hidden"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('dob')} 🎂
               </label>
               <input
                 type="date"
                 value={newCustDob}
                 onChange={(e) => setNewCustDob(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:ring-2 focus:ring-indigo-500 outline-hidden"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
             >
               <Plus className="w-4 h-4" />
               <span>{t('quickAddBtn')}</span>

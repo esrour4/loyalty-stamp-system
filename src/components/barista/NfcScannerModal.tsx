@@ -159,18 +159,18 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4 animate-in fade-in">
-      <div className="relative w-full max-w-md rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden text-stone-900 dark:text-stone-100 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-md rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden text-slate-900 dark:text-slate-100 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-stone-100 dark:border-stone-800 shrink-0">
+        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 flex items-center justify-center font-bold">
               <Radio className="w-5 h-5 animate-pulse" />
             </div>
             <div>
               <h3 className="text-base font-bold">
                 {isAr ? 'قارئ تقنية NFC والبطاقات' : 'NFC Card & Tag Reader'}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {isHardwareSupported
                   ? isAr
                     ? 'المستشعر اللاسلكي نشط (Web NFC)'
@@ -185,7 +185,7 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -198,7 +198,7 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
             <div className="relative flex items-center justify-center w-28 h-28">
               {/* Radar waves */}
               <div className="absolute inset-0 rounded-full bg-amber-500/15 animate-ping duration-1000" />
-              <div className="absolute -inset-3 rounded-full bg-amber-500/10 animate-pulse" />
+              <div className="absolute -inset-3 rounded-full bg-indigo-500/10 animate-pulse" />
               <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/30 z-10">
                 <Smartphone className="w-9 h-9" />
               </div>
@@ -215,12 +215,12 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
             </h4>
 
             {lastScannedUid && (
-              <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold">
+              <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-mono text-indigo-600 dark:text-cyan-400 font-bold">
                 Tag UID: {lastScannedUid}
               </span>
             )}
 
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-xs leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs leading-relaxed">
               {isHardwareSupported
                 ? isAr
                   ? 'يتم الاستماع تلقائياً لبطاقات NTAG وشرائح NFC المبرمجة للمتجر.'
@@ -232,15 +232,15 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
           </div>
 
           {/* Educational Phone-to-Phone Tip */}
-          <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-start gap-3 text-xs">
-            <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-amber-800/60 flex items-start gap-3 text-xs">
+            <Info className="w-4 h-4 text-indigo-600 dark:text-cyan-400 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="font-bold text-amber-950 dark:text-amber-200">
+              <p className="font-bold text-amber-950 dark:text-cyan-200">
                 {isAr
                   ? 'لمس الهاتف بالهاتف يهتز بدون نقل البيانات؟'
                   : 'Touching Phone-to-Phone Vibrates Without Data?'}
               </p>
-              <p className="text-[11px] text-amber-900/80 dark:text-amber-300/80 leading-relaxed">
+              <p className="text-[11px] text-amber-900/80 dark:text-cyan-300/80 leading-relaxed">
                 {isAr
                   ? 'اهتزاز الهاتف عند لمس جوال آخر هو استشعار تلقائي من نظام أندرويد، ولكن متصفحات الويب لا تدعم البث المباشر بين هاتفين. لنقل البيانات فورياً بين هاتفين، استخدم كاميرا QR أدناه.'
                   : 'Phone vibration upon touching another phone is a hardware OS collision. Web browsers require physical NFC tags/cards to read data. For phone-to-phone, use the Instant Camera Scanner.'}
@@ -251,7 +251,7 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
                   onClose();
                   onOpenQrScanner();
                 }}
-                className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
+                className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-cyan-400 hover:underline cursor-pointer"
               >
                 <QrCode className="w-3.5 h-3.5" />
                 <span>{isAr ? 'فتح ماسح كاميرا QR الفوري' : 'Switch to Camera QR Scanner'}</span>
@@ -260,10 +260,10 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
           </div>
 
           {/* 1-Tap Quick Customer Tap Simulator */}
-          <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
+          <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-indigo-500" />
                 <span>{isAr ? 'محاكاة نقرة بطاقة العميل (تجربة فورية):' : 'Instant 1-Tap Card Simulation:'}</span>
               </span>
             </div>
@@ -274,17 +274,17 @@ export const NfcScannerModal: React.FC<NfcScannerModalProps> = ({
                   key={c.id}
                   type="button"
                   onClick={() => handleSimulateTap(c)}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/80 hover:bg-amber-50 dark:hover:bg-stone-700/80 border border-stone-200 dark:border-stone-700/70 text-left rtl:text-right transition cursor-pointer group"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-indigo-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/70 text-left rtl:text-right transition cursor-pointer group"
                 >
                   <div className="min-w-0 pr-2">
-                    <p className="text-xs font-bold text-stone-800 dark:text-stone-200 truncate group-hover:text-amber-600 dark:group-hover:text-amber-400">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-indigo-600 dark:group-hover:text-cyan-400">
                       {c.name}
                     </p>
-                    <p className="text-[10px] font-mono text-stone-500 truncate">
+                    <p className="text-[10px] font-mono text-slate-500 truncate">
                       {c.cardNumber}
                     </p>
                   </div>
-                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 shrink-0">
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950/60 text-amber-800 dark:text-cyan-300 shrink-0">
                     {c.currentStamps}/8 ☕
                   </span>
                 </button>

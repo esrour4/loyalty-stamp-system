@@ -91,18 +91,18 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in">
-      <div className="relative w-full max-w-md rounded-3xl bg-white dark:bg-stone-900 p-6 sm:p-7 border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-md rounded-3xl bg-white dark:bg-slate-900 p-6 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-cyan-400 flex items-center justify-center font-bold">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                 {t('changeOwnerPinTitle')}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t('ownerSecurityTitle')}
               </p>
             </div>
@@ -110,7 +110,7 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -118,19 +118,19 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
 
         {/* Form Body */}
         <form onSubmit={handleSave} className="space-y-4 pt-4">
-          <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
             {t('changeOwnerPinDesc')}
           </p>
 
           {/* Current PIN reference */}
-          <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/70 space-y-1.5">
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-stone-400" />
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-slate-400" />
                 <span>{t('currentOwnerPin')}</span>
               </label>
-              <span className="text-[11px] font-mono text-stone-500 dark:text-stone-400">
-                {isAr ? 'الرمز الحالي المسجل:' : 'Active PIN:'} <strong className="text-stone-800 dark:text-stone-200">{currentPin}</strong>
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                {isAr ? 'الرمز الحالي المسجل:' : 'Active PIN:'} <strong className="text-slate-800 dark:text-slate-200">{currentPin}</strong>
               </span>
             </div>
             <input
@@ -142,22 +142,22 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
                 if (val.length <= 4) setEnteredCurrentPin(val);
               }}
               placeholder={isAr ? 'أدخل الرمز الحالي للتأكيد (اختياري)' : 'Enter current PIN to confirm (optional)'}
-              className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-xs font-mono text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-amber-500 outline-hidden tracking-widest"
+              className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden tracking-widest"
             />
           </div>
 
           {/* New PIN & Confirm New PIN Box */}
-          <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 space-y-3">
+          <div className="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-amber-950 dark:text-amber-200 flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <label className="text-xs font-bold text-indigo-950 dark:text-indigo-200 flex items-center gap-1.5">
+                <KeyRound className="w-3.5 h-3.5 text-indigo-600 dark:text-cyan-400" />
                 <span>{t('newOwnerPin')}</span>
               </label>
 
               <button
                 type="button"
                 onClick={handleGenerateRandomPin}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold shadow-xs transition cursor-pointer"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold shadow-xs transition cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
                 <span>{t('generateRandomPin')}</span>
@@ -166,7 +166,7 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] font-semibold text-amber-900 dark:text-amber-300 block mb-1">
+                <label className="text-[11px] font-semibold text-indigo-900 dark:text-indigo-300 block mb-1">
                   {t('newOwnerPin')}
                 </label>
                 <input
@@ -180,12 +180,12 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
                     setErrorMsg('');
                   }}
                   placeholder="••••"
-                  className="w-full px-3 py-2 text-center tracking-[0.5em] font-mono text-base font-bold rounded-xl bg-white dark:bg-stone-900 border border-amber-300 dark:border-amber-700 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-amber-500 outline-hidden"
+                  className="w-full px-3 py-2 text-center tracking-[0.5em] font-mono text-base font-bold rounded-xl bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-semibold text-amber-900 dark:text-amber-300 block mb-1">
+                <label className="text-[11px] font-semibold text-indigo-900 dark:text-indigo-300 block mb-1">
                   {t('confirmNewOwnerPin')}
                 </label>
                 <input
@@ -199,7 +199,7 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
                     setErrorMsg('');
                   }}
                   placeholder="••••"
-                  className="w-full px-3 py-2 text-center tracking-[0.5em] font-mono text-base font-bold rounded-xl bg-white dark:bg-stone-900 border border-amber-300 dark:border-amber-700 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-amber-500 outline-hidden"
+                  className="w-full px-3 py-2 text-center tracking-[0.5em] font-mono text-base font-bold rounded-xl bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden"
                 />
               </div>
             </div>
@@ -209,7 +209,7 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPins(!showPins)}
-                className="flex items-center gap-1.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300 hover:text-amber-950 dark:hover:text-amber-100 transition cursor-pointer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold text-indigo-800 dark:text-indigo-300 hover:text-indigo-950 dark:hover:text-indigo-100 transition cursor-pointer"
               >
                 {showPins ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 <span>{showPins ? (isAr ? 'إخفاء الأرقام' : 'Hide digits') : (isAr ? 'إظهار الأرقام' : 'Show digits')}</span>
@@ -232,18 +232,18 @@ export const ChangeOwnerPinModal: React.FC<ChangeOwnerPinModalProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-stone-100 dark:border-stone-800">
+          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 text-xs font-bold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition cursor-pointer"
+              className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               {isAr ? 'إلغاء' : 'Cancel'}
             </button>
             <button
               type="submit"
               disabled={newPin.length !== 4 || confirmPin.length !== 4}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md transition cursor-pointer"
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md transition cursor-pointer"
             >
               <Check className="w-4 h-4" />
               <span>{t('saveNewPin')}</span>

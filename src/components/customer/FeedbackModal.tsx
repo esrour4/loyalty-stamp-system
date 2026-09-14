@@ -38,10 +38,10 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
             key={star}
             type="button"
             onClick={() => setRating(star)}
-            className="p-1 text-amber-400 hover:scale-110 transition-transform"
+            className="p-1 text-cyan-400 hover:scale-110 transition-transform"
           >
             <Star
-              className={`w-5 h-5 ${star <= rating ? 'fill-amber-400 text-amber-400' : 'text-stone-300 dark:text-stone-600'}`}
+              className={`w-5 h-5 ${star <= rating ? 'fill-amber-400 text-cyan-400' : 'text-slate-300 dark:text-slate-600'}`}
             />
           </button>
         ))}
@@ -51,11 +51,11 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-      <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 text-stone-900 dark:text-stone-100 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 text-slate-900 dark:text-slate-100 shadow-2xl overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-full"
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-full"
         >
           <X className="w-5 h-5" />
         </button>
@@ -65,31 +65,31 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
               <ThumbsUp className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
               {isAr ? 'شكراً لمشاركتنا رأيك!' : 'Thank you for your feedback!'}
             </h3>
-            <p className="text-sm text-stone-500 dark:text-stone-400 mt-2">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
               {t('feedbackThanks', { points: settings.surveyRewardPoints || 25 })}
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-cyan-400">
                 <MessageSquare className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                   {t('feedbackTitle')}
                 </h3>
-                <p className="text-xs text-stone-500 dark:text-stone-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   {t('feedbackSubtitle', { points: settings.surveyRewardPoints || 25 })}
                 </p>
               </div>
             </div>
 
             {/* Rating criteria */}
-            <div className="space-y-3.5 my-5 bg-stone-50 dark:bg-stone-800/50 p-4 rounded-2xl border border-stone-200/60 dark:border-stone-700/60">
+            <div className="space-y-3.5 my-5 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold">{t('qualityRating')}</span>
                 {renderStars(quality, setQuality)}
@@ -110,7 +110,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
 
             {/* Feedback textarea */}
             <div className="mb-5">
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 {t('comments')}
               </label>
               <textarea
@@ -118,13 +118,13 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
                 onChange={(e) => setComment(e.target.value)}
                 placeholder={t('commentsPlaceholder')}
                 rows={3}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:outline-hidden focus:ring-2 focus:ring-amber-500 resize-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:ring-2 focus:ring-indigo-500 resize-none"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               <span>{t('submitFeedback')}</span>

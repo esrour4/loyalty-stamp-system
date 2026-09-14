@@ -1,4 +1,4 @@
-export type UserRole = 'customer' | 'barista' | 'owner';
+export type UserRole = 'landing' | 'customer' | 'barista' | 'owner';
 
 export type Language = 'en' | 'ar';
 
@@ -145,12 +145,12 @@ export interface WhatsAppLog {
 }
 
 export interface ThemeColors {
-  primary: string; // Hex e.g. #78350f (warm roast) or custom
-  accent: string;  // Hex e.g. #d97706 (amber caramel)
+  primary: string; // Hex e.g. #4f46e5 (indigo) or custom
+  accent: string;  // Hex e.g. #06b6d4 (cyan)
   background: string;
   cardBg: string;
   textColor: string;
-  preset: 'espresso' | 'caramel' | 'emerald' | 'midnight' | 'rose';
+  preset: 'indigoCyan' | 'emeraldTeal' | 'violetAmber' | 'skyBlue' | 'roseCoral';
 }
 
 export interface StoreSettings {

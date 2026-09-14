@@ -113,20 +113,20 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className="bg-white dark:bg-stone-900 w-full max-w-lg rounded-3xl shadow-2xl border border-stone-200 dark:border-stone-800 overflow-hidden"
+        className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-stone-100 dark:border-stone-800">
+        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 flex items-center justify-center font-bold">
               <Edit2 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                 {t('editCustomerTitle')}
               </h3>
-              <p className="text-xs font-mono text-stone-400">
+              <p className="text-xs font-mono text-slate-400">
                 {customer.cardNumber}
               </p>
             </div>
@@ -135,7 +135,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -147,7 +147,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
             status === 'suspended'
               ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300'
               : status === 'pending'
-              ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300'
+              ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-amber-900 text-indigo-800 dark:text-cyan-300'
               : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300'
           }`}
         >
@@ -155,7 +155,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
             {status === 'suspended' ? (
               <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
             ) : status === 'pending' ? (
-              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+              <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
             ) : (
               <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
             )}
@@ -201,7 +201,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
           {/* Full Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('fullName')} *
               </label>
               <div className="relative">
@@ -209,14 +209,14 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-medium text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-medium text-slate-900 dark:text-slate-100"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('phone')} *
               </label>
               <div className="relative">
@@ -225,7 +225,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+963..."
-                  className="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-mono font-medium text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono font-medium text-slate-900 dark:text-slate-100"
                   required
                 />
               </div>
@@ -235,45 +235,45 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
           {/* Date of birth & Referral Code */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('dob')}
               </label>
               <input
                 type="date"
                 value={dateOfBirth}
                 onChange={(e) => setDateOfBirth(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-medium text-stone-900 dark:text-stone-100"
+                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-medium text-slate-900 dark:text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('yourReferralCode')}
               </label>
               <input
                 type="text"
                 value={referralCode}
                 onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                className="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-mono uppercase text-stone-900 dark:text-stone-100"
+                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono uppercase text-slate-900 dark:text-slate-100"
               />
             </div>
           </div>
 
           {/* Stamps & Points with Tier recalculation preview */}
-          <div className="p-4 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-900/40 space-y-3">
+          <div className="p-4 rounded-2xl bg-amber-500/5 dark:bg-indigo-500/10 border border-indigo-200 dark:border-amber-900/40 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-600" />
+              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-indigo-600" />
                 <span>{isAr ? 'الأختام والنقاط وفئة العميل' : 'Stamps, Points & Member Tier'}</span>
               </span>
 
               {/* Dynamic Predicted Tier Badge */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white dark:bg-stone-800 shadow-sm border border-stone-200 dark:border-stone-700">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700">
                 <span
                   className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: predictedTierConfig.color }}
                 />
-                <span className="text-[11px] font-bold text-stone-800 dark:text-stone-200">
+                <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
                   {isAr ? predictedTierConfig.nameAr : predictedTierConfig.nameEn}
                 </span>
               </div>
@@ -281,7 +281,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   {t('currentStampsCount')} (0 - {settings.stampsForFreeDrink || 8})
                 </label>
                 <input
@@ -290,12 +290,12 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
                   max={settings.stampsForFreeDrink || 8}
                   value={currentStamps}
                   onChange={(e) => setCurrentStamps(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-bold font-mono text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold font-mono text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   {t('pointsBalance')}
                 </label>
                 <input
@@ -304,12 +304,12 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
                   step={5}
                   value={totalPoints}
                   onChange={(e) => setTotalPoints(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-bold font-mono text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold font-mono text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
-            <p className="text-[11px] text-stone-500 dark:text-stone-400">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               {isAr
                 ? `⚡ يتم تحديد فئة العميل تلقائياً بناءً على النقاط (${totalPoints} نقطة = ${predictedTierConfig.nameAr}).`
                 : `⚡ Member tier updates dynamically based on configured thresholds (${totalPoints} pts = ${predictedTierConfig.nameEn}).`}
@@ -318,7 +318,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
 
           {/* Account Status Radio Group */}
           <div>
-            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-2">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
               {t('accountStatus')}
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -336,7 +336,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
                 {
                   value: 'pending' as const,
                   label: isAr ? 'معلق للطلب' : 'Pending',
-                  color: 'border-amber-500 text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300',
+                  color: 'border-indigo-500 text-amber-700 bg-indigo-50 dark:bg-indigo-950/40 dark:text-cyan-300',
                 },
               ].map((opt) => (
                 <button
@@ -346,7 +346,7 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
                   className={`py-2 px-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 ${
                     status === opt.value
                       ? `${opt.color} ring-2 ring-offset-1`
-                      : 'border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800'
+                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
                   <span>{opt.label}</span>
@@ -356,17 +356,17 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-stone-100 dark:border-stone-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-semibold transition"
+              className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold transition"
             >
               {t('cancel')}
             </button>
             <button
               type="submit"
-              className="px-6 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-sm transition"
+              className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-sm transition"
             >
               {t('saveCustomerChanges')}
             </button>
