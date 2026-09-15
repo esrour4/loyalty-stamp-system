@@ -3,19 +3,15 @@ import {
   Bell,
   Coffee,
   Globe,
-  LogIn,
   Moon,
-  ShieldCheck,
   Smartphone,
   Sparkles,
   Store,
   Sun,
-  User,
   X,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PWAInstallButton } from './PWAInstallButton';
-import { QuickLoginModal } from '../landing/QuickLoginModal';
 import { UserRole } from '../../types';
 
 export const Header: React.FC = () => {
@@ -30,11 +26,9 @@ export const Header: React.FC = () => {
     settings,
     notifications,
     toast,
-    currentCustomer,
   } = useApp();
 
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const isAr = language === 'ar';
 
   const roleOptions: { key: UserRole; label: string; icon: any }[] = [
@@ -46,13 +40,6 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {/* Quick Login Modal */}
-      <QuickLoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        defaultTab="customer"
-      />
-
       {/* Toast Notification Alert */}
       {toast && (
         <div
@@ -110,20 +97,8 @@ export const Header: React.FC = () => {
               })}
             </div>
 
-            {/* Right: Actions (Sign In Trigger, Language, Theme, Notifications, PWA Install) */}
+            {/* Right: Actions (PWA Install, Language, Theme, Notifications) */}
             <div className="flex items-center gap-1.5 sm:gap-2">
-              
-              {/* Quick Sign-In CTA Button */}
-              <button
-                type="button"
-                id="header-quick-signin-btn"
-                onClick={() => setShowLoginModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-extrabold text-xs shadow-xs transition cursor-pointer active:scale-95"
-              >
-                <LogIn className="w-3.5 h-3.5 text-cyan-200" />
-                <span className="hidden sm:inline">{t('quickLogin')}</span>
-              </button>
-
               <PWAInstallButton />
 
               {/* Language Switcher */}

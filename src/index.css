@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
+  html.dark {
+    color-scheme: dark;
+  }
+  html:not(.dark) {
+    color-scheme: light;
+  }
   html[dir="rtl"] {
     font-family: 'Cairo', system-ui, -apple-system, sans-serif;
   }
