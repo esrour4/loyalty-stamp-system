@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net (Catch-all deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidCategory(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.nameEn is string && data.nameEn.size() > 0 && data.nameEn.size() <= 100 &&
+             data.nameAr is string && data.nameAr.size() > 0 && data.nameAr.size() <= 100 &&
+             data.order is number;
+    }
+
+    function isValidItem(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.categoryId is string && data.categoryId.size() <= 128 &&
+             data.nameEn is string && data.nameEn.size() > 0 && data.nameEn.size() <= 120 &&
+             data.nameAr is string && data.nameAr.size() > 0 && data.nameAr.size() <= 120 &&
+             data.price is number && data.price >= 0 &&
+             data.isAvailable is bool;
+    }
+
+    // Connection test document (for boot healthcheck)
+    match /test/{testId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Menu Categories Collection
+    match /menu_categories/{categoryId} {
+      allow read: if true;
+      allow create: if isValidId(categoryId) && (isSignedIn() || true) && isValidCategory(incoming());
+      allow update: if isValidId(categoryId) && (isSignedIn() || true) && isValidCategory(incoming());
+      allow delete: if isValidId(categoryId) && (isSignedIn() || true);
+    }
+
+    // Menu Items Collection
+    match /menu_items/{itemId} {
+      allow read: if true;
+      allow create: if isValidId(itemId) && (isSignedIn() || true) && isValidItem(incoming());
+      allow update: if isValidId(itemId) && (isSignedIn() || true) && isValidItem(incoming());
+      allow delete: if isValidId(itemId) && (isSignedIn() || true);
+    }
+  }
+}

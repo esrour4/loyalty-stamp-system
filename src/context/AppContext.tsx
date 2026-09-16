@@ -6,6 +6,8 @@ import {
   Coupon,
   Customer,
   Language,
+  MenuCategory,
+  MenuItem,
   RewardItem,
   StoreSettings,
   SurveyFeedback,
@@ -19,6 +21,8 @@ import {
 } from '../types';
 import { translations } from '../i18n/translations';
 import { ZenderSendResult, ZenderService } from '../services/zenderService';
+import { MenuService } from '../services/menuService';
+import { testFirestoreConnection } from '../services/firebase';
 
 export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
   {
@@ -442,6 +446,18 @@ interface AppContextType {
   sendTestWhatsApp: (phone: string, overrideConfig?: { apiUrl?: string; apiKey?: string; whatsappDeviceId?: string; enabled?: boolean }) => Promise<ZenderSendResult>;
   triggerToast: (msg: string, type?: 'success' | 'info' | 'warning') => void;
   toast: { message: string; type: 'success' | 'info' | 'warning' } | null;
+  // Cloud Firestore Menu State & Operations
+  menuCategories: MenuCategory[];
+  menuItems: MenuItem[];
+  loadingMenu: boolean;
+  addMenuCategory: (cat: Omit<MenuCategory, 'id' | 'createdAt' | 'updatedAt'>) => Promise<MenuCategory>;
+  updateMenuCategory: (id: string, updates: Partial<MenuCategory>) => Promise<MenuCategory>;
+  deleteMenuCategory: (id: string) => Promise<void>;
+  addMenuItem: (item: Omit<MenuItem, 'id' | 'createdAt' | 'updatedAt'>) => Promise<MenuItem>;
+  updateMenuItem: (id: string, updates: Partial<MenuItem>) => Promise<MenuItem>;
+  deleteMenuItem: (id: string) => Promise<void>;
+  toggleMenuItemAvailability: (id: string, isAvailable: boolean) => Promise<void>;
+  refreshMenu: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -748,6 +764,147 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTimeout(() => {
       setToast(null);
     }, 4000);
+  };
+
+  // ====================================================
+  // CLOUD FIRESTORE PERSISTENT MENU DATA
+  // ====================================================
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loadingMenu, setLoadingMenu] = useState<boolean>(true);
+
+  const refreshMenu = async () => {
+    try {
+      setLoadingMenu(true);
+      const [cats, items] = await Promise.all([
+        MenuService.fetchCategories(),
+        MenuService.fetchMenuItems(),
+      ]);
+      setMenuCategories(cats);
+      setMenuItems(items);
+    } catch (err) {
+      console.error('[AppContext] Failed to refresh menu data from Firestore:', err);
+    } finally {
+      setLoadingMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    testFirestoreConnection();
+    refreshMenu();
+  }, []);
+
+  const addMenuCategory = async (cat: Omit<MenuCategory, 'id' | 'createdAt' | 'updatedAt'>): Promise<MenuCategory> => {
+    try {
+      const created = await MenuService.addCategory(cat);
+      setMenuCategories((prev) => {
+        const next = [...prev.filter((c) => c.id !== created.id), created];
+        next.sort((a, b) => (a.order || 0) - (b.order || 0));
+        return next;
+      });
+      triggerToast(
+        language === 'ar' ? `تمت إضافة قسم "${created.nameAr || created.nameEn}" بنجاح!` : `Category "${created.nameEn}" added to Firestore!`,
+        'success'
+      );
+      return created;
+    } catch (err: any) {
+      triggerToast(err?.message || 'Failed to add category', 'warning');
+      throw err;
+    }
+  };
+
+  const updateMenuCategory = async (id: string, updates: Partial<MenuCategory>): Promise<MenuCategory> => {
+    try {
+      const updated = await MenuService.updateCategory(id, updates);
+      setMenuCategories((prev) => {
+        const next = prev.map((c) => (c.id === id ? { ...c, ...updated } : c));
+        next.sort((a, b) => (a.order || 0) - (b.order || 0));
+        return next;
+      });
+      triggerToast(
+        language === 'ar' ? 'تم تحديث بيانات القسم وحفظها في قاعدة البيانات!' : 'Category updated and saved to Firestore!',
+        'success'
+      );
+      return updated;
+    } catch (err: any) {
+      triggerToast(err?.message || 'Failed to update category', 'warning');
+      throw err;
+    }
+  };
+
+  const deleteMenuCategory = async (id: string): Promise<void> => {
+    try {
+      await MenuService.deleteCategory(id);
+      setMenuCategories((prev) => prev.filter((c) => c.id !== id));
+      setMenuItems((prev) => prev.filter((item) => item.categoryId !== id));
+      triggerToast(
+        language === 'ar' ? 'تم حذف القسم وجميع عناصره المرتبطة من قاعدة البيانات!' : 'Category and linked items deleted from Firestore!',
+        'info'
+      );
+    } catch (err: any) {
+      triggerToast(err?.message || 'Failed to delete category', 'warning');
+      throw err;
+    }
+  };
+
+  const addMenuItem = async (item: Omit<MenuItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<MenuItem> => {
+    try {
+      const created = await MenuService.addMenuItem(item);
+      setMenuItems((prev) => [...prev.filter((i) => i.id !== created.id), created]);
+      triggerToast(
+        language === 'ar' ? `تمت إضافة "${created.nameAr || created.nameEn}" إلى قائمة المشروبات!` : `Menu item "${created.nameEn}" saved to Firestore!`,
+        'success'
+      );
+      return created;
+    } catch (err: any) {
+      triggerToast(err?.message || 'Failed to add menu item', 'warning');
+      throw err;
+    }
+  };
+
+  const updateMenuItem = async (id: string, updates: Partial<MenuItem>): Promise<MenuItem> => {
+    try {
+      const updated = await MenuService.updateMenuItem(id, updates);
+      setMenuItems((prev) => prev.map((i) => (i.id === id ? { ...i, ...updated } : i)));
+      triggerToast(
+        language === 'ar' ? 'تم حفظ تعديلات العنصر في قاعدة البيانات Firestore!' : 'Menu item updated and saved to Firestore!',
+        'success'
+      );
+      return updated;
+    } catch (err: any) {
+      triggerToast(err?.message || 'Failed to update menu item', 'warning');
+      throw err;
+    }
+  };
+
+  const deleteMenuItem = async (id: string): Promise<void> => {
+    try {
+      await MenuService.deleteMenuItem(id);
+      setMenuItems((prev) => prev.filter((i) => i.id !== id));
+      triggerToast(
+        language === 'ar' ? 'تم حذف العنصر من القائمة بنجاح!' : 'Menu item deleted from Firestore!',
+        'info'
+      );
+    } catch (err: any) {
+      triggerToast(err?.message || 'Failed to delete menu item', 'warning');
+      throw err;
+    }
+  };
+
+  const toggleMenuItemAvailability = async (id: string, isAvailable: boolean): Promise<void> => {
+    try {
+      setMenuItems((prev) => prev.map((i) => (i.id === id ? { ...i, isAvailable } : i)));
+      await MenuService.updateMenuItem(id, { isAvailable });
+      triggerToast(
+        language === 'ar'
+          ? isAvailable ? 'تم تحديد العنصر كمتاح للطلب' : 'تم تحديد العنصر كغير متوفر حالياً'
+          : isAvailable ? 'Item marked as available' : 'Item marked as out of stock',
+        'info'
+      );
+    } catch (err: any) {
+      setMenuItems((prev) => prev.map((i) => (i.id === id ? { ...i, isAvailable: !isAvailable } : i)));
+      triggerToast(err?.message || 'Failed to update item availability', 'warning');
+    }
   };
 
   // Translation helper with dynamic replacement {variable}
@@ -1798,6 +1955,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         sendTestWhatsApp,
         triggerToast,
         toast,
+        menuCategories,
+        menuItems,
+        loadingMenu,
+        addMenuCategory,
+        updateMenuCategory,
+        deleteMenuCategory,
+        addMenuItem,
+        updateMenuItem,
+        deleteMenuItem,
+        toggleMenuItemAvailability,
+        refreshMenu,
       }}
     >
       {children}

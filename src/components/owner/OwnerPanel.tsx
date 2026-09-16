@@ -41,6 +41,7 @@ import {
   UserPlus,
   Users,
   UserX,
+  UtensilsCrossed,
   X,
 } from 'lucide-react';
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
@@ -52,6 +53,7 @@ import { BaristaEditModal } from './BaristaEditModal';
 import { ChangeOwnerPinModal } from './ChangeOwnerPinModal';
 import { OwnerLogin } from './OwnerLogin';
 import { NfcTagWriterModal } from '../common/NfcTagWriterModal';
+import { MenuManagementTab } from '../menu/MenuManagementTab';
 
 export const OwnerPanel: React.FC = () => {
   const {
@@ -87,7 +89,7 @@ export const OwnerPanel: React.FC = () => {
   const isAr = language === 'ar';
 
   const [activeTab, setActiveTab] = useState<
-    'analytics' | 'branding' | 'rewards' | 'wheel' | 'customers' | 'baristas' | 'zender' | 'feedback' | 'broadcast'
+    'analytics' | 'branding' | 'rewards' | 'menu' | 'wheel' | 'customers' | 'baristas' | 'zender' | 'feedback' | 'broadcast'
   >('analytics');
 
   // Mobile navigation menu toggle state
@@ -446,6 +448,7 @@ export const OwnerPanel: React.FC = () => {
               { key: 'analytics', label: t('tabAnalytics'), icon: BarChart3, desc: isAr ? 'المبيعات والأرقام' : 'Sales & Stats' },
               { key: 'branding', label: t('tabBranding'), icon: Palette, desc: isAr ? 'الهوية والألوان' : 'Colors & Theme' },
               { key: 'rewards', label: t('tabRewards'), icon: Award, desc: isAr ? 'كتالوج الهدايا' : 'Catalog & Perks' },
+              { key: 'menu', label: t('tabMenu'), icon: UtensilsCrossed, desc: isAr ? 'قائمة المشروبات والوجبات' : 'Cloud Menu System' },
               { key: 'wheel', label: t('tabWheel'), icon: Sparkles, desc: isAr ? 'عجلة الحظ اليومية' : 'Lucky Wheel' },
               { key: 'customers', label: t('tabCustomers'), icon: Users, desc: isAr ? 'سجل العملاء' : 'Customer Roster' },
               { key: 'baristas', label: t('tabBaristas'), icon: Coffee, desc: isAr ? 'طاقم العمل' : 'Staff Members' },
@@ -495,6 +498,7 @@ export const OwnerPanel: React.FC = () => {
             { key: 'analytics', label: t('tabAnalytics'), icon: BarChart3 },
             { key: 'branding', label: t('tabBranding'), icon: Palette },
             { key: 'rewards', label: t('tabRewards'), icon: Award },
+            { key: 'menu', label: t('tabMenu'), icon: UtensilsCrossed },
             { key: 'wheel', label: t('tabWheel'), icon: Sparkles },
             { key: 'customers', label: t('tabCustomers'), icon: Users },
             { key: 'baristas', label: t('tabBaristas'), icon: Coffee },
@@ -1024,6 +1028,9 @@ export const OwnerPanel: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Cloud Firestore Menu Management Tab */}
+      {activeTab === 'menu' && <MenuManagementTab />}
 
       {/* Wheel Settings Tab */}
       {activeTab === 'wheel' && <WheelSettingsTab />}

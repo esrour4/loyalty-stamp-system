@@ -1,6 +1,17 @@
 import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
+import {
+  getCategories,
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  getMenuItems,
+  addMenuItem,
+  updateMenuItem,
+  deleteMenuItem,
+  seedMenuIfEmpty,
+} from './server/firestoreService';
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
@@ -271,8 +282,142 @@ app.post('/api/zender/send', async (req, res) => {
   }
 });
 
+// ==========================================
+// CLOUD FIRESTORE MENU DATABASE API ROUTES
+// ==========================================
+
+// 1. Get all menu categories
+app.get('/api/menu/categories', async (req, res) => {
+  try {
+    const categories = await getCategories();
+    return res.json({ success: true, categories });
+  } catch (error: any) {
+    console.error('[API /api/menu/categories GET error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to fetch menu categories from Firestore' });
+  }
+});
+
+// 2. Add new menu category
+app.post('/api/menu/categories', async (req, res) => {
+  try {
+    const { nameEn, nameAr, descriptionEn, descriptionAr, order, icon } = req.body;
+    if (!nameEn && !nameAr) {
+      return res.status(400).json({ success: false, error: 'Category name is required in English or Arabic.' });
+    }
+    const category = await addCategory({ nameEn, nameAr, descriptionEn, descriptionAr, order, icon });
+    return res.status(201).json({ success: true, category });
+  } catch (error: any) {
+    console.error('[API /api/menu/categories POST error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to add menu category to Firestore' });
+  }
+});
+
+// 3. Update existing menu category
+app.put('/api/menu/categories/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await updateCategory(id, req.body);
+    return res.json({ success: true, category });
+  } catch (error: any) {
+    console.error('[API /api/menu/categories PUT error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to update menu category in Firestore' });
+  }
+});
+
+// 4. Delete menu category (cascades items)
+app.delete('/api/menu/categories/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await deleteCategory(id);
+    return res.json({ success: true, ...result });
+  } catch (error: any) {
+    console.error('[API /api/menu/categories DELETE error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to delete menu category from Firestore' });
+  }
+});
+
+// 5. Get all menu items
+app.get('/api/menu/items', async (req, res) => {
+  try {
+    const items = await getMenuItems();
+    return res.json({ success: true, items });
+  } catch (error: any) {
+    console.error('[API /api/menu/items GET error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to fetch menu items from Firestore' });
+  }
+});
+
+// 6. Add new menu item
+app.post('/api/menu/items', async (req, res) => {
+  try {
+    const { categoryId, nameEn, nameAr, descriptionEn, descriptionAr, price, currency, isAvailable, image, calories, tag } = req.body;
+    if (!nameEn && !nameAr) {
+      return res.status(400).json({ success: false, error: 'Item name is required in English or Arabic.' });
+    }
+    const item = await addMenuItem({
+      categoryId,
+      nameEn,
+      nameAr,
+      descriptionEn,
+      descriptionAr,
+      price: Number(price) || 0,
+      currency,
+      isAvailable: isAvailable !== false,
+      image,
+      calories: calories ? Number(calories) : undefined,
+      tag,
+    });
+    return res.status(201).json({ success: true, item });
+  } catch (error: any) {
+    console.error('[API /api/menu/items POST error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to add menu item to Firestore' });
+  }
+});
+
+// 7. Update menu item
+app.put('/api/menu/items/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const item = await updateMenuItem(id, req.body);
+    return res.json({ success: true, item });
+  } catch (error: any) {
+    console.error('[API /api/menu/items PUT error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to update menu item in Firestore' });
+  }
+});
+
+// 8. Delete menu item
+app.delete('/api/menu/items/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await deleteMenuItem(id);
+    return res.json({ success: true, ...result });
+  } catch (error: any) {
+    console.error('[API /api/menu/items DELETE error]', error);
+    return res.status(500).json({ success: false, error: error?.message || 'Failed to delete menu item from Firestore' });
+  }
+});
+
+// 9. Manual menu re-seed trigger
+app.post('/api/menu/seed', async (req, res) => {
+  try {
+    await seedMenuIfEmpty();
+    const categories = await getCategories();
+    const items = await getMenuItems();
+    return res.json({ success: true, categories, items });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
 // Vite middleware / Static Serving
 async function startServer() {
+  // Ensure Cloud Firestore menu collections are initialized
+  try {
+    await seedMenuIfEmpty();
+  } catch (err) {
+    console.warn('[Firestore] Background auto-seed notice:', err);
+  }
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },

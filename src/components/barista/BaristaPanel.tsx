@@ -23,6 +23,7 @@ import {
   UserCheck,
   UserPlus,
   Users,
+  UtensilsCrossed,
   X,
 } from 'lucide-react';
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
@@ -31,6 +32,7 @@ import { QrScanner } from '../common/QrScanner';
 import { NfcScannerModal } from './NfcScannerModal';
 import { NfcTagWriterModal } from '../common/NfcTagWriterModal';
 import { PointsGiftRedemptionModal } from './PointsGiftRedemptionModal';
+import { CustomerMenuView } from '../menu/CustomerMenuView';
 
 export const BaristaPanel: React.FC = () => {
   const {
@@ -58,7 +60,7 @@ export const BaristaPanel: React.FC = () => {
 
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'scan' | 'approvals' | 'add_cust' | 'shift'>('scan');
+  const [activeTab, setActiveTab] = useState<'scan' | 'menu' | 'approvals' | 'add_cust' | 'shift'>('scan');
   
   // Quick stamps quantity
   const [stampsCount, setStampsCount] = useState(1);
@@ -295,6 +297,19 @@ export const BaristaPanel: React.FC = () => {
             >
               <QrCode className="w-3.5 h-3.5" />
               <span>{t('quickScanner')}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('menu')}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+                activeTab === 'menu'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              }`}
+            >
+              <UtensilsCrossed className="w-3.5 h-3.5" />
+              <span>{isAr ? 'قائمة المشروبات والأسعار' : 'Cafe Menu'}</span>
             </button>
 
             <button
@@ -887,6 +902,33 @@ export const BaristaPanel: React.FC = () => {
               <span>{t('quickAddBtn')}</span>
             </button>
           </form>
+        </div>
+      )}
+
+      {/* Live Cafe Menu & Item Lookup Tab for Barista */}
+      {activeTab === 'menu' && (
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-cyan-400">
+                <UtensilsCrossed className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  {isAr ? 'دليل قائمة المشروبات والمأكولات المباشر' : 'Live Cafe Menu & Product Catalog'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {isAr ? 'بيانات حية متزامنة من Cloud Firestore لمعرفة الأسعار والمخزون' : 'Cloud Firestore synced prices, calories, and live stock availability'}
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 self-start sm:self-auto">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              {isAr ? 'متصل بقاعدة البيانات' : 'Connected to Firestore'}
+            </span>
+          </div>
+
+          <CustomerMenuView />
         </div>
       )}
 

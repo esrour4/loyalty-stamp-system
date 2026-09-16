@@ -187,3 +187,32 @@ export interface BroadcastNotification {
   createdAt: string;
   sentCount: number;
 }
+
+export interface MenuCategory {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  order: number;
+  icon?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface MenuItem {
+  id: string;
+  categoryId: string;
+  nameEn: string;
+  nameAr: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  price: number;
+  currency?: string;
+  isAvailable: boolean;
+  image?: string;
+  calories?: number;
+  tag?: string; // 'bestseller' | 'signature' | 'new' | 'seasonal'
+  createdAt?: string;
+  updatedAt?: string;
+}

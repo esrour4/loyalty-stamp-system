@@ -14,6 +14,7 @@ import {
   Sparkles,
   Ticket,
   Users,
+  UtensilsCrossed,
 } from 'lucide-react';
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
 import { CustomerLoginRegister } from './CustomerLoginRegister';
@@ -21,6 +22,7 @@ import { DigitalStampCard } from './DigitalStampCard';
 import { DailyWheelModal } from './DailyWheelModal';
 import { ReferralCard } from './ReferralCard';
 import { FeedbackModal } from './FeedbackModal';
+import { CustomerMenuView } from '../menu/CustomerMenuView';
 
 export const CustomerPortal: React.FC = () => {
   const {
@@ -34,7 +36,7 @@ export const CustomerPortal: React.FC = () => {
     tierConfigs,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'card' | 'coupons' | 'rewards' | 'history'>('card');
+  const [activeTab, setActiveTab] = useState<'card' | 'menu' | 'coupons' | 'rewards' | 'history'>('card');
   const [showWheel, setShowWheel] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
 
@@ -169,6 +171,19 @@ export const CustomerPortal: React.FC = () => {
 
         <button
           type="button"
+          onClick={() => setActiveTab('menu')}
+          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+            activeTab === 'menu'
+              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+          }`}
+        >
+          <UtensilsCrossed className="w-3.5 h-3.5" />
+          <span>{isAr ? 'قائمة المقهى' : 'Cafe Menu'}</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('coupons')}
           className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
             activeTab === 'coupons'
@@ -235,6 +250,33 @@ export const CustomerPortal: React.FC = () => {
             {/* Referral Card */}
             <ReferralCard />
           </div>
+        </div>
+      )}
+
+      {/* Artisan Coffee & Food Menu Tab */}
+      {activeTab === 'menu' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-cyan-400">
+                <UtensilsCrossed className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  {isAr ? 'قائمة المشروبات والمأكولات المختصة' : 'Artisan Beverage & Food Menu'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {isAr ? 'أسعار حية ومباشرة من مقهانا' : 'Live specialty coffee & bakery catalog'}
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 self-start sm:self-auto">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              {isAr ? 'متصل بقاعدة البيانات السحابية' : 'Cloud Firestore Live'}
+            </span>
+          </div>
+
+          <CustomerMenuView />
         </div>
       )}
 

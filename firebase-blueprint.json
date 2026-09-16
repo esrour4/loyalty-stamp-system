@@ -1,0 +1,141 @@
+{
+  "entities": {
+    "MenuCategory": {
+      "title": "MenuCategory",
+      "description": "Category for organizing coffee shop menu items",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the category",
+          "maxLength": 128
+        },
+        "nameEn": {
+          "type": "string",
+          "description": "English name of the category",
+          "maxLength": 100
+        },
+        "nameAr": {
+          "type": "string",
+          "description": "Arabic name of the category",
+          "maxLength": 100
+        },
+        "descriptionEn": {
+          "type": "string",
+          "description": "English description of the category",
+          "maxLength": 250
+        },
+        "descriptionAr": {
+          "type": "string",
+          "description": "Arabic description of the category",
+          "maxLength": 250
+        },
+        "order": {
+          "type": "number",
+          "description": "Display order index"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon identifier for the category",
+          "maxLength": 50
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["id", "nameEn", "nameAr", "order"]
+    },
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "Individual beverage, pastry, or coffee item on the menu",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the menu item",
+          "maxLength": 128
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Foreign key reference to MenuCategory",
+          "maxLength": 128
+        },
+        "nameEn": {
+          "type": "string",
+          "description": "English name of the menu item",
+          "maxLength": 120
+        },
+        "nameAr": {
+          "type": "string",
+          "description": "Arabic name of the menu item",
+          "maxLength": 120
+        },
+        "descriptionEn": {
+          "type": "string",
+          "description": "English description of the menu item",
+          "maxLength": 300
+        },
+        "descriptionAr": {
+          "type": "string",
+          "description": "Arabic description of the menu item",
+          "maxLength": 300
+        },
+        "price": {
+          "type": "number",
+          "description": "Price in local currency"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code e.g. SYP or USD",
+          "maxLength": 10
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Whether item is currently in stock"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL or asset path for the item image",
+          "maxLength": 500
+        },
+        "calories": {
+          "type": "number",
+          "description": "Estimated calorie count"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Special badge e.g. bestseller, popular, new",
+          "maxLength": 30
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["id", "categoryId", "nameEn", "nameAr", "price", "isAvailable"]
+    }
+  },
+  "firestore": {
+    "/menu_categories/{categoryId}": {
+      "schema": "MenuCategory",
+      "description": "Persistent store of coffee shop menu categories"
+    },
+    "/menu_items/{itemId}": {
+      "schema": "MenuItem",
+      "description": "Persistent store of coffee shop menu items"
+    }
+  }
+}
