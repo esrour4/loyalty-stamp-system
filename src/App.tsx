@@ -4,6 +4,7 @@ import { Header } from './components/common/Header';
 import { OfflineBanner } from './components/common/OfflineBanner';
 import { LandingPage } from './components/landing/LandingPage';
 import { CustomerPortal } from './components/customer/CustomerPortal';
+import { CustomerTableMenuView } from './components/menu/CustomerTableMenuView';
 import { BaristaPanel } from './components/barista/BaristaPanel';
 import { OwnerPanel } from './components/owner/OwnerPanel';
 import { CheckCircle2 } from 'lucide-react';
@@ -23,6 +24,7 @@ const MainAppLayout: React.FC = () => {
       <main className="flex-1 w-full pb-16">
         {role === 'landing' && <LandingPage onNavigateToLogin={(targetRole) => setRole(targetRole)} />}
         {role === 'customer' && <CustomerPortal />}
+        {role === 'menu' && <CustomerTableMenuView />}
         {role === 'barista' && <BaristaPanel />}
         {role === 'owner' && <OwnerPanel />}
       </main>

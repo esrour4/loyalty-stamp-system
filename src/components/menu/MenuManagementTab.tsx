@@ -18,9 +18,16 @@ import {
   ChevronRight,
   Eye,
   AlertCircle,
+  QrCode,
+  Printer,
+  ShoppingBag,
+  Minus,
+  MapPin,
+  X,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { MenuCategory, MenuItem } from '../../types';
+import { TableMenuQrModal } from './TableMenuQrModal';
 
 export const MenuManagementTab: React.FC = () => {
   const {
@@ -38,6 +45,13 @@ export const MenuManagementTab: React.FC = () => {
     deleteMenuItem,
     toggleMenuItemAvailability,
     refreshMenu,
+    currentTable,
+    setCurrentTable,
+    tableTray,
+    addToTableTray,
+    updateTableTrayItemQty,
+    removeFromTableTray,
+    clearTableTray,
   } = useApp();
 
   const isAr = language === 'ar';
@@ -54,6 +68,24 @@ export const MenuManagementTab: React.FC = () => {
   const [showItemModal, setShowItemModal] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [deletingTarget, setDeletingTarget] = useState<{ type: 'category' | 'item'; id: string; name: string } | null>(null);
+
+  // Table Menu QR Modal State
+  const [showQrModal, setShowQrModal] = useState<boolean>(false);
+  const [qrModalTable, setQrModalTable] = useState<string>('Table 1');
+  const [qrModalCatId, setQrModalCatId] = useState<string | undefined>(undefined);
+  const [qrModalItemId, setQrModalItemId] = useState<string | undefined>(undefined);
+
+  // Admin Basket / Order Test Modal State
+  const [showAdminBasketModal, setShowAdminBasketModal] = useState<boolean>(false);
+  const totalBasketCount = tableTray.reduce((acc, curr) => acc + curr.quantity, 0);
+  const totalBasketPrice = tableTray.reduce((acc, curr) => acc + curr.item.price * curr.quantity, 0);
+
+  const openQrModal = (table = 'Table 1', catId?: string, itemId?: string) => {
+    setQrModalTable(table);
+    setQrModalCatId(catId);
+    setQrModalItemId(itemId);
+    setShowQrModal(true);
+  };
 
   // Category Form State
   const [catNameEn, setCatNameEn] = useState('');
@@ -300,6 +332,36 @@ export const MenuManagementTab: React.FC = () => {
 
             <button
               type="button"
+              id="generate-table-qr-btn"
+              onClick={() => openQrModal()}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white text-xs font-black shadow-md transition cursor-pointer"
+            >
+              <QrCode className="w-4 h-4" />
+              <span>{isAr ? 'توليد QR للطاولات' : 'Generate Table QR'}</span>
+            </button>
+
+            <button
+              type="button"
+              id="admin-menu-basket-btn"
+              onClick={() => setShowAdminBasketModal(true)}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-black shadow-md transition cursor-pointer ${
+                totalBasketCount > 0
+                  ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 animate-pulse'
+                  : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-600'
+              }`}
+              title={isAr ? 'عرض وتجربة سلة الطلبات' : 'Test Order Basket'}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>{isAr ? 'سلة الطلبات' : 'Order Basket'}</span>
+              {totalBasketCount > 0 && (
+                <span className="ms-1 px-1.5 py-0.2 rounded-full bg-slate-950 text-white text-[10px] font-mono">
+                  {totalBasketCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
               id="add-category-btn"
               onClick={() => openCategoryModal()}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-600 transition shadow-xs cursor-pointer"
@@ -337,6 +399,42 @@ export const MenuManagementTab: React.FC = () => {
           <div className="bg-indigo-950/40 p-3 rounded-2xl border border-indigo-800/30">
             <span className="text-[10px] text-amber-400 block font-semibold">{isAr ? 'غير متوفر مؤقتاً' : 'Out of Stock'}</span>
             <span className="text-lg font-black text-amber-400">{outOfStockCount}</span>
+          </div>
+        </div>
+
+        {/* Table QR Card & Quick Generator */}
+        <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-indigo-950/90 via-slate-900 to-indigo-950/90 border border-indigo-600/40 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 border border-cyan-500/30">
+              <QrCode className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-black text-white">
+                  {isAr ? 'ستاندات QR لقائمة طاولات المقهى' : 'Table QR Code Stands & Digital Menu'}
+                </h4>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+                  {isAr ? 'جاهز للطباعة' : 'Print Ready'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                {isAr
+                  ? 'ضع ستاندات QR المطبوعة على طاولات المقهى ليتمكن الزبائن من مسح الرمز وتصفح القائمة الحية من هواتفهم دون الحاجة لقائمة ورقية.'
+                  : 'Place printable QR stands on your tables so customers can scan with phone cameras to browse your live Firestore menu and prices.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
+            <button
+              type="button"
+              id="open-table-qr-hub-btn"
+              onClick={() => openQrModal('Table 1')}
+              className="px-4 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-black transition shadow-md flex items-center gap-1.5 cursor-pointer"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>{isAr ? 'طباعة ستاندات الطاولات' : 'Print Table Stands'}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -400,8 +498,19 @@ export const MenuManagementTab: React.FC = () => {
                   </span>
                 </button>
 
-                {/* Edit & Delete Action Buttons inside Category Pill */}
-                <div className="flex items-center pe-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* QR, Edit & Delete Action Buttons inside Category Pill */}
+                <div className="flex items-center pe-1.5 opacity-0 group-hover:opacity-100 transition-opacity gap-0.5">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openQrModal(undefined, cat.id, undefined);
+                    }}
+                    className={`p-1 rounded-md transition ${isSelected ? 'text-white hover:bg-white/20' : 'text-slate-400 hover:text-cyan-500'}`}
+                    title={isAr ? 'توليد QR لهذا القسم' : 'Generate QR for Category'}
+                  >
+                    <QrCode className="w-3 h-3" />
+                  </button>
                   <button
                     type="button"
                     onClick={(e) => {
@@ -534,9 +643,9 @@ export const MenuManagementTab: React.FC = () => {
               >
                 {/* Image & Badges */}
                 <div className="relative h-40 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                  {item.image ? (
+                  {item.image && item.image.trim() !== '' ? (
                     <img
-                      src={item.image}
+                      src={item.image.trim()}
                       alt={item.nameEn}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       referrerPolicy="no-referrer"
@@ -637,10 +746,38 @@ export const MenuManagementTab: React.FC = () => {
                     </label>
 
                     <div className="flex items-center gap-1">
+                      {/* Add to Basket button for admin test */}
+                      {item.isAvailable && (
+                        <button
+                          type="button"
+                          onClick={() => addToTableTray(item, 1)}
+                          className={`p-1.5 rounded-lg transition cursor-pointer flex items-center gap-1 ${
+                            tableTray.find((t) => t.item.id === item.id)
+                              ? 'bg-indigo-600 text-white shadow-xs'
+                              : 'text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }`}
+                          title={isAr ? 'إضافة للسلة / تجربة الطلب' : 'Add to basket / Test order'}
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          {tableTray.find((t) => t.item.id === item.id) && (
+                            <span className="text-[10px] font-bold font-mono">
+                              {tableTray.find((t) => t.item.id === item.id)?.quantity}
+                            </span>
+                          )}
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => openQrModal('Table 1', item.categoryId, item.id)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        title={isAr ? 'توليد QR لهذا الصنف' : 'Generate QR for this item'}
+                      >
+                        <QrCode className="w-3.5 h-3.5" />
+                      </button>
                       <button
                         type="button"
                         onClick={() => openItemModal(item)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                         title={isAr ? 'تعديل الصنف' : 'Edit item'}
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -1084,6 +1221,178 @@ export const MenuManagementTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ==================================================== */}
+      {/* 8. FLOATING BASKET BAR FOR ADMIN                     */}
+      {/* ==================================================== */}
+      {totalBasketCount > 0 && (
+        <div className="sticky bottom-4 z-30 pt-3">
+          <div className="bg-slate-900 text-white p-3.5 px-5 rounded-3xl shadow-2xl border border-indigo-500/40 flex items-center justify-between gap-4 max-w-xl mx-auto backdrop-blur-md">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs">
+                {totalBasketCount}
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block font-semibold leading-none">
+                  {isAr ? 'معاينة سلة الطلبات' : 'Order Basket Preview'}
+                </span>
+                <span className="text-sm font-black text-cyan-300 font-mono">
+                  {totalBasketPrice.toLocaleString()} {settings.currency || 'SYP'}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => clearTableTray()}
+                className="px-3 py-1.5 rounded-xl border border-slate-700 text-[11px] font-bold text-slate-400 hover:text-red-400 cursor-pointer"
+              >
+                {isAr ? 'إفراغ' : 'Clear'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAdminBasketModal(true)}
+                className="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md cursor-pointer flex items-center gap-1.5"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span>{isAr ? 'عرض السلة' : 'View Basket'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================== */}
+      {/* 9. ADMIN BASKET / ORDER PREVIEW MODAL                */}
+      {/* ==================================================== */}
+      {showAdminBasketModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 px-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/40">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-2xl bg-indigo-600/10 text-indigo-600 dark:text-cyan-400 flex items-center justify-center font-bold">
+                  <ShoppingBag className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">
+                    {isAr ? 'سلة الطلبات التجريبية' : 'Order Basket Preview'}
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    {isAr ? 'اختبار إضافة الأصناف وحساب الإجمالي' : 'Test item additions & total bill calculation'}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowAdminBasketModal(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
+              {tableTray.length === 0 ? (
+                <div className="py-12 text-center text-slate-400 text-xs">
+                  {isAr ? 'السلة فارغة. أضف عناصر من بطاقات القائمة أعلاه لتجربتها.' : 'Basket is empty. Click the basket icon on items above to test.'}
+                </div>
+              ) : (
+                tableTray.map(({ item, quantity }) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
+                  >
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                        {isAr ? item.nameAr || item.nameEn : item.nameEn || item.nameAr}
+                      </h4>
+                      <span className="text-[11px] font-mono text-indigo-600 dark:text-cyan-400 font-bold">
+                        {(item.price * quantity).toLocaleString()} {item.currency || settings.currency || 'SYP'}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-0.5">
+                        <button
+                          type="button"
+                          onClick={() => updateTableTrayItemQty(item.id, -1)}
+                          className="w-6 h-6 flex items-center justify-center text-slate-500 hover:text-red-500 cursor-pointer"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="px-2 text-xs font-mono font-bold text-slate-900 dark:text-slate-100">
+                          {quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => updateTableTrayItemQty(item.id, 1)}
+                          className="w-6 h-6 flex items-center justify-center text-slate-500 hover:text-indigo-600 cursor-pointer"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => removeFromTableTray(item.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg cursor-pointer"
+                        title={isAr ? 'حذف' : 'Remove'}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {tableTray.length > 0 && (
+              <div className="p-4 px-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-500">{isAr ? 'إجمالي السلة:' : 'Basket Subtotal:'}</span>
+                  <span className="text-base font-black font-mono text-indigo-600 dark:text-cyan-400">
+                    {totalBasketPrice.toLocaleString()} {settings.currency || 'SYP'}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearTableTray();
+                      setShowAdminBasketModal(false);
+                    }}
+                    className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-500 hover:text-red-500 cursor-pointer"
+                  >
+                    {isAr ? 'إفراغ' : 'Clear'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowAdminBasketModal(false)}
+                    className="flex-1 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md cursor-pointer"
+                  >
+                    {isAr ? 'إغلاق' : 'Close'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================== */}
+      {/* 10. TABLE MENU QR GENERATOR MODAL                    */}
+      {/* ==================================================== */}
+      <TableMenuQrModal
+        isOpen={showQrModal}
+        onClose={() => setShowQrModal(false)}
+        initialTable={qrModalTable}
+        initialCategoryId={qrModalCatId}
+        initialItemId={qrModalItemId}
+      />
     </div>
   );
 };

@@ -26,6 +26,7 @@ import {
   Percent,
   Plus,
   Power,
+  QrCode,
   Radio,
   Send,
   Settings,
@@ -377,6 +378,18 @@ export const OwnerPanel: React.FC = () => {
               <Menu className="w-3.5 h-3.5" />
               <span>{isAr ? 'الأقسام' : 'Menu'}</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileMenuOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Quick Table QR Generator Button */}
+            <button
+              type="button"
+              id="owner-header-table-qr-btn"
+              onClick={() => setActiveTab('menu')}
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-200 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 text-xs font-bold border border-cyan-300 dark:border-cyan-700 transition cursor-pointer"
+              title={isAr ? 'توليد ستاندات QR للطاولات' : 'Generate Table QR Stands'}
+            >
+              <QrCode className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span className="hidden sm:inline">{isAr ? 'QR الطاولات' : 'Table QR'}</span>
             </button>
 
             {/* Quick Change Owner PIN button */}

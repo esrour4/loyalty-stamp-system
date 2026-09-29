@@ -11,6 +11,7 @@ import {
   RewardItem,
   StoreSettings,
   SurveyFeedback,
+  TableOrderTrayItem,
   TierConfig,
   TierLevel,
   Transaction,
@@ -141,6 +142,8 @@ const DEFAULT_SETTINGS: StoreSettings = {
   surveyRewardPoints: 25,
   birthdayRewardFreeDrink: true,
   ownerPin: '1234',
+  wifiName: 'RoastBloom_Guest',
+  wifiPassword: 'CoffeeReward2026',
 };
 
 export const DEFAULT_TIER_CONFIGS: Record<TierLevel, TierConfig> = {
@@ -458,6 +461,14 @@ interface AppContextType {
   deleteMenuItem: (id: string) => Promise<void>;
   toggleMenuItemAvailability: (id: string, isAvailable: boolean) => Promise<void>;
   refreshMenu: () => Promise<void>;
+  // Table Menu & Tray State
+  currentTable: string | null;
+  setCurrentTable: (table: string | null) => void;
+  tableTray: TableOrderTrayItem[];
+  addToTableTray: (item: MenuItem, qty?: number) => void;
+  updateTableTrayItemQty: (itemId: string, delta: number) => void;
+  removeFromTableTray: (itemId: string) => void;
+  clearTableTray: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -483,7 +494,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [role, setRole] = useState<UserRole>(() => {
     try {
       const saved = localStorage.getItem('coffee_role') as UserRole;
-      return saved === 'landing' || saved === 'customer' || saved === 'barista' || saved === 'owner' ? saved : 'landing';
+      return saved === 'landing' || saved === 'customer' || saved === 'barista' || saved === 'owner' || saved === 'menu' ? saved : 'landing';
     } catch (e) {
       return 'landing';
     }
@@ -652,6 +663,73 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
 
+  // Table Menu & On-Table Order Tray State
+  const [currentTable, setCurrentTableState] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      return localStorage.getItem('coffee_current_table') || null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const setCurrentTable = (tbl: string | null) => {
+    setCurrentTableState(tbl);
+    if (tbl) {
+      localStorage.setItem('coffee_current_table', tbl);
+    } else {
+      localStorage.removeItem('coffee_current_table');
+    }
+  };
+
+  const [tableTray, setTableTray] = useState<TableOrderTrayItem[]>(() => {
+    return safeGetStorage<TableOrderTrayItem[]>('coffee_table_tray', []);
+  });
+
+  useEffect(() => {
+    localStorage.setItem('coffee_table_tray', JSON.stringify(tableTray));
+  }, [tableTray]);
+
+  const addToTableTray = (item: MenuItem, qty = 1) => {
+    setTableTray((prev) => {
+      const idx = prev.findIndex((t) => t.item.id === item.id);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = { ...copy[idx], quantity: copy[idx].quantity + qty };
+        return copy;
+      }
+      return [...prev, { item, quantity: qty }];
+    });
+    triggerToast(
+      language === 'ar'
+        ? `تمت إضافة ${item.nameAr || item.nameEn} إلى سلة طلبات الطاولة!`
+        : `Added ${item.nameEn || item.nameAr} to table order tray!`,
+      'success'
+    );
+  };
+
+  const updateTableTrayItemQty = (itemId: string, delta: number) => {
+    setTableTray((prev) => {
+      return prev
+        .map((t) => {
+          if (t.item.id === itemId) {
+            const newQty = t.quantity + delta;
+            return newQty > 0 ? { ...t, quantity: newQty } : null;
+          }
+          return t;
+        })
+        .filter(Boolean) as TableOrderTrayItem[];
+    });
+  };
+
+  const removeFromTableTray = (itemId: string) => {
+    setTableTray((prev) => prev.filter((t) => t.item.id !== itemId));
+  };
+
+  const clearTableTray = () => {
+    setTableTray([]);
+  };
+
   // Sync current customer object
   const currentCustomer = customers.find((c) => c.id === currentCustomerId) || null;
 
@@ -725,6 +803,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const params = new URLSearchParams(window.location.search);
       const cardParam = params.get('card') || params.get('login') || params.get('c');
       const phoneParam = params.get('phone');
+
+      const viewParam = params.get('view') || params.get('tab') || params.get('page');
+      const tableParam = params.get('table') || params.get('tbl') || params.get('t');
+
+      if (tableParam) {
+        const decodedTable = decodeURIComponent(tableParam).trim();
+        setCurrentTable(decodedTable);
+        setRole('menu');
+        triggerToast(
+          language === 'ar'
+            ? `أهلاً بك! تم فتح قائمة المقهى المباشرة لطاولة (${decodedTable}).`
+            : `Welcome! Live menu opened for ${decodedTable}.`,
+          'info'
+        );
+      } else if (viewParam === 'menu') {
+        setRole('menu');
+      }
 
       if (cardParam || phoneParam) {
         const query = (cardParam || phoneParam)!.trim().toUpperCase();
@@ -1966,6 +2061,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deleteMenuItem,
         toggleMenuItemAvailability,
         refreshMenu,
+        currentTable,
+        setCurrentTable,
+        tableTray,
+        addToTableTray,
+        updateTableTrayItemQty,
+        removeFromTableTray,
+        clearTableTray,
       }}
     >
       {children}

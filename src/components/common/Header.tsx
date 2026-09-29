@@ -8,6 +8,7 @@ import {
   Sparkles,
   Store,
   Sun,
+  UtensilsCrossed,
   X,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -33,6 +34,7 @@ export const Header: React.FC = () => {
 
   const roleOptions: { key: UserRole; label: string; icon: any }[] = [
     { key: 'landing', label: t('homePortal'), icon: Sparkles },
+    { key: 'menu', label: isAr ? 'قائمة المقهى' : 'Cafe Menu', icon: UtensilsCrossed },
     { key: 'customer', label: t('customerPortal'), icon: Smartphone },
     { key: 'barista', label: t('baristaPortal'), icon: Coffee },
     { key: 'owner', label: t('ownerPortal'), icon: Store },

@@ -184,9 +184,9 @@ export const DigitalStampCard: React.FC = () => {
         <div className="relative z-10 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex flex-col sm:flex-row items-center gap-4">
           {/* QR Code */}
           <div className="shrink-0 bg-white p-2 rounded-xl shadow-md">
-            {qrDataUrl ? (
+            {qrDataUrl && qrDataUrl.trim() !== '' ? (
               <img
-                src={qrDataUrl}
+                src={qrDataUrl.trim()}
                 alt="Loyalty QR Code"
                 className="w-24 h-24 sm:w-28 sm:h-28 object-contain"
               />

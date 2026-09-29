@@ -1,4 +1,4 @@
-export type UserRole = 'landing' | 'customer' | 'barista' | 'owner';
+export type UserRole = 'landing' | 'customer' | 'barista' | 'owner' | 'menu';
 
 export type Language = 'en' | 'ar';
 
@@ -173,6 +173,14 @@ export interface StoreSettings {
   surveyRewardPoints: number; // points given for survey
   birthdayRewardFreeDrink: boolean;
   ownerPin?: string; // 4-digit PIN for Admin/Owner portal
+  wifiName?: string;
+  wifiPassword?: string;
+}
+
+export interface TableOrderTrayItem {
+  item: MenuItem;
+  quantity: number;
+  notes?: string;
 }
 
 export interface BroadcastNotification {

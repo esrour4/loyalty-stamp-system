@@ -410,6 +410,15 @@ export const translations = {
     close: "Close",
     success: "Success",
     error: "Error",
+    tableQrCode: "Table Menu QR Code",
+    generateTableQr: "Generate Table QR",
+    tableNumber: "Table Number",
+    printTableTent: "Print Table Stands",
+    downloadQrPng: "Download PNG",
+    downloadQrSvg: "Download SVG",
+    scanForMenu: "Scan for Live Menu",
+    tableTray: "Table Order Tray",
+    addToTray: "Add to Tray",
   },
   
   ar: {
@@ -823,5 +832,14 @@ export const translations = {
     close: "إغلاق",
     success: "نجاح",
     error: "خطأ",
+    tableQrCode: "رمز QR لقائمة الطاولة",
+    generateTableQr: "توليد QR للطاولات",
+    tableNumber: "رقم الطاولة",
+    printTableTent: "طباعة ستاندات الطاولات",
+    downloadQrPng: "تحميل صورة PNG",
+    downloadQrSvg: "تحميل ملف SVG",
+    scanForMenu: "امسح الرمز لتصفح القائمة",
+    tableTray: "سلة طلبات الطاولة",
+    addToTray: "إضافة للطلب",
   }
 };
