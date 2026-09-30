@@ -37,14 +37,13 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
   onSave,
   onToggleStatus,
 }) => {
-  const { language, t, tierConfigs, settings } = useApp();
+  const { language, t, settings } = useApp();
   const isAr = language === 'ar';
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [currentStamps, setCurrentStamps] = useState(0);
-  const [totalPoints, setTotalPoints] = useState(0);
   const [status, setStatus] = useState<'approved' | 'pending' | 'suspended'>('approved');
   const [referralCode, setReferralCode] = useState('');
 
@@ -54,35 +53,12 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
       setPhone(customer.phone || '');
       setDateOfBirth(customer.dateOfBirth || '');
       setCurrentStamps(customer.currentStamps || 0);
-      setTotalPoints(customer.totalPoints || 0);
       setStatus(customer.status || 'approved');
       setReferralCode(customer.referralCode || '');
     }
   }, [customer]);
 
   if (!isOpen || !customer) return null;
-
-  // Calculate predicted tier from points
-  const activeTiers = tierConfigs || settings.tiers || DEFAULT_TIER_CONFIGS;
-  const calculatePredictedTier = (pts: number): TierLevel => {
-    const levels: TierLevel[] = ['platinum', 'gold', 'silver', 'bronze'];
-    levels.sort((a, b) => {
-      const minA = activeTiers[a]?.minPoints ?? DEFAULT_TIER_CONFIGS[a].minPoints;
-      const minB = activeTiers[b]?.minPoints ?? DEFAULT_TIER_CONFIGS[b].minPoints;
-      return minB - minA;
-    });
-
-    for (const lvl of levels) {
-      const min = activeTiers[lvl]?.minPoints ?? DEFAULT_TIER_CONFIGS[lvl].minPoints;
-      if (pts >= min) {
-        return lvl;
-      }
-    }
-    return 'bronze';
-  };
-
-  const predictedTierKey = calculatePredictedTier(totalPoints);
-  const predictedTierConfig = activeTiers[predictedTierKey] || DEFAULT_TIER_CONFIGS[predictedTierKey];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,8 +70,6 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
       phone: phone.trim(),
       dateOfBirth: dateOfBirth || undefined,
       currentStamps: Math.min(settings.stampsForFreeDrink || 8, Math.max(0, currentStamps)),
-      totalPoints: Math.max(0, totalPoints),
-      tier: predictedTierKey,
       status,
       referralCode: referralCode.trim() || customer.referralCode,
     };
@@ -264,56 +238,26 @@ export const CustomerEditModal: React.FC<CustomerEditModalProps> = ({
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
-                <span>{isAr ? 'الأختام والنقاط وفئة العميل' : 'Stamps, Points & Member Tier'}</span>
+                <span>{isAr ? 'رصيد أختام القهوة' : 'Coffee Stamps Balance'}</span>
               </span>
-
-              {/* Dynamic Predicted Tier Badge */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700">
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: predictedTierConfig.color }}
-                />
-                <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
-                  {isAr ? predictedTierConfig.nameAr : predictedTierConfig.nameEn}
-                </span>
-              </div>
+              <span className="text-xs font-black text-amber-600 dark:text-amber-400 font-mono">
+                {currentStamps} / {settings.stampsForFreeDrink || 8}
+              </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  {t('currentStampsCount')} (0 - {settings.stampsForFreeDrink || 8})
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={settings.stampsForFreeDrink || 8}
-                  value={currentStamps}
-                  onChange={(e) => setCurrentStamps(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold font-mono text-slate-900 dark:text-slate-100"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  {t('pointsBalance')}
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  step={5}
-                  value={totalPoints}
-                  onChange={(e) => setTotalPoints(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold font-mono text-slate-900 dark:text-slate-100"
-                />
-              </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {t('currentStampsCount')} (0 - {settings.stampsForFreeDrink || 8})
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={settings.stampsForFreeDrink || 8}
+                value={currentStamps}
+                onChange={(e) => setCurrentStamps(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold font-mono text-slate-900 dark:text-slate-100"
+              />
             </div>
-
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              {isAr
-                ? `⚡ يتم تحديد فئة العميل تلقائياً بناءً على النقاط (${totalPoints} نقطة = ${predictedTierConfig.nameAr}).`
-                : `⚡ Member tier updates dynamically based on configured thresholds (${totalPoints} pts = ${predictedTierConfig.nameEn}).`}
-            </p>
           </div>
 
           {/* Account Status Radio Group */}

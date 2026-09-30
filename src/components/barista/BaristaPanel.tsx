@@ -26,12 +26,12 @@ import {
   UtensilsCrossed,
   X,
 } from 'lucide-react';
-import { useApp, TIER_CONFIGS } from '../../context/AppContext';
+import { useApp } from '../../context/AppContext';
 import { Customer } from '../../types';
 import { QrScanner } from '../common/QrScanner';
 import { NfcScannerModal } from './NfcScannerModal';
 import { NfcTagWriterModal } from '../common/NfcTagWriterModal';
-import { PointsGiftRedemptionModal } from './PointsGiftRedemptionModal';
+import { StampRewardsExchangeModal } from './StampRewardsExchangeModal';
 import { CustomerMenuView } from '../menu/CustomerMenuView';
 
 export const BaristaPanel: React.FC = () => {
@@ -74,7 +74,7 @@ export const BaristaPanel: React.FC = () => {
   const [showQrScanner, setShowQrScanner] = useState(false);
   const [showNfcModal, setShowNfcModal] = useState(false);
   const [showNfcWriterModal, setShowNfcWriterModal] = useState(false);
-  const [showPointsGiftsModal, setShowPointsGiftsModal] = useState(false);
+  const [showStampRewardsModal, setShowStampRewardsModal] = useState(false);
 
   // Barista PIN auth
   const [pinInput, setPinInput] = useState('');
@@ -506,10 +506,8 @@ export const BaristaPanel: React.FC = () => {
                       <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                         {selectedCustomer.name}
                       </h3>
-                      <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-amber-800 dark:text-cyan-300">
-                        {isAr
-                          ? TIER_CONFIGS[selectedCustomer.tier].nameAr
-                          : TIER_CONFIGS[selectedCustomer.tier].nameEn}
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
+                        {isAr ? 'عضو ولاء' : 'Loyalty Member'}
                       </span>
                     </div>
                     <p className="text-xs font-mono text-slate-500 mt-0.5">
@@ -518,18 +516,18 @@ export const BaristaPanel: React.FC = () => {
                   </div>
 
                   <div className="text-right rtl:text-left">
-                    <span className="text-xs font-bold text-slate-400 block">{t('pointsBalance')}</span>
-                    <span className="text-lg font-extrabold text-indigo-600 dark:text-cyan-400 font-mono">
-                      {selectedCustomer.totalPoints} pts
+                    <span className="text-xs font-bold text-slate-400 block">{isAr ? 'رصيد الأختام' : 'Stamps Count'}</span>
+                    <span className="text-lg font-black text-amber-600 dark:text-amber-400 font-mono">
+                      {selectedCustomer.currentStamps} / {settings.stampsForFreeDrink || 8}
                     </span>
                     <button
                       type="button"
                       id="barista-quick-redeem-gifts-link"
-                      onClick={() => setShowPointsGiftsModal(true)}
-                      className="mt-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-[11px] font-bold text-amber-800 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-700/60 cursor-pointer flex items-center gap-1 ml-auto rtl:ml-0 rtl:mr-auto transition active:scale-95"
+                      onClick={() => setShowStampRewardsModal(true)}
+                      className="mt-1 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-[11px] font-bold text-indigo-700 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-700/60 cursor-pointer flex items-center gap-1 ml-auto rtl:ml-0 rtl:mr-auto transition active:scale-95"
                     >
                       <Gift className="w-3 h-3 text-indigo-600 dark:text-cyan-400" />
-                      <span>{isAr ? 'صرف / تبديل هدايا' : 'Redeem / Replace Gifts'}</span>
+                      <span>{isAr ? 'كتالوج استبدال الأختام' : 'Exchange Stamps'}</span>
                     </button>
                   </div>
                 </div>
@@ -620,96 +618,87 @@ export const BaristaPanel: React.FC = () => {
                     <span>{t('redeemFreeDrinkBtn')}</span>
                   </button>
 
-                  {/* 2. Points Collected Gifts & Replacement Hub */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-indigo-400/40 dark:border-indigo-700/40 space-y-3">
+                  {/* 2. Stamp Rewards Exchange Hub */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-cyan-500/5 to-transparent border border-indigo-400/40 dark:border-indigo-700/40 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
+                        <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-xs">
                           <Gift className="w-4 h-4" />
                         </div>
                         <div>
                           <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                            {t('pointsGiftsTitle')}
+                            {isAr ? 'كتالوج استبدال مكافآت الأختام' : 'Stamp Rewards Exchange'}
                           </h4>
                           <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                            {isAr ? 'صرف، تبديل، أو استرجاع هدايا النقاط' : 'Redeem, replace, or refund gifts'}
+                            {isAr ? 'استبدال الأختام بمشروبات، مخبوزات، أو بن' : 'Exchange stamps for drinks, bakery & beans'}
                           </span>
                         </div>
                       </div>
 
                       <div className="text-right rtl:text-left">
-                        <span className="text-xs font-extrabold text-indigo-600 dark:text-cyan-400 font-mono">
-                          {selectedCustomer.totalPoints} pts
+                        <span className="text-xs font-black text-amber-600 dark:text-amber-400 font-mono">
+                          {selectedCustomer.currentStamps} {isAr ? 'أختام' : 'stamps'}
                         </span>
                       </div>
                     </div>
 
                     {/* Quick In-Desk Eligible Rewards */}
-                    {rewards.filter((r) => r.available !== false && selectedCustomer.totalPoints >= r.pointsCost).length > 0 ? (
+                    {rewards.filter((r) => r.available !== false && selectedCustomer.currentStamps >= (r.stampsCost || 4)).length > 0 ? (
                       <div className="space-y-1.5 pt-1">
                         <span className="text-[10px] font-bold text-slate-500 uppercase block">
-                          {isAr ? 'هدايا جاهزة للصرف فوراً بالنقاط:' : 'Gifts ready to redeem with points:'}
+                          {isAr ? 'مكافآت جاهزة للاستبدال بالأختام:' : 'Rewards ready for stamp exchange:'}
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                           {rewards
-                            .filter((r) => r.available !== false && selectedCustomer.totalPoints >= r.pointsCost)
+                            .filter((r) => r.available !== false && selectedCustomer.currentStamps >= (r.stampsCost || 4))
                             .slice(0, 4)
-                            .map((reward) => (
-                              <div
-                                key={reward.id}
-                                className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
-                              >
-                                <div className="truncate mr-2 rtl:mr-0 rtl:ml-2">
-                                  <p className="text-[11px] font-bold text-slate-900 dark:text-slate-100 truncate">
-                                    {isAr ? reward.titleAr : reward.titleEn}
-                                  </p>
-                                  <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-cyan-400">
-                                    {reward.pointsCost} pts
-                                  </span>
-                                </div>
-                                <button
-                                  type="button"
-                                  onClick={async () => {
-                                    await redeemCatalogReward(selectedCustomer.id, reward.id, activeBarista.name);
-                                  }}
-                                  className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold whitespace-nowrap shadow-2xs transition active:scale-95 cursor-pointer"
+                            .map((reward) => {
+                              const cost = reward.stampsCost || 4;
+                              return (
+                                <div
+                                  key={reward.id}
+                                  className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
                                 >
-                                  {isAr ? 'صرف' : 'Redeem'}
-                                </button>
-                              </div>
-                            ))}
+                                  <div className="truncate mr-2 rtl:mr-0 rtl:ml-2">
+                                    <p className="text-[11px] font-bold text-slate-900 dark:text-slate-100 truncate">
+                                      {isAr ? reward.titleAr : reward.titleEn}
+                                    </p>
+                                    <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-cyan-400">
+                                      {cost} {isAr ? 'أختام' : 'stamps'}
+                                    </span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={async () => {
+                                      await redeemCatalogReward(selectedCustomer.id, reward.id, activeBarista.name);
+                                    }}
+                                    className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold whitespace-nowrap shadow-2xs transition active:scale-95 cursor-pointer"
+                                  >
+                                    {isAr ? 'استبدال' : 'Exchange'}
+                                  </button>
+                                </div>
+                              );
+                            })}
                         </div>
                       </div>
                     ) : (
                       <div className="p-2.5 rounded-xl bg-slate-100/60 dark:bg-slate-800/40 text-[11px] text-slate-500 text-center">
                         {isAr
-                          ? `رصيد العميل الحالي (${selectedCustomer.totalPoints} نقطة). يحتاج المزيد من النقاط لفتح هدايا الكتالوج.`
-                          : `Customer has ${selectedCustomer.totalPoints} pts. Needs more points for catalog gifts.`}
+                          ? `رصيد العميل الحالي (${selectedCustomer.currentStamps} أختام). يحتاج إلى أختام إضافية لفتح مكافآت الكتالوج.`
+                          : `Customer has ${selectedCustomer.currentStamps} stamps. Needs more stamps for catalog rewards.`}
                       </div>
                     )}
 
-                    {/* Launch Comprehensive Redemption & Replacement Modal */}
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <button
-                        type="button"
-                        id="barista-open-points-catalog-btn"
-                        onClick={() => setShowPointsGiftsModal(true)}
-                        className="py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
-                      >
-                        <Gift className="w-3.5 h-3.5" />
-                        <span>{t('pointsGiftsCatalog')}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        id="barista-open-replace-refund-btn"
-                        onClick={() => setShowPointsGiftsModal(true)}
-                        className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
-                      >
-                        <RotateCcw className="w-3.5 h-3.5 text-indigo-500" />
-                        <span>{t('replaceOrRefundGift')}</span>
-                      </button>
-                    </div>
+                    {/* Launch Full Catalog Modal Button */}
+                    <button
+                      type="button"
+                      id="barista-open-stamp-catalog-btn"
+                      onClick={() => setShowStampRewardsModal(true)}
+                      className="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+                    >
+                      <Gift className="w-3.5 h-3.5" />
+                      <span>{isAr ? 'تصفح كافة مكافآت الأختام' : 'Browse All Stamp Rewards'}</span>
+                    </button>
                   </div>
 
                   {/* 3. Active Customer Coupons (if any) */}
@@ -907,7 +896,7 @@ export const BaristaPanel: React.FC = () => {
 
       {/* Live Cafe Menu & Item Lookup Tab for Barista */}
       {activeTab === 'menu' && (
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-cyan-400">
@@ -961,11 +950,11 @@ export const BaristaPanel: React.FC = () => {
         />
       )}
 
-      {/* Points Gifts Redemption & Replacement Studio */}
+      {/* Stamp Rewards Catalogue Exchange Modal */}
       {selectedCustomer && (
-        <PointsGiftRedemptionModal
-          isOpen={showPointsGiftsModal}
-          onClose={() => setShowPointsGiftsModal(false)}
+        <StampRewardsExchangeModal
+          isOpen={showStampRewardsModal}
+          onClose={() => setShowStampRewardsModal(false)}
           customer={selectedCustomer}
           baristaName={activeBarista.name}
         />

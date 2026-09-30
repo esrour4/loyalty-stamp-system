@@ -47,10 +47,10 @@ export const DEFAULT_WHEEL_SECTORS: WheelSector[] = [
   },
   {
     id: 'sec_3',
-    labelEn: '50 Bonus Points',
-    labelAr: '50 نقطة إضافية',
-    type: 'points',
-    value: 50,
+    labelEn: '+2 Bonus Stamps',
+    labelAr: '+2 ختم إضافي',
+    type: 'stamp',
+    value: 2,
     color: '#4f46e5', // vibrant indigo
     isWinning: true,
   },
@@ -111,8 +111,6 @@ const DEFAULT_SETTINGS: StoreSettings = {
   logoIcon: 'coffee',
   currency: 'SYP',
   stampsForFreeDrink: 8,
-  pointsPerStamp: 10,
-  pointsPerCurrencyUnit: 1,
   stampIcon: 'cup',
   theme: {
     primary: '#4f46e5', // Electric Indigo
@@ -139,7 +137,6 @@ const DEFAULT_SETTINGS: StoreSettings = {
     sectors: DEFAULT_WHEEL_SECTORS,
   },
   referralRewardStamps: 2,
-  surveyRewardPoints: 25,
   birthdayRewardFreeDrink: true,
   ownerPin: '1234',
   wifiName: 'RoastBloom_Guest',
@@ -287,6 +284,7 @@ const INITIAL_REWARDS: RewardItem[] = [
     titleAr: 'كولد برو القهوة المختصة الفاخر',
     descriptionEn: 'Slow steeped for 18 hours using Ethiopian Yirgacheffe beans.',
     descriptionAr: 'منقوع ببطء لمدة 18 ساعة باستخدام حبوب القهوة الإثيوبية الفاخرة.',
+    stampsCost: 4,
     pointsCost: 80,
     category: 'drink',
     icon: 'coffee',
@@ -298,6 +296,7 @@ const INITIAL_REWARDS: RewardItem[] = [
     titleAr: 'كرواسون اللوز الفرنسي الطازج',
     descriptionEn: 'Freshly baked flaky butter croissant filled with almond cream.',
     descriptionAr: 'كرواسون فرنسي هش بالزبدة محشو بكريمة اللوز ومحمص يومياً.',
+    stampsCost: 5,
     pointsCost: 100,
     category: 'pastry',
     icon: 'croissant',
@@ -309,6 +308,7 @@ const INITIAL_REWARDS: RewardItem[] = [
     titleAr: 'محصول بن كولومبيا غيشا 250 جرام',
     descriptionEn: 'Award-winning light roast with jasmine, peach, and honey floral notes.',
     descriptionAr: 'محصول فاخر بتحميص خفيف مع إيحاءات الياسمين والخوخ والعسل.',
+    stampsCost: 10,
     pointsCost: 350,
     category: 'beans',
     icon: 'package',
@@ -320,6 +320,7 @@ const INITIAL_REWARDS: RewardItem[] = [
     titleAr: 'كوب حراري مخصص بحفر اسمك 500 مل',
     descriptionEn: 'Double-walled matte black stainless steel insulated travel mug.',
     descriptionAr: 'كوب ستانلس ستيل عازل للحرارة مطفي مع نقش شعارك أو اسمك.',
+    stampsCost: 14,
     pointsCost: 500,
     category: 'merch',
     icon: 'gift',
@@ -1076,8 +1077,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       status: 'pending', // Pending approval by barista/owner
       currentStamps: 0,
       totalStampsCollected: 0,
-      totalPoints: 10, // welcome bonus points
-      tier: 'bronze',
       referralCode: userRefCode,
       referredBy: refCode ? refCode.trim().toUpperCase() : undefined,
       referralCount: 0,
@@ -1333,17 +1332,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const freeDrinksEarned = Math.floor(newStampsTotal / maxStamps);
     const remainderStamps = newStampsTotal % maxStamps;
 
-    const currentMultiplier = (tierConfigs[target.tier]?.multiplier) ?? (TIER_CONFIGS[target.tier]?.multiplier ?? 1);
-    const pointsToAdd = Math.round(count * settings.pointsPerStamp * currentMultiplier);
-    const newTotalPoints = target.totalPoints + pointsToAdd;
-    const newTier = calculateTier(newTotalPoints);
-
     const updatedCustomer: Customer = {
       ...target,
       currentStamps: remainderStamps,
       totalStampsCollected: target.totalStampsCollected + count,
-      totalPoints: newTotalPoints,
-      tier: newTier,
       lastVisitAt: new Date().toISOString(),
     };
 
@@ -1375,9 +1367,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       cardNumber: target.cardNumber,
       type: 'stamp_add',
       stampsChanged: count,
-      pointsChanged: pointsToAdd,
-      detailsEn: `Added ${count} coffee stamps (+${pointsToAdd} pts)`,
-      detailsAr: `إضافة ${count} أختام قهوة (+${pointsToAdd} نقطة)`,
+      pointsChanged: 0,
+      detailsEn: `Added ${count} coffee stamps`,
+      detailsAr: `إضافة ${count} أختام قهوة لبطاقة العميل`,
       performedBy: baristaName,
       createdAt: new Date().toISOString(),
     };
@@ -1396,8 +1388,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     triggerToast(
       language === 'ar'
-        ? `تم ختم ${count} أكواب للعميل ${target.name}! (+${pointsToAdd} نقطة)`
-        : `Added ${count} stamps for ${target.name}! (+${pointsToAdd} pts)`
+        ? `تم ختم ${count} أكواب للعميل ${target.name}! ☕`
+        : `Added ${count} stamps for ${target.name}! ☕`
     );
   };
 
@@ -1468,22 +1460,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  // Redeem catalog reward
+  // Redeem catalog reward via STAMP exchange
   const redeemCatalogReward = async (customerId: string, rewardId: string, baristaName: string = 'Barista') => {
     const target = customers.find((c) => c.id === customerId);
     const reward = rewards.find((r) => r.id === rewardId);
     if (!target || !reward) return { success: false, message: 'Invalid customer or reward' };
 
-    if (target.totalPoints < reward.pointsCost) {
+    const stampsCost = reward.stampsCost || Math.max(1, Math.round((reward.pointsCost || 80) / 20)) || 4;
+
+    if (target.currentStamps < stampsCost) {
       return {
         success: false,
-        message: language === 'ar' ? 'رصيد النقاط غير كافٍ لهذه المكافأة' : 'Insufficient points for this reward',
+        message:
+          language === 'ar'
+            ? `رصيد الأختام غير كافٍ. يتطلب ${stampsCost} أختام والعميل لديه ${target.currentStamps} ختم فقط.`
+            : `Insufficient stamps. Requires ${stampsCost} stamps, customer only has ${target.currentStamps}.`,
       };
     }
 
+    const newStamps = target.currentStamps - stampsCost;
     const updated: Customer = {
       ...target,
-      totalPoints: target.totalPoints - reward.pointsCost,
+      currentStamps: newStamps,
     };
 
     setCustomers((prev) => prev.map((c) => (c.id === customerId ? updated : c)));
@@ -1493,11 +1491,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       customerId: target.id,
       customerName: target.name,
       cardNumber: target.cardNumber,
-      type: 'points_redeem',
-      stampsChanged: 0,
-      pointsChanged: -reward.pointsCost,
-      detailsEn: `Redeemed ${reward.titleEn} (-${reward.pointsCost} pts)`,
-      detailsAr: `استبدال ${reward.titleAr} (-${reward.pointsCost} نقطة)`,
+      type: 'reward_exchange',
+      stampsChanged: -stampsCost,
+      pointsChanged: 0,
+      detailsEn: `Exchanged ${stampsCost} stamps for: ${reward.titleEn}`,
+      detailsAr: `استبدال ${stampsCost} أختام بمكافأة: ${reward.titleAr}`,
       performedBy: baristaName,
       createdAt: new Date().toISOString(),
     };
@@ -1511,7 +1509,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     confetti({ particleCount: 90, spread: 60 });
     return {
       success: true,
-      message: language === 'ar' ? `تم استبدال ${reward.titleAr} بنجاح!` : `Redeemed ${reward.titleEn} successfully!`,
+      message:
+        language === 'ar'
+          ? `تم استبدال (${reward.titleAr}) بنجاح مقابل ${stampsCost} أختام!`
+          : `Exchanged ${stampsCost} stamps for ${reward.titleEn} successfully!`,
     };
   };
 
@@ -1713,9 +1714,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     let createdCoupon: Coupon | undefined;
 
     if (chosen.isWinning) {
-      if (chosen.type === 'points') {
-        newPoints += Number(chosen.value || 0);
-      } else if (chosen.type === 'stamp') {
+      if (chosen.type === 'stamp') {
         newStamps = Math.min(settings.stampsForFreeDrink, newStamps + Number(chosen.value || 1));
       } else if (chosen.type === 'coupon') {
         createdCoupon = {
@@ -1740,7 +1739,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         cardNumber: target.cardNumber,
         type: 'wheel_reward',
         stampsChanged: chosen.type === 'stamp' ? Number(chosen.value || 1) : 0,
-        pointsChanged: chosen.type === 'points' ? Number(chosen.value || 0) : 0,
+        pointsChanged: 0,
         detailsEn: `Fortune Wheel Win: ${chosen.labelEn}`,
         detailsAr: `جائزة عجلة الحظ: ${chosen.labelAr}`,
         performedBy: 'Fortune Wheel',
@@ -1789,7 +1788,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       isWinning: chosen.isWinning,
       sectorIndex: chosenIndex,
       coupon: createdCoupon,
-      points: chosen.type === 'points' ? Number(chosen.value) : undefined,
       stamps: chosen.type === 'stamp' ? Number(chosen.value || 1) : undefined,
       remainingSpinsToday: remainingSpins,
     };
@@ -1820,35 +1818,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setFeedbackList((prev) => [newFeedback, ...prev]);
 
-    // Give bonus points for survey
-    const bonusPoints = settings.surveyRewardPoints || 25;
-    const updatedCustomer: Customer = {
-      ...target,
-      totalPoints: target.totalPoints + bonusPoints,
-      tier: calculateTier(target.totalPoints + bonusPoints),
-    };
-    setCustomers((prev) => prev.map((c) => (c.id === customerId ? updatedCustomer : c)));
-
-    // Record Transaction
-    const newTx: Transaction = {
-      id: 'tx_' + Date.now(),
-      customerId: target.id,
-      customerName: target.name,
-      cardNumber: target.cardNumber,
-      type: 'survey_bonus',
-      stampsChanged: 0,
-      pointsChanged: bonusPoints,
-      detailsEn: `Customer feedback bonus (+${bonusPoints} pts)`,
-      detailsAr: `مكافأة تعبئة استبيان تقييم الخدمة (+${bonusPoints} نقطة)`,
-      performedBy: 'Feedback System',
-      createdAt: new Date().toISOString(),
-    };
-    setTransactions((prev) => [newTx, ...prev]);
-
+    // Record Feedback Toast
     triggerToast(
       language === 'ar'
-        ? `شكراً لتقييمك! تمت إضافة +${bonusPoints} نقطة هدية لرصيدك.`
-        : `Thank you for your feedback! +${bonusPoints} bonus points awarded.`
+        ? 'شكراً جزيلاً لتقييمك ومشاركتنا رأيك في تحسين خدماتنا!'
+        : 'Thank you for your valuable feedback and support!'
     );
   };
 

@@ -48,7 +48,6 @@ import {
 import { useApp, TIER_CONFIGS } from '../../context/AppContext';
 import { Barista, Customer, RewardItem, TierLevel, UserRole } from '../../types';
 import { WheelSettingsTab } from './WheelSettingsTab';
-import { TierConfigSection } from './TierConfigSection';
 import { CustomerEditModal } from './CustomerEditModal';
 import { BaristaEditModal } from './BaristaEditModal';
 import { ChangeOwnerPinModal } from './ChangeOwnerPinModal';
@@ -77,7 +76,6 @@ export const OwnerPanel: React.FC = () => {
     updateCustomer,
     toggleCustomerStatus,
     deleteCustomer,
-    tierConfigs,
     sendBroadcast,
     sendTestWhatsApp,
     isOwnerAuthenticated,
@@ -122,11 +120,9 @@ export const OwnerPanel: React.FC = () => {
   const [stampIcon, setStampIcon] = useState(settings.stampIcon);
   const [ownerPinSetting, setOwnerPinSetting] = useState(settings.ownerPin || '1234');
 
-  // Rewards settings
+  // Rewards settings (Pure Stamps System)
   const [stampsForFree, setStampsForFree] = useState(settings.stampsForFreeDrink);
-  const [pointsPerStamp, setPointsPerStamp] = useState(settings.pointsPerStamp);
   const [referralStamps, setReferralStamps] = useState(settings.referralRewardStamps);
-  const [surveyPoints, setSurveyPoints] = useState(settings.surveyRewardPoints);
 
   // New Reward Modal Form
   const [showAddReward, setShowAddReward] = useState(false);
@@ -134,7 +130,7 @@ export const OwnerPanel: React.FC = () => {
   const [newRewTitleAr, setNewRewTitleAr] = useState('');
   const [newRewDescEn, setNewRewDescEn] = useState('');
   const [newRewDescAr, setNewRewDescAr] = useState('');
-  const [newRewCost, setNewRewCost] = useState(100);
+  const [newRewCost, setNewRewCost] = useState(5);
   const [newRewCategory, setNewRewCategory] = useState<'drink' | 'pastry' | 'beans' | 'merch' | 'discount'>('drink');
 
   // New Barista Modal Form
@@ -218,14 +214,12 @@ export const OwnerPanel: React.FC = () => {
     setAccentColor(p.accent);
   };
 
-  // Save Rewards Settings
+  // Save Rewards Settings (Pure Stamps System)
   const handleSaveRewardsConfig = (e: React.FormEvent) => {
     e.preventDefault();
     updateSettings({
       stampsForFreeDrink: stampsForFree,
-      pointsPerStamp,
       referralRewardStamps: referralStamps,
-      surveyRewardPoints: surveyPoints,
     });
   };
 
@@ -238,7 +232,7 @@ export const OwnerPanel: React.FC = () => {
       titleAr: newRewTitleAr,
       descriptionEn: newRewDescEn,
       descriptionAr: newRewDescAr,
-      pointsCost: Number(newRewCost),
+      stampsCost: Number(newRewCost) || 4,
       category: newRewCategory,
       icon: 'gift',
       available: true,
@@ -380,16 +374,16 @@ export const OwnerPanel: React.FC = () => {
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileMenuOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {/* Quick Table QR Generator Button */}
+            {/* Quick Cafe Menu QR Generator Button */}
             <button
               type="button"
-              id="owner-header-table-qr-btn"
+              id="owner-header-cafe-qr-btn"
               onClick={() => setActiveTab('menu')}
               className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-200 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 text-xs font-bold border border-cyan-300 dark:border-cyan-700 transition cursor-pointer"
-              title={isAr ? 'توليد ستاندات QR للطاولات' : 'Generate Table QR Stands'}
+              title={isAr ? 'توليد رمز QR لقائمة المقهى' : 'Generate Cafe Menu QR'}
             >
               <QrCode className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span className="hidden sm:inline">{isAr ? 'QR الطاولات' : 'Table QR'}</span>
+              <span className="hidden sm:inline">{isAr ? 'QR القائمة' : 'Menu QR'}</span>
             </button>
 
             {/* Quick Change Owner PIN button */}
@@ -618,33 +612,52 @@ export const OwnerPanel: React.FC = () => {
               </div>
             </div>
 
-            {/* Member Tier Distribution */}
+            {/* Stamp Card Progress & Redemptions Summary */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-4">
-                <Award className="w-5 h-5 text-indigo-600" />
+                <Coffee className="w-5 h-5 text-indigo-600" />
                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  {t('tierDistribution')}
+                  {isAr ? 'حالة بطاقات الأختام والمكافآت' : 'Stamp Cards & Redemptions'}
                 </h3>
               </div>
               <div className="space-y-3">
-                {Object.keys(TIER_CONFIGS).map((tierKey) => {
-                  const tier = TIER_CONFIGS[tierKey as TierLevel];
-                  const count = customers.filter((c) => c.tier === tierKey).length;
-                  const pct = totalRegistered > 0 ? Math.round((count / totalRegistered) * 100) : 0;
+                {[
+                  {
+                    label: isAr ? 'بطاقات جاهزة للمشروب المجاني (8 أختام)' : 'Cards Ready for Free Drink (8 Stamps)',
+                    count: customers.filter((c) => c.currentStamps >= (settings.stampsForFreeDrink || 8)).length,
+                    color: '#10b981',
+                  },
+                  {
+                    label: isAr ? 'بطاقات قريبة من الإكمال (5-7 أختام)' : 'Nearly Completed (5-7 Stamps)',
+                    count: customers.filter((c) => c.currentStamps >= 5 && c.currentStamps < (settings.stampsForFreeDrink || 8)).length,
+                    color: '#6366f1',
+                  },
+                  {
+                    label: isAr ? 'بطاقات نشطة (1-4 أختام)' : 'Active Stamp Collectors (1-4 Stamps)',
+                    count: customers.filter((c) => c.currentStamps >= 1 && c.currentStamps < 5).length,
+                    color: '#06b6d4',
+                  },
+                  {
+                    label: isAr ? 'بطاقات جديدة (0 ختم)' : 'New / Reset Cards (0 Stamps)',
+                    count: customers.filter((c) => c.currentStamps === 0).length,
+                    color: '#94a3b8',
+                  },
+                ].map((stat, idx) => {
+                  const pct = totalRegistered > 0 ? Math.round((stat.count / totalRegistered) * 100) : 0;
                   return (
-                    <div key={tierKey}>
+                    <div key={idx}>
                       <div className="flex items-center justify-between text-xs mb-1">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">
-                          {isAr ? tier.nameAr : tier.nameEn}
+                          {stat.label}
                         </span>
                         <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
-                          {count} ({pct}%)
+                          {stat.count} ({pct}%)
                         </span>
                       </div>
                       <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full rounded-full"
-                          style={{ width: `${Math.max(pct, 5)}%`, backgroundColor: tier.color }}
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${Math.max(pct, 5)}%`, backgroundColor: stat.color }}
                         />
                       </div>
                     </div>
@@ -923,10 +936,10 @@ export const OwnerPanel: React.FC = () => {
               <span>{isAr ? 'قواعد برنامج الولاء والأختام' : 'Loyalty Rules & Ratios'}</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  {t('stampsForFreeTarget')}
+                  {t('stampsForFreeTarget')} (4 - 12)
                 </label>
                 <input
                   type="number"
@@ -934,20 +947,7 @@ export const OwnerPanel: React.FC = () => {
                   max={12}
                   value={stampsForFree}
                   onChange={(e) => setStampsForFree(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  {t('pointsPerStampRate')}
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  value={pointsPerStamp}
-                  onChange={(e) => setPointsPerStamp(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold"
                 />
               </div>
 
@@ -960,20 +960,7 @@ export const OwnerPanel: React.FC = () => {
                   min={1}
                   value={referralStamps}
                   onChange={(e) => setReferralStamps(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  {t('surveyBonusPoints')}
-                </label>
-                <input
-                  type="number"
-                  min={5}
-                  value={surveyPoints}
-                  onChange={(e) => setSurveyPoints(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold"
                 />
               </div>
             </div>
@@ -985,9 +972,6 @@ export const OwnerPanel: React.FC = () => {
               {t('save')}
             </button>
           </form>
-
-          {/* Tier Configuration Management */}
-          <TierConfigSection />
 
           {/* Reward Catalog Management */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
@@ -1017,8 +1001,9 @@ export const OwnerPanel: React.FC = () => {
                       <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
                         {isAr ? r.titleAr : r.titleEn}
                       </span>
-                      <span className="text-xs font-mono font-bold text-indigo-600 dark:text-cyan-400">
-                        {r.pointsCost} pts
+                      <span className="text-xs font-mono font-bold text-indigo-600 dark:text-cyan-400 flex items-center gap-1">
+                        <Coffee className="w-3.5 h-3.5" />
+                        <span>{r.stampsCost || Math.max(1, Math.round((r.pointsCost || 80) / 20))} {isAr ? 'أختام' : 'stamps'}</span>
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 leading-relaxed mb-2">
@@ -1059,8 +1044,8 @@ export const OwnerPanel: React.FC = () => {
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 {isAr
-                  ? 'إدارة حسابات العملاء، تعديل البيانات والنقاط، وتفعيل أو تعطيل الحسابات'
-                  : 'Manage customer accounts, edit points & stamps, and enable or disable access.'}
+                  ? 'إدارة حسابات العملاء، تعديل البيانات والأختام، وتفعيل أو تعطيل الحسابات'
+                  : 'Manage customer accounts, track stamps, and enable or disable access.'}
               </p>
             </div>
 
@@ -1115,20 +1100,13 @@ export const OwnerPanel: React.FC = () => {
                   <th className="pb-3 px-2">{t('cardNumberPlaceholder')}</th>
                   <th className="pb-3 px-2">{t('phone')}</th>
                   <th className="pb-3 px-2">{t('stamps')}</th>
-                  <th className="pb-3 px-2">{t('points')}</th>
-                  <th className="pb-3 px-2">{t('memberTier')}</th>
+                  <th className="pb-3 px-2">{isAr ? 'إجمالي الأختام المكتسبة' : 'Total Stamps'}</th>
                   <th className="pb-3 px-2">{t('status')}</th>
                   <th className="pb-3 px-2 text-center">{t('actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filteredCustomerList.map((c) => {
-                  const customerTierConfig = (tierConfigs || settings.tiers)?.[c.tier];
-                  const tierColor = customerTierConfig?.color || '#b45309';
-                  const tierName = isAr
-                    ? customerTierConfig?.nameAr || c.tier
-                    : customerTierConfig?.nameEn || c.tier;
-
                   return (
                     <tr key={c.id} className="text-slate-700 dark:text-slate-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
                       <td className="py-3 px-2">
@@ -1139,23 +1117,11 @@ export const OwnerPanel: React.FC = () => {
                       </td>
                       <td className="py-3 px-2 font-mono text-indigo-600 dark:text-cyan-400 font-semibold">{c.cardNumber}</td>
                       <td className="py-3 px-2 font-mono text-slate-500">{c.phone}</td>
-                      <td className="py-3 px-2 font-bold">{c.currentStamps}/{settings.stampsForFreeDrink || 8}</td>
-                      <td className="py-3 px-2 font-bold font-mono">{c.totalPoints} pts</td>
-                      <td className="py-3 px-2">
-                        <span
-                          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border"
-                          style={{
-                            borderColor: `${tierColor}40`,
-                            backgroundColor: `${tierColor}15`,
-                            color: tierColor,
-                          }}
-                        >
-                          <span
-                            className="w-1.5 h-1.5 rounded-full"
-                            style={{ backgroundColor: tierColor }}
-                          />
-                          <span>{tierName}</span>
-                        </span>
+                      <td className="py-3 px-2 font-bold font-mono text-amber-600 dark:text-amber-400">
+                        {c.currentStamps}/{settings.stampsForFreeDrink || 8} ☕
+                      </td>
+                      <td className="py-3 px-2 font-bold font-mono text-slate-700 dark:text-slate-200">
+                        {c.totalStampsCollected} ☕
                       </td>
                       <td className="py-3 px-2">
                         <span
@@ -1830,13 +1796,12 @@ export const OwnerPanel: React.FC = () => {
                 <select
                   value={targetTier}
                   onChange={(e) => setTargetTier(e.target.value as any)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold"
                 >
                   <option value="all">{t('allCustomers')} ({customers.filter(c => c.status === 'approved').length})</option>
-                  <option value="bronze">{isAr ? 'المستوى البرونزي' : 'Bronze Tier'}</option>
-                  <option value="silver">{isAr ? 'المستوى الفضي' : 'Silver Tier'}</option>
-                  <option value="gold">{isAr ? 'المستوى الذهبي' : 'Gold Tier'}</option>
-                  <option value="platinum">{isAr ? 'المستوى البلاتيني' : 'Platinum Tier'}</option>
+                  <option value="ready_free">{isAr ? 'عملاء مؤهلون للمشروب المجاني (8 أختام)' : 'Ready for Free Drink (8 Stamps)'} ({customers.filter(c => c.currentStamps >= (settings.stampsForFreeDrink || 8)).length})</option>
+                  <option value="collecting">{isAr ? 'عملاء يجمعون الأختام (1-7 أختام)' : 'Collecting Stamps (1-7 Stamps)'} ({customers.filter(c => c.currentStamps > 0 && c.currentStamps < (settings.stampsForFreeDrink || 8)).length})</option>
+                  <option value="new">{isAr ? 'عملاء جدد (0 ختم)' : 'New Members (0 Stamps)'} ({customers.filter(c => c.currentStamps === 0).length})</option>
                 </select>
               </div>
 
@@ -1909,14 +1874,17 @@ export const OwnerPanel: React.FC = () => {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold mb-1">{t('pointsCost')}</label>
+                  <label className="block text-xs font-semibold mb-1">
+                    {isAr ? 'عدد الأختام المطلوبة' : 'Stamps Required'}
+                  </label>
                   <input
                     type="number"
                     required
-                    min={10}
+                    min={1}
                     value={newRewCost}
                     onChange={(e) => setNewRewCost(Number(e.target.value))}
                     className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono"
+                    placeholder="e.g. 5"
                   />
                 </div>
                 <div>

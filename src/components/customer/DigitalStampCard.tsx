@@ -11,7 +11,7 @@ import {
   Share2,
   Sparkles,
 } from 'lucide-react';
-import { useApp, TIER_CONFIGS } from '../../context/AppContext';
+import { useApp } from '../../context/AppContext';
 import { CardExportService } from '../../services/cardExportService';
 
 export const DigitalStampCard: React.FC = () => {
@@ -41,7 +41,6 @@ export const DigitalStampCard: React.FC = () => {
   const maxStamps = settings.stampsForFreeDrink || 8;
   const currentStamps = currentCustomer.currentStamps;
   const stampsRemaining = Math.max(0, maxStamps - currentStamps);
-  const tierConfig = TIER_CONFIGS[currentCustomer.tier];
 
   // Handle Download Card as high-res Image
   const handleDownloadCard = async () => {
@@ -83,21 +82,16 @@ export const DigitalStampCard: React.FC = () => {
               </h3>
             </div>
             <p className="text-xs text-cyan-300/90 font-medium">
-              {isAr ? 'بطاقة الأختام والمكافآت الرقمية' : 'Digital Stamp Pass'}
+              {isAr ? 'بطاقة الأختام الرقمية' : 'Digital Stamp Card'}
             </p>
           </div>
 
-          {/* Tier Badge */}
-          <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-md border"
-            style={{
-              backgroundColor: 'rgba(15, 23, 42, 0.8)',
-              borderColor: tierConfig.color,
-              color: tierConfig.color,
-            }}
-          >
-            <Sparkles className="w-3 h-3" />
-            <span>{isAr ? tierConfig.nameAr : tierConfig.nameEn}</span>
+          {/* Stamp Status Badge */}
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-md border bg-slate-900/80 border-cyan-400 text-cyan-300">
+            <Sparkles className="w-3 h-3 text-cyan-400" />
+            <span>
+              {currentStamps} / {maxStamps} {t('stamps')}
+            </span>
           </div>
         </div>
 
@@ -204,8 +198,8 @@ export const DigitalStampCard: React.FC = () => {
             </p>
             <p className="text-[11px] text-slate-400 mb-3 leading-relaxed">
               {isAr
-                ? 'أظهر الرمز للباريستا عند الطلب لإضافة الأختام واستبدال المكافآت فورياً.'
-                : 'Present this QR code to the barista to collect stamps and redeem rewards.'}
+                ? 'أظهر الرمز للباريستا عند الطلب لإضافة الأختام والحصول على مشروبك المجاني.'
+                : 'Present this QR code to the barista to collect stamps and unlock your free drink.'}
             </p>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
@@ -224,11 +218,13 @@ export const DigitalStampCard: React.FC = () => {
           </div>
         </div>
 
-        {/* Footer Stats summary */}
+        {/* Footer Stats summary (Pure Stamps System) */}
         <div className="relative z-10 grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-800/80 text-center">
           <div>
-            <span className="text-[10px] text-slate-400 block">{t('pointsBalance')}</span>
-            <span className="text-sm font-extrabold text-cyan-400">{currentCustomer.totalPoints} pts</span>
+            <span className="text-[10px] text-slate-400 block">{isAr ? 'أختام البطاقة الحالية' : 'Current Card Stamps'}</span>
+            <span className="text-sm font-extrabold text-cyan-400">
+              {currentCustomer.currentStamps} / {settings.stampsForFreeDrink || 8} ☕
+            </span>
           </div>
           <div>
             <span className="text-[10px] text-slate-400 block">{t('totalStampsEarned')}</span>

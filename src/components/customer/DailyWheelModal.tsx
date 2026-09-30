@@ -101,8 +101,8 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ isOpen, onClos
           </h3>
           <p className="text-xs text-slate-400 mt-1">
             {isAr
-              ? `لديك ${maxSpins} ${maxSpins === 1 ? 'محاولة' : 'محاولات'} يومياً للفوز بجوائز فورية وكوبونات!`
-              : `You have ${maxSpins} ${maxSpins === 1 ? 'spin' : 'spins'} per day for instant rewards & coupons!`}
+              ? `لديك ${maxSpins} ${maxSpins === 1 ? 'محاولة' : 'محاولات'} يومياً للفوز بأختام إضافية ومشروبات مجانية!`
+              : `You have ${maxSpins} ${maxSpins === 1 ? 'spin' : 'spins'} per day for bonus stamps & specialty treats!`}
           </p>
 
           {/* Spins badge */}
@@ -193,7 +193,7 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ isOpen, onClos
                 <p className="text-sm font-bold text-cyan-300">{t('spinWonTitle')}</p>
                 <p className="text-base font-extrabold text-white mt-0.5">{spinOutcome.prize}</p>
                 <p className="text-[11px] text-slate-300 mt-1">
-                  {isAr ? 'تمت إضافة الجائزة والكوبون إلى محفظتك بنجاح!' : 'Prize & Coupon added to your wallet!'}
+                  {isAr ? 'تمت إضافة الجائزة بنجاح إلى بطاقتك الرقمية!' : 'Prize successfully added to your digital card!'}
                 </p>
               </>
             ) : (

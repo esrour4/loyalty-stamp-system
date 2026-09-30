@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Award,
   Cake,
   Clock,
   Coffee,
-  Gift,
   History,
   LogOut,
   MessageSquare,
-  Package,
-  QrCode,
-  Share2,
   Sparkles,
-  Ticket,
-  Users,
   UtensilsCrossed,
 } from 'lucide-react';
-import { useApp, TIER_CONFIGS } from '../../context/AppContext';
+import { useApp } from '../../context/AppContext';
 import { CustomerLoginRegister } from './CustomerLoginRegister';
 import { DigitalStampCard } from './DigitalStampCard';
 import { DailyWheelModal } from './DailyWheelModal';
@@ -28,15 +21,13 @@ export const CustomerPortal: React.FC = () => {
   const {
     currentCustomer,
     logoutCustomer,
-    rewards,
     transactions,
     language,
     t,
     settings,
-    tierConfigs,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'card' | 'menu' | 'coupons' | 'rewards' | 'history'>('card');
+  const [activeTab, setActiveTab] = useState<'card' | 'menu' | 'history'>('card');
   const [showWheel, setShowWheel] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
 
@@ -53,8 +44,6 @@ export const CustomerPortal: React.FC = () => {
     const dob = new Date(currentCustomer.dateOfBirth);
     return today.getDate() === dob.getDate() && today.getMonth() === dob.getMonth();
   })();
-
-  const tierConfig = tierConfigs?.[currentCustomer.tier] || TIER_CONFIGS[currentCustomer.tier];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-6">
@@ -76,7 +65,7 @@ export const CustomerPortal: React.FC = () => {
                     : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300'
                 }`}
               >
-                {currentCustomer.status === 'pending' ? t('pendingStatus') : isAr ? tierConfig.nameAr : tierConfig.nameEn}
+                {currentCustomer.status === 'pending' ? t('pendingStatus') : isAr ? 'عضو ولاء' : 'Loyalty Member'}
               </span>
             </div>
             <p className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">
@@ -105,7 +94,7 @@ export const CustomerPortal: React.FC = () => {
             type="button"
             id="open-feedback-btn"
             onClick={() => setShowFeedback(true)}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-cyan-400 transition"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-cyan-400 transition cursor-pointer"
             title={t('feedbackTitle')}
           >
             <MessageSquare className="w-4 h-4" />
@@ -116,7 +105,7 @@ export const CustomerPortal: React.FC = () => {
             type="button"
             id="customer-logout-btn"
             onClick={logoutCustomer}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-red-600 transition"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-red-600 transition cursor-pointer"
             title={t('logout')}
           >
             <LogOut className="w-4 h-4" />
@@ -141,7 +130,7 @@ export const CustomerPortal: React.FC = () => {
 
       {/* Birthday Banner */}
       {isBirthday && (
-        <div className="p-4 sm:p-5 rounded-3xl bg-linear-to-r from-rose-500/20 via-amber-500/20 to-orange-500/20 border border-rose-300 dark:border-rose-700 text-slate-900 dark:text-slate-100">
+        <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-rose-500/20 via-amber-500/20 to-orange-500/20 border border-rose-300 dark:border-rose-700 text-slate-900 dark:text-slate-100">
           <div className="flex items-center gap-3">
             <Cake className="w-7 h-7 text-rose-500 animate-bounce shrink-0" />
             <div>
@@ -155,14 +144,14 @@ export const CustomerPortal: React.FC = () => {
       )}
 
       {/* Navigation Sub-Tabs */}
-      <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl overflow-x-auto">
+      <div className="flex items-center gap-2 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl overflow-x-auto no-scrollbar">
         <button
           type="button"
           onClick={() => setActiveTab('card')}
-          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'card'
-              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <Coffee className="w-3.5 h-3.5" />
@@ -172,10 +161,10 @@ export const CustomerPortal: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('menu')}
-          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'menu'
-              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <UtensilsCrossed className="w-3.5 h-3.5" />
@@ -184,37 +173,11 @@ export const CustomerPortal: React.FC = () => {
 
         <button
           type="button"
-          onClick={() => setActiveTab('coupons')}
-          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
-            activeTab === 'coupons'
-              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-          }`}
-        >
-          <Ticket className="w-3.5 h-3.5" />
-          <span>{t('myCoupons')} ({currentCustomer.coupons?.filter((c) => !c.used).length || 0})</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('rewards')}
-          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
-            activeTab === 'rewards'
-              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-          }`}
-        >
-          <Gift className="w-3.5 h-3.5" />
-          <span>{t('catalogRewards')}</span>
-        </button>
-
-        <button
-          type="button"
           onClick={() => setActiveTab('history')}
-          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'history'
-              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <History className="w-3.5 h-3.5" />
@@ -227,23 +190,29 @@ export const CustomerPortal: React.FC = () => {
         <div className="space-y-6">
           <DigitalStampCard />
 
-          {/* Tier Perks & Referral Row */}
+          {/* Quick Perks & Referral Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Tier Benefits */}
+            {/* Stamp System Explanation & Benefits */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-3">
-                <Award className="w-5 h-5 text-indigo-600 dark:text-cyan-400" />
+                <Coffee className="w-5 h-5 text-indigo-600 dark:text-cyan-400" />
                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  {t('tierPerks')} ({isAr ? tierConfig.nameAr : tierConfig.nameEn})
+                  {isAr ? 'برنامج أختام القهوة' : 'Stamp Loyalty Program'}
                 </h3>
               </div>
-              <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                {(isAr ? tierConfig.perksAr : tierConfig.perksEn).map((perk, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                    <span>{perk}</span>
-                  </li>
-                ))}
+              <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                  <span>{isAr ? 'ختم رقمي مجاني مع كل كوب قهوة أو مشروب مختص' : '1 digital stamp with every specialty coffee drink'}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-cyan-500 shrink-0" />
+                  <span>{isAr ? `اجمع ${settings.stampsForFreeDrink || 8} أختام واحصل على مشروبك القادم مجاناً فورياً` : `Collect ${settings.stampsForFreeDrink || 8} stamps to unlock your complimentary drink`}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+                  <span>{isAr ? 'أظهر رمز QR للباريستا عند الطلب لتسجيل أختامك بثوانٍ' : 'Show your QR code to the barista to register your stamps in seconds'}</span>
+                </li>
               </ul>
             </div>
 
@@ -255,7 +224,7 @@ export const CustomerPortal: React.FC = () => {
 
       {/* Artisan Coffee & Food Menu Tab */}
       {activeTab === 'menu' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-cyan-400">
@@ -280,131 +249,6 @@ export const CustomerPortal: React.FC = () => {
         </div>
       )}
 
-      {/* Active Coupons Wallet */}
-      {activeTab === 'coupons' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-          <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <Ticket className="w-5 h-5 text-indigo-600" />
-            <span>{t('myCoupons')}</span>
-          </h3>
-
-          {currentCustomer.coupons.length === 0 ? (
-            <div className="py-12 text-center text-slate-400">
-              <Ticket className="w-10 h-10 mx-auto mb-2 opacity-40" />
-              <p className="text-sm">{t('noCoupons')}</p>
-              <button
-                type="button"
-                onClick={() => setShowWheel(true)}
-                className="mt-3 px-4 py-2 rounded-xl bg-amber-500 text-white font-bold text-xs"
-              >
-                {t('spinWheelTitle')}
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {currentCustomer.coupons.map((coupon) => (
-                <div
-                  key={coupon.id}
-                  className={`p-4 rounded-2xl border transition-all ${
-                    coupon.used
-                      ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60'
-                      : 'bg-indigo-50/50 dark:bg-indigo-950/30 border-indigo-300 dark:border-indigo-700/60 shadow-xs'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="text-xs font-extrabold text-slate-900 dark:text-slate-100">
-                      {isAr ? coupon.titleAr : coupon.titleEn}
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                        coupon.used
-                          ? 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
-                          : 'bg-amber-500 text-white'
-                      }`}
-                    >
-                      {coupon.used ? t('couponUsed') : t('couponCode')}
-                    </span>
-                  </div>
-
-                  <p className="text-sm font-mono font-bold text-amber-700 dark:text-cyan-400 mb-2">
-                    {coupon.code}
-                  </p>
-
-                  <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span>
-                      {t('expiresOn')}: {coupon.expiresAt}
-                    </span>
-                    {!coupon.used && (
-                      <span className="text-indigo-600 dark:text-cyan-400 font-bold">
-                        {t('useCoupon')}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Catalog Rewards */}
-      {activeTab === 'rewards' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-              <Gift className="w-5 h-5 text-indigo-600" />
-              <span>{t('catalogRewards')}</span>
-            </h3>
-            <span className="text-xs font-bold text-indigo-600 dark:text-cyan-400">
-              {t('pointsBalance')}: {currentCustomer.totalPoints} pts
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {rewards.map((r) => {
-              const canAfford = currentCustomer.totalPoints >= r.pointsCost;
-              return (
-                <div
-                  key={r.id}
-                  className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                        {isAr ? r.titleAr : r.titleEn}
-                      </span>
-                      <span className="text-xs font-bold text-indigo-600 dark:text-cyan-400 font-mono">
-                        {r.pointsCost} pts
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">
-                      {isAr ? r.descriptionAr : r.descriptionEn}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
-                    <span className="text-[10px] text-slate-400 capitalize">{r.category}</span>
-                    <span
-                      className={`text-xs font-bold ${
-                        canAfford ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'
-                      }`}
-                    >
-                      {canAfford
-                        ? isAr
-                          ? 'جاهز للاستبدال بالكاونتر'
-                          : 'Redeem at Counter'
-                        : isAr
-                        ? `متبقي ${r.pointsCost - currentCustomer.totalPoints} نقطة`
-                        : `${r.pointsCost - currentCustomer.totalPoints} pts needed`}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       {/* Transaction & Activity History */}
       {activeTab === 'history' && (
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
@@ -425,7 +269,6 @@ export const CustomerPortal: React.FC = () => {
                     <th className="pb-3 px-2">{t('date')}</th>
                     <th className="pb-3 px-2">{t('activity')}</th>
                     <th className="pb-3 px-2">{t('stamps')}</th>
-                    <th className="pb-3 px-2">{t('points')}</th>
                     <th className="pb-3 px-2">{t('staff')}</th>
                   </tr>
                 </thead>
@@ -441,10 +284,7 @@ export const CustomerPortal: React.FC = () => {
                           {isAr ? tx.detailsAr : tx.detailsEn}
                         </td>
                         <td className="py-3 px-2 font-bold text-indigo-600 dark:text-cyan-400">
-                          {tx.stampsChanged > 0 ? `+${tx.stampsChanged}` : tx.stampsChanged}
-                        </td>
-                        <td className="py-3 px-2 font-bold text-emerald-600 dark:text-emerald-400">
-                          {tx.pointsChanged > 0 ? `+${tx.pointsChanged}` : tx.pointsChanged}
+                          {tx.stampsChanged > 0 ? `+${tx.stampsChanged}` : tx.stampsChanged} ☕
                         </td>
                         <td className="py-3 px-2 text-slate-400">{tx.performedBy}</td>
                       </tr>

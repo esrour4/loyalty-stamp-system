@@ -21,7 +21,7 @@ export interface WheelSector {
   id: string;
   labelEn: string;
   labelAr: string;
-  type: 'points' | 'stamp' | 'coupon' | 'lose';
+  type: 'stamp' | 'coupon' | 'lose';
   value?: number | string;
   discountType?: 'percentage' | 'fixed' | 'free_item';
   color: string;
@@ -43,8 +43,8 @@ export interface Customer {
   status: CustomerStatus;
   currentStamps: number; // 0 to maxStamps (e.g. 8)
   totalStampsCollected: number;
-  totalPoints: number;
-  tier: TierLevel;
+  totalPoints?: number; // legacy optional
+  tier?: TierLevel; // legacy optional
   referralCode: string;
   referredBy?: string;
   referralCount: number;
@@ -74,7 +74,8 @@ export interface RewardItem {
   titleAr: string;
   descriptionEn: string;
   descriptionAr: string;
-  pointsCost: number;
+  stampsCost: number; // Stamps required to exchange for this reward
+  pointsCost?: number; // Optional legacy fallback
   category: 'drink' | 'pastry' | 'beans' | 'merch' | 'discount';
   icon: string;
   available: boolean;
@@ -99,9 +100,9 @@ export interface Transaction {
   customerId: string;
   customerName: string;
   cardNumber: string;
-  type: 'stamp_add' | 'stamp_redeem' | 'points_redeem' | 'points_refund' | 'wheel_reward' | 'referral_bonus' | 'birthday_gift' | 'survey_bonus';
+  type: 'stamp_add' | 'stamp_redeem' | 'reward_exchange' | 'wheel_reward' | 'referral_bonus' | 'birthday_gift' | 'survey_bonus' | 'points_refund' | 'points_redeem';
   stampsChanged: number;
-  pointsChanged: number;
+  pointsChanged?: number;
   detailsEn: string;
   detailsAr: string;
   performedBy: string; // 'Barista: Ali' or 'System'
@@ -162,15 +163,15 @@ export interface StoreSettings {
   logoUrl?: string;
   currency: string; // 'SYP' | 'USD' | 'EUR' | 'SAR' | 'AED' | 'ل.س'
   stampsForFreeDrink: number; // default 8
-  pointsPerStamp: number; // default 10
-  pointsPerCurrencyUnit: number; // default 1 pt per 1 SAR
+  pointsPerStamp?: number;
+  pointsPerCurrencyUnit?: number;
   stampIcon: 'cup' | 'bean' | 'star' | 'heart';
   theme: ThemeColors;
   zender: ZenderConfig;
   wheel: WheelSettings;
   tiers?: Record<TierLevel, TierConfig>;
   referralRewardStamps: number; // stamps given to referrer
-  surveyRewardPoints: number; // points given for survey
+  surveyRewardPoints?: number;
   birthdayRewardFreeDrink: boolean;
   ownerPin?: string; // 4-digit PIN for Admin/Owner portal
   wifiName?: string;
@@ -189,7 +190,7 @@ export interface BroadcastNotification {
   titleAr: string;
   messageEn: string;
   messageAr: string;
-  targetTier: 'all' | TierLevel;
+  targetTier?: 'all' | TierLevel | string;
   sendViaPush: boolean;
   sendViaWhatsapp: boolean;
   createdAt: string;

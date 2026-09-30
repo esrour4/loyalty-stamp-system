@@ -80,8 +80,8 @@ export const MenuManagementTab: React.FC = () => {
   const totalBasketCount = tableTray.reduce((acc, curr) => acc + curr.quantity, 0);
   const totalBasketPrice = tableTray.reduce((acc, curr) => acc + curr.item.price * curr.quantity, 0);
 
-  const openQrModal = (table = 'Table 1', catId?: string, itemId?: string) => {
-    setQrModalTable(table);
+  const openQrModal = (catId?: string, itemId?: string) => {
+    setQrModalTable('General Menu');
     setQrModalCatId(catId);
     setQrModalItemId(itemId);
     setShowQrModal(true);
@@ -318,33 +318,42 @@ export const MenuManagementTab: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2">
             <button
               type="button"
-              id="refresh-menu-btn"
-              onClick={handleManualRefresh}
-              disabled={isRefreshing || loadingMenu}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-800/60 hover:bg-indigo-700 text-white text-xs font-bold border border-indigo-500/30 transition shadow-xs cursor-pointer"
+              id="add-item-btn"
+              onClick={() => openItemModal()}
+              className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black transition shadow-md cursor-pointer active:scale-95"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing || loadingMenu ? 'animate-spin text-cyan-400' : ''}`} />
-              <span>{isAr ? 'تحديث من السحابة' : 'Re-sync Firestore'}</span>
+              <Plus className="w-4 h-4" />
+              <span>{isAr ? 'إضافة مشروب / وجبة' : 'Add Menu Item'}</span>
+            </button>
+
+            <button
+              type="button"
+              id="add-category-btn"
+              onClick={() => openCategoryModal()}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-600 transition shadow-xs cursor-pointer active:scale-95"
+            >
+              <FolderPlus className="w-3.5 h-3.5 text-cyan-400" />
+              <span>{isAr ? 'قسم جديد' : 'New Category'}</span>
             </button>
 
             <button
               type="button"
               id="generate-table-qr-btn"
               onClick={() => openQrModal()}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white text-xs font-black shadow-md transition cursor-pointer"
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white text-xs font-black shadow-md transition cursor-pointer active:scale-95"
             >
               <QrCode className="w-4 h-4" />
-              <span>{isAr ? 'توليد QR للطاولات' : 'Generate Table QR'}</span>
+              <span>{isAr ? 'رمز QR القائمة' : 'Cafe Menu QR'}</span>
             </button>
 
             <button
               type="button"
               id="admin-menu-basket-btn"
               onClick={() => setShowAdminBasketModal(true)}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-black shadow-md transition cursor-pointer ${
+              className={`flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-black shadow-md transition cursor-pointer active:scale-95 ${
                 totalBasketCount > 0
                   ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 animate-pulse'
                   : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-600'
@@ -362,22 +371,13 @@ export const MenuManagementTab: React.FC = () => {
 
             <button
               type="button"
-              id="add-category-btn"
-              onClick={() => openCategoryModal()}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-600 transition shadow-xs cursor-pointer"
+              id="refresh-menu-btn"
+              onClick={handleManualRefresh}
+              disabled={isRefreshing || loadingMenu}
+              className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-indigo-800/60 hover:bg-indigo-700 text-white text-xs font-bold border border-indigo-500/30 transition shadow-xs cursor-pointer active:scale-95"
             >
-              <FolderPlus className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{isAr ? 'إضافة قسم جديد' : 'New Category'}</span>
-            </button>
-
-            <button
-              type="button"
-              id="add-item-btn"
-              onClick={() => openItemModal()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black transition shadow-md cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>{isAr ? 'إضافة مشروب / وجبة' : 'Add Menu Item'}</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing || loadingMenu ? 'animate-spin text-cyan-400' : ''}`} />
+              <span>{isAr ? 'مزامنة مع السحابة' : 'Re-sync Firestore'}</span>
             </button>
           </div>
         </div>
@@ -411,7 +411,7 @@ export const MenuManagementTab: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h4 className="text-sm font-black text-white">
-                  {isAr ? 'ستاندات QR لقائمة طاولات المقهى' : 'Table QR Code Stands & Digital Menu'}
+                  {isAr ? 'رمز QR وستاند قائمة المقهى الرقمية' : 'Digital Cafe Menu QR Code & Stand'}
                 </h4>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
                   {isAr ? 'جاهز للطباعة' : 'Print Ready'}
@@ -419,8 +419,8 @@ export const MenuManagementTab: React.FC = () => {
               </div>
               <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
                 {isAr
-                  ? 'ضع ستاندات QR المطبوعة على طاولات المقهى ليتمكن الزبائن من مسح الرمز وتصفح القائمة الحية من هواتفهم دون الحاجة لقائمة ورقية.'
-                  : 'Place printable QR stands on your tables so customers can scan with phone cameras to browse your live Firestore menu and prices.'}
+                  ? 'اطبع رمز QR الموحد للمقهى وضعه على الستاندات، الكاونتر، أو الطاولات ليتمكن الزبائن من مسحه وتصفح قائمة المشروبات والمأكولات والأسعار فوراً من هواتفهم.'
+                  : 'Print your cafe menu QR stand to place on counters, stands or tables so guests can scan with their phone cameras to browse your live menu and prices.'}
               </p>
             </div>
           </div>
@@ -429,11 +429,11 @@ export const MenuManagementTab: React.FC = () => {
             <button
               type="button"
               id="open-table-qr-hub-btn"
-              onClick={() => openQrModal('Table 1')}
+              onClick={() => openQrModal()}
               className="px-4 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-black transition shadow-md flex items-center gap-1.5 cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>{isAr ? 'طباعة ستاندات الطاولات' : 'Print Table Stands'}</span>
+              <span>{isAr ? 'طباعة ستاند القائمة' : 'Print Menu Stand'}</span>
             </button>
           </div>
         </div>
@@ -458,11 +458,11 @@ export const MenuManagementTab: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex items-center gap-2 pt-1 overflow-x-auto pb-2 no-scrollbar scroll-smooth">
           <button
             type="button"
             onClick={() => setSelectedCategoryId('all')}
-            className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 border ${
+            className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 shrink-0 border ${
               selectedCategoryId === 'all'
                 ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300'
@@ -480,7 +480,7 @@ export const MenuManagementTab: React.FC = () => {
             return (
               <div
                 key={cat.id}
-                className={`group flex items-center rounded-2xl border transition ${
+                className={`group flex items-center rounded-2xl border transition shrink-0 ${
                   isSelected
                     ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
                     : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300'
@@ -499,12 +499,12 @@ export const MenuManagementTab: React.FC = () => {
                 </button>
 
                 {/* QR, Edit & Delete Action Buttons inside Category Pill */}
-                <div className="flex items-center pe-1.5 opacity-0 group-hover:opacity-100 transition-opacity gap-0.5">
+                <div className="flex items-center pe-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity gap-0.5">
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openQrModal(undefined, cat.id, undefined);
+                      openQrModal(cat.id);
                     }}
                     className={`p-1 rounded-md transition ${isSelected ? 'text-white hover:bg-white/20' : 'text-slate-400 hover:text-cyan-500'}`}
                     title={isAr ? 'توليد QR لهذا القسم' : 'Generate QR for Category'}
@@ -553,8 +553,17 @@ export const MenuManagementTab: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={isAr ? 'بحث بالاسم أو الوصف...' : 'Search coffee, pastry, beans...'}
-            className="w-full ps-10 pe-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 shadow-xs"
+            className="w-full ps-10 pe-9 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 shadow-xs"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
@@ -768,7 +777,7 @@ export const MenuManagementTab: React.FC = () => {
                       )}
                       <button
                         type="button"
-                        onClick={() => openQrModal('Table 1', item.categoryId, item.id)}
+                        onClick={() => openQrModal(item.categoryId, item.id)}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                         title={isAr ? 'توليد QR لهذا الصنف' : 'Generate QR for this item'}
                       >
@@ -810,7 +819,7 @@ export const MenuManagementTab: React.FC = () => {
       {/* ==================================================== */}
       {showCategoryModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <FolderPlus className="w-5 h-5 text-indigo-600" />
@@ -941,7 +950,7 @@ export const MenuManagementTab: React.FC = () => {
       {/* ==================================================== */}
       {showItemModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Coffee className="w-5 h-5 text-indigo-600" />

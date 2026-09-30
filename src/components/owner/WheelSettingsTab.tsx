@@ -62,20 +62,20 @@ export const WheelSettingsTab: React.FC = () => {
   const [editingSectorId, setEditingSectorId] = useState<string | null>(null);
   const [sectorLabelEn, setSectorLabelEn] = useState('');
   const [sectorLabelAr, setSectorLabelAr] = useState('');
-  const [sectorType, setSectorType] = useState<'points' | 'stamp' | 'coupon' | 'lose'>('points');
-  const [sectorValue, setSectorValue] = useState<string | number>('50');
+  const [sectorType, setSectorType] = useState<'stamp' | 'coupon' | 'lose'>('stamp');
+  const [sectorValue, setSectorValue] = useState<string | number>('1');
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed' | 'free_item'>('percentage');
-  const [sectorColor, setSectorColor] = useState('#d97706');
+  const [sectorColor, setSectorColor] = useState('#4f46e5');
   const [isWinning, setIsWinning] = useState(true);
 
   const openAddModal = () => {
     setEditingSectorId(null);
-    setSectorLabelEn('');
-    setSectorLabelAr('');
-    setSectorType('points');
-    setSectorValue('50');
+    setSectorLabelEn('+1 Bonus Stamp');
+    setSectorLabelAr('+1 ختم إضافي');
+    setSectorType('stamp');
+    setSectorValue(1);
     setDiscountType('percentage');
-    setSectorColor('#d97706');
+    setSectorColor('#4f46e5');
     setIsWinning(true);
     setModalOpen(true);
   };
@@ -84,15 +84,15 @@ export const WheelSettingsTab: React.FC = () => {
     setEditingSectorId(sector.id);
     setSectorLabelEn(sector.labelEn);
     setSectorLabelAr(sector.labelAr);
-    setSectorType(sector.type);
+    setSectorType(sector.type as any);
     setSectorValue(sector.value ?? '');
     setDiscountType(sector.discountType || 'percentage');
-    setSectorColor(sector.color || '#d97706');
+    setSectorColor(sector.color || '#4f46e5');
     setIsWinning(sector.isWinning);
     setModalOpen(true);
   };
 
-  const handleSectorTypeChange = (type: 'points' | 'stamp' | 'coupon' | 'lose') => {
+  const handleSectorTypeChange = (type: 'stamp' | 'coupon' | 'lose') => {
     setSectorType(type);
     if (type === 'lose') {
       setIsWinning(false);
@@ -101,19 +101,12 @@ export const WheelSettingsTab: React.FC = () => {
         setSectorLabelEn('Better Luck Next Time');
         setSectorLabelAr('حظ أوفر المرة القادمة');
       }
-      setSectorColor('#57534e');
+      setSectorColor('#64748b');
     } else {
       setIsWinning(true);
-      if (type === 'points') {
-        setSectorValue(50);
-        setSectorColor('#d97706');
-        if (!sectorLabelEn || sectorLabelEn === 'Better Luck Next Time') {
-          setSectorLabelEn('50 Points');
-          setSectorLabelAr('50 نقطة');
-        }
-      } else if (type === 'stamp') {
+      if (type === 'stamp') {
         setSectorValue(1);
-        setSectorColor('#f59e0b');
+        setSectorColor('#4f46e5');
         if (!sectorLabelEn || sectorLabelEn === 'Better Luck Next Time') {
           setSectorLabelEn('+1 Free Stamp');
           setSectorLabelAr('+1 ختم مجاني');
@@ -121,7 +114,7 @@ export const WheelSettingsTab: React.FC = () => {
       } else if (type === 'coupon') {
         setSectorValue('Free Croissant');
         setDiscountType('free_item');
-        setSectorColor('#b45309');
+        setSectorColor('#06b6d4');
         if (!sectorLabelEn || sectorLabelEn === 'Better Luck Next Time') {
           setSectorLabelEn('Free Croissant');
           setSectorLabelAr('كرواسون مجاني');
@@ -496,7 +489,6 @@ export const WheelSettingsTab: React.FC = () => {
                         </span>
                       </div>
                       <p className="text-[10px] text-slate-400 mt-0.5 truncate">
-                        {sector.type === 'points' && `⭐ ${sector.value} ${isAr ? 'نقطة' : 'Pts'}`}
                         {sector.type === 'stamp' && `☕ +${sector.value || 1} ${isAr ? 'ختم' : 'Stamp'}`}
                         {sector.type === 'coupon' && `🎁 ${sector.value || 'Coupon'}`}
                         {sector.type === 'lose' && `🍂 ${isAr ? 'بدون جائزة' : 'No Prize'}`}
@@ -581,9 +573,8 @@ export const WheelSettingsTab: React.FC = () => {
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
                   {isAr ? 'نوع القطاع والنتيجة' : 'Sector Type & Outcome'}
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   {[
-                    { type: 'points', labelAr: '⭐ نقاط مكافأة', labelEn: '⭐ Points', icon: Star },
                     { type: 'stamp', labelAr: '☕ ختم إضافي', labelEn: '☕ Stamp', icon: Coffee },
                     { type: 'coupon', labelAr: '🎁 كوبون هدية', labelEn: '🎁 Coupon', icon: Gift },
                     { type: 'lose', labelAr: '🍂 حظ أوفر (خسارة)', labelEn: '🍂 Lose / Try Again', icon: RotateCcw },
@@ -615,7 +606,7 @@ export const WheelSettingsTab: React.FC = () => {
                     required
                     value={sectorLabelAr}
                     onChange={(e) => setSectorLabelAr(e.target.value)}
-                    placeholder={isAr ? 'مثال: 50 نقطة، حظ أوفر، كرواسون' : 'e.g. 50 نقطة'}
+                    placeholder={isAr ? 'مثال: +1 ختم إضافي، كرواسون مجاني' : 'e.g. +1 ختم'}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100"
                   />
                 </div>
@@ -629,27 +620,11 @@ export const WheelSettingsTab: React.FC = () => {
                     required
                     value={sectorLabelEn}
                     onChange={(e) => setSectorLabelEn(e.target.value)}
-                    placeholder="e.g. 50 Points, Try Again, Free Croissant"
+                    placeholder="e.g. +1 Bonus Stamp, Free Croissant"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100"
                   />
                 </div>
               </div>
-
-              {/* Value / Specific Options based on type */}
-              {sectorType === 'points' && (
-                <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                    {isAr ? 'عدد النقاط الممنوحة' : 'Points Amount'}
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={sectorValue}
-                    onChange={(e) => setSectorValue(parseInt(e.target.value) || 0)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100"
-                  />
-                </div>
-              )}
 
               {sectorType === 'stamp' && (
                 <div>

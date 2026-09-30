@@ -69,7 +69,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
               {isAr ? 'شكراً لمشاركتنا رأيك!' : 'Thank you for your feedback!'}
             </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
-              {t('feedbackThanks', { points: settings.surveyRewardPoints || 25 })}
+              {isAr ? 'شكراً جزيلاً لتقييمك ومساعدتنا في تقديم أفضل تجربة قهوة لك دائماً!' : 'Thank you for your feedback and helping us craft the best coffee experience for you!'}
             </p>
           </div>
         ) : (
@@ -83,7 +83,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
                   {t('feedbackTitle')}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {t('feedbackSubtitle', { points: settings.surveyRewardPoints || 25 })}
+                  {isAr ? 'شاركنا تجربتك في المقهى وساعدنا على تحسين خدماتنا وتقديم الأفضل دائماً.' : 'Share your café experience to help us continuously craft the finest coffee and service.'}
                 </p>
               </div>
             </div>
