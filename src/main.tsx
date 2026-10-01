@@ -4,15 +4,14 @@ import App from './App.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import './index.css';
 
-// Automatically clean up stale Service Workers from previous builds
-if (typeof window !== 'undefined') {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for (const registration of registrations) {
-        registration.unregister().catch(() => {});
-      }
-    });
-  }
+import { registerSW } from 'virtual:pwa-register';
+
+// Register PWA service worker for offline support and installability
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  registerSW({
+    immediate: true,
+  });
+}
 
   // Catch dynamic import errors from old chunk hashes after a new deployment
   window.addEventListener('vite:preloadError', (event) => {
@@ -45,7 +44,6 @@ if (typeof window !== 'undefined') {
       }
     }
   });
-}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

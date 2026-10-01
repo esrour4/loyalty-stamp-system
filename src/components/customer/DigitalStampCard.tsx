@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CardExportService } from '../../services/cardExportService';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 
 export const DigitalStampCard: React.FC = () => {
   const { currentCustomer, settings, language, t, triggerToast } = useApp();
@@ -203,6 +204,9 @@ export const DigitalStampCard: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              {/* PWA Install Button */}
+              <PWAInstallButton />
+
               {/* Download Card Button */}
               <button
                 type="button"

@@ -754,20 +754,20 @@ export const MenuManagementTab: React.FC = () => {
                       </span>
                     </label>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       {/* Add to Basket button for admin test */}
                       {item.isAvailable && (
                         <button
                           type="button"
                           onClick={() => addToTableTray(item, 1)}
-                          className={`p-1.5 rounded-lg transition cursor-pointer flex items-center gap-1 ${
+                          className={`min-w-[34px] min-h-[34px] p-2 rounded-xl transition cursor-pointer flex items-center justify-center gap-1 ${
                             tableTray.find((t) => t.item.id === item.id)
                               ? 'bg-indigo-600 text-white shadow-xs'
                               : 'text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800'
                           }`}
                           title={isAr ? 'إضافة للسلة / تجربة الطلب' : 'Add to basket / Test order'}
                         >
-                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <ShoppingBag className="w-4 h-4" />
                           {tableTray.find((t) => t.item.id === item.id) && (
                             <span className="text-[10px] font-bold font-mono">
                               {tableTray.find((t) => t.item.id === item.id)?.quantity}
@@ -778,18 +778,18 @@ export const MenuManagementTab: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => openQrModal(item.categoryId, item.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="min-w-[34px] min-h-[34px] p-2 rounded-xl text-slate-400 hover:text-cyan-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
                         title={isAr ? 'توليد QR لهذا الصنف' : 'Generate QR for this item'}
                       >
-                        <QrCode className="w-3.5 h-3.5" />
+                        <QrCode className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => openItemModal(item)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="min-w-[34px] min-h-[34px] p-2 rounded-xl text-slate-400 hover:text-indigo-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
                         title={isAr ? 'تعديل الصنف' : 'Edit item'}
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
@@ -800,10 +800,10 @@ export const MenuManagementTab: React.FC = () => {
                             name: isAr ? item.nameAr || item.nameEn : item.nameEn,
                           })
                         }
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition"
+                        className="min-w-[34px] min-h-[34px] p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition cursor-pointer flex items-center justify-center"
                         title={isAr ? 'حذف الصنف' : 'Delete item'}
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
